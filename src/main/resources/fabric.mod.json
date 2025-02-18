@@ -1,0 +1,44 @@
+{
+	"schemaVersion": 1,
+	"id": "hasugoods",
+	"version": "${version}",
+	"name": "Hasugoods",
+	"description": "A mod that adds Hasunosora items to Minecraft.",
+	"authors": [
+		"KCFindstr"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/rurimegu/hasugoods-mod"
+	},
+	"license": "MIT",
+	"icon": "assets/hasugoods/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"rurino.hasugoods.Hasugoods"
+		],
+		"client": [
+			"rurino.hasugoods.HasugoodsClient"
+		],
+		"fabric-datagen": [
+			"rurino.hasugoods.HasugoodsDataGenerator"
+		]
+	},
+	"mixins": [
+		"hasugoods.mixins.json",
+		{
+			"config": "hasugoods.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.16.10",
+		"minecraft": "~1.21.4",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
