@@ -1,4 +1,8 @@
 {
+  "death.attack.toutoshi": "%1$s died of the preciousness of %2$s",
+  "death.attack.toutoshi.player": "%1$s died of the preciousness of %2$s while trying to escape %3$s",
+  "effect.hasugoods.oshi_protection": "Oshi Protection",
   "item.hasugoods.rurino_badge": "Rurino Can Badge",
-  "itemGroup.hasugoods": "Hasunosora"
+  "itemGroup.hasugoods": "Hasunosora",
+  "text.hasugoods.rurino": "Rurino"
 }

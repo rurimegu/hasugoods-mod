@@ -1,44 +1,52 @@
 {
-	"schemaVersion": 1,
-	"id": "hasugoods",
-	"version": "0.0.1",
-	"name": "Hasugoods",
-	"description": "A mod that adds Hasunosora items to Minecraft.",
-	"authors": [
-		"KCFindstr"
-	],
-	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/rurimegu/hasugoods-mod"
-	},
-	"license": "MIT",
-	"icon": "assets/hasugoods/icon.png",
-	"environment": "*",
-	"entrypoints": {
-		"main": [
-			"dev.rurino.hasugoods.Hasugoods"
-		],
-		"client": [
-			"dev.rurino.hasugoods.HasugoodsClient"
-		],
-		"fabric-datagen": [
-			"dev.rurino.hasugoods.HasugoodsDataGenerator"
-		]
-	},
-	"mixins": [
-		"hasugoods.mixins.json",
-		{
-			"config": "hasugoods.client.mixins.json",
-			"environment": "client"
-		}
-	],
-	"depends": {
-		"fabricloader": ">=0.16.10",
-		"minecraft": "~1.21.4",
-		"java": ">=21",
-		"fabric-api": "*"
-	},
-	"suggests": {
-		"another-mod": "*"
-	}
+  "schemaVersion": 1,
+  "id": "hasugoods",
+  "version": "0.0.1",
+  "name": "Hasugoods",
+  "description": "A mod that adds Hasunosora items to Minecraft.",
+  "authors": [
+    "KCFindstr"
+  ],
+  "contact": {
+    "homepage": "https://fabricmc.net/",
+    "sources": "https://github.com/rurimegu/hasugoods-mod"
+  },
+  "license": "MIT",
+  "icon": "assets/hasugoods/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.rurino.hasugoods.Hasugoods"
+    ],
+    "client": [
+      "dev.rurino.hasugoods.HasugoodsClient"
+    ],
+    "fabric-datagen": [
+      "dev.rurino.hasugoods.HasugoodsDataGenerator"
+    ],
+    "cardinal-components": [
+      "dev.rurino.hasugoods.component.ModComponents"
+    ]
+  },
+  "mixins": [
+    "hasugoods.mixins.json",
+    {
+      "config": "hasugoods.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.10",
+    "minecraft": "~1.21.4",
+    "java": ">=21",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "another-mod": "*"
+  },
+  "custom": {
+    "cardinal-components": [
+      "hasugoods:toutoshi"
+    ]
+  }
 }

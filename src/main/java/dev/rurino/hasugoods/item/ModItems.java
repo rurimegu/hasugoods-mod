@@ -21,8 +21,8 @@ public class ModItems {
       .build();
 
   public static Item register(Item item, RegistryKey<Item> registryKey) {
+    Hasugoods.LOGGER.info("Register item: " + registryKey.getValue());
     Item registeredItem = Registry.register(Registries.ITEM, registryKey.getValue(), item);
-    Hasugoods.LOGGER.info("Registered item: " + registryKey.getValue());
     return registeredItem;
   }
 
