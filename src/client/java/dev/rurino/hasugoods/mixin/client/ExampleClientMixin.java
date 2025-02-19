@@ -1,4 +1,4 @@
-package rurino.hasugoods.mixin.client;
+package dev.rurino.hasugoods.mixin.client;
 
 import net.minecraft.client.MinecraftClient;
 import org.spongepowered.asm.mixin.Mixin;

@@ -1,6 +1,6 @@
 {
 	"required": true,
-	"package": "rurino.hasugoods.mixin",
+	"package": "dev.rurino.hasugoods.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 		"ExampleMixin"

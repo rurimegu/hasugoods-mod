@@ -1,6 +1,6 @@
 {
 	"required": true,
-	"package": "rurino.hasugoods.mixin.client",
+	"package": "dev.rurino.hasugoods.mixin.client",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
 		"ExampleClientMixin"

@@ -1,9 +1,11 @@
-package rurino.hasugoods;
+package dev.rurino.hasugoods;
 
 import net.fabricmc.api.ModInitializer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import dev.rurino.hasugoods.item.ModItems;
 
 public class Hasugoods implements ModInitializer {
 	public static final String MOD_ID = "hasugoods";
@@ -19,6 +21,8 @@ public class Hasugoods implements ModInitializer {
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 
-		LOGGER.info("Hello Fabric world!");
+		LOGGER.info("Initializing Hasugoods");
+
+		ModItems.initialize();
 	}
 }

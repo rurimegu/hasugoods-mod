@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"id": "hasugoods",
-	"version": "${version}",
+	"version": "0.0.1",
 	"name": "Hasugoods",
 	"description": "A mod that adds Hasunosora items to Minecraft.",
 	"authors": [
@@ -16,13 +16,13 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"rurino.hasugoods.Hasugoods"
+			"dev.rurino.hasugoods.Hasugoods"
 		],
 		"client": [
-			"rurino.hasugoods.HasugoodsClient"
+			"dev.rurino.hasugoods.HasugoodsClient"
 		],
 		"fabric-datagen": [
-			"rurino.hasugoods.HasugoodsDataGenerator"
+			"dev.rurino.hasugoods.HasugoodsDataGenerator"
 		]
 	},
 	"mixins": [
