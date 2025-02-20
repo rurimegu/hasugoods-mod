@@ -5,6 +5,7 @@ import java.util.Optional;
 import com.mojang.serialization.MapCodec;
 
 import dev.rurino.hasugoods.Hasugoods;
+import dev.rurino.hasugoods.ModConstants;
 import dev.rurino.hasugoods.component.IToutoshiComponent;
 import dev.rurino.hasugoods.component.ModComponents;
 import dev.rurino.hasugoods.item.OshiItem;
@@ -18,7 +19,6 @@ import net.minecraft.world.World;
 import net.minecraft.network.RegistryByteBuf;
 
 public record ToutoshiEffectsConsumeEffect() implements ConsumeEffect {
-  private static final int TOUTOSHI_EFFECT_DURATION = 2 * 20;
   public static final MapCodec<ToutoshiEffectsConsumeEffect> CODEC = MapCodec.unit(ToutoshiEffectsConsumeEffect::new);
   public static final PacketCodec<RegistryByteBuf, ToutoshiEffectsConsumeEffect> PACKET_CODEC = PacketCodec.unit(
       new ToutoshiEffectsConsumeEffect());
@@ -41,6 +41,7 @@ public record ToutoshiEffectsConsumeEffect() implements ConsumeEffect {
       return false;
     }
     toutoshiComponent.get().setToutoshiSourceItem((OshiItem) item);
-    return user.addStatusEffect(new StatusEffectInstance(ModEffects.OSHI_PROTECTION, TOUTOSHI_EFFECT_DURATION));
+    return user
+        .addStatusEffect(new StatusEffectInstance(ModEffects.OSHI_PROTECTION, ModConstants.TOUTOSHI_EFFECT_DURATION));
   }
 }

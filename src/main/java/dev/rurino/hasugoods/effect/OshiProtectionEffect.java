@@ -3,6 +3,7 @@ package dev.rurino.hasugoods.effect;
 import java.util.Optional;
 
 import dev.rurino.hasugoods.Hasugoods;
+import dev.rurino.hasugoods.ModConstants;
 import dev.rurino.hasugoods.component.IToutoshiComponent;
 import dev.rurino.hasugoods.component.ModComponents;
 import dev.rurino.hasugoods.damage.ModDamageTypes;
@@ -16,8 +17,6 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ServerWorld;
 
 public class OshiProtectionEffect extends StatusEffect {
-
-  private static final float DAMAGE_AMOUNT = 1000f;
 
   public OshiProtectionEffect() {
     super(StatusEffectCategory.BENEFICIAL, 0xffd700);
@@ -47,7 +46,7 @@ public class OshiProtectionEffect extends StatusEffect {
             .getOrThrow(RegistryKeys.DAMAGE_TYPE)
             .getEntry(ModDamageTypes.TOUTOSHI_DAMAGE.getValue()).get(),
         oshiItem);
-    entity.damage(world, damageSource, DAMAGE_AMOUNT);
+    entity.damage(world, damageSource, ModConstants.TOUTOSHI_DAMAGE_AMOUNT);
     return true;
   }
 }
