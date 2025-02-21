@@ -8,11 +8,11 @@ import dev.rurino.hasugoods.component.IToutoshiComponent;
 import dev.rurino.hasugoods.component.ModComponents;
 import dev.rurino.hasugoods.damage.ModDamageTypes;
 import dev.rurino.hasugoods.damage.ToutoshiDamageSource;
-import dev.rurino.hasugoods.item.OshiItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
+import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ServerWorld;
 
@@ -35,8 +35,8 @@ public class OshiProtectionEffect extends StatusEffect {
       return false;
     }
     IToutoshiComponent toutoshiComponent = toutoshiComponentOptional.get();
-    OshiItem oshiItem = toutoshiComponent.getToutoshiSourceItem();
-    if (oshiItem == null) {
+    Item item = toutoshiComponent.getToutoshiSourceItem();
+    if (item == null) {
       Hasugoods.LOGGER.warn("Cannot find Toutoshi source item for {} when removing oshi protection", entity);
       return false;
     }
@@ -45,7 +45,7 @@ public class OshiProtectionEffect extends StatusEffect {
         world.getRegistryManager()
             .getOrThrow(RegistryKeys.DAMAGE_TYPE)
             .getEntry(ModDamageTypes.TOUTOSHI_DAMAGE.getValue()).get(),
-        oshiItem);
+        item);
     entity.damage(world, damageSource, ModConstants.TOUTOSHI_DAMAGE_AMOUNT);
     return true;
   }

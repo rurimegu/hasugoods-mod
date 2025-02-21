@@ -27,11 +27,11 @@ public class BadgeItem extends OshiItem {
       List.<ConsumeEffect>of(new ClearAllEffectsConsumeEffect(), new ToutoshiEffectsConsumeEffect()));
 
   public static final RegistryKey<Item> RURINO_BADGE_KEY = RegistryKey.of(RegistryKeys.ITEM,
-      Identifier.of(Hasugoods.MOD_ID, "rurino_badge"));
+      Identifier.of(Hasugoods.MOD_ID, OshiItem.RURINO_KEY + "_badge"));
   public static final Item RURINO_BADGE = ModItems.register(
       new BadgeItem(new Item.Settings().maxCount(16).rarity(Rarity.COMMON)
           .component(DataComponentTypes.DEATH_PROTECTION, HASU_BADGE_DEATH_PROTECTION)
-          .registryKey(RURINO_BADGE_KEY), "rurino"),
+          .registryKey(RURINO_BADGE_KEY), OshiItem.RURINO_KEY),
       RURINO_BADGE_KEY);
 
   public BadgeItem(Settings settings, String oshiName) {

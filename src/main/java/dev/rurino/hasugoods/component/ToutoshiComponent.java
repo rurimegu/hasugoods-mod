@@ -17,19 +17,19 @@ public class ToutoshiComponent implements IToutoshiComponent {
 
   private static final String TOUTOSHI_SOURCE_ITEM = "toutoshiSourceItem";
   private final LivingEntity provider;
-  private OshiItem toutoshiSourceItem;
+  private Item toutoshiSourceItem;
 
   public ToutoshiComponent(LivingEntity provider) {
     this.provider = provider;
   }
 
   @Override
-  public OshiItem getToutoshiSourceItem() {
+  public Item getToutoshiSourceItem() {
     return toutoshiSourceItem;
   }
 
   @Override
-  public void setToutoshiSourceItem(OshiItem item) {
+  public void setToutoshiSourceItem(Item item) {
     toutoshiSourceItem = item;
     ModComponents.TOUTOSHI.sync(provider);
   }

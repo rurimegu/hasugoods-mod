@@ -5,6 +5,8 @@ import net.minecraft.item.Item;
 import net.minecraft.text.Text;
 
 public class OshiItem extends Item {
+  public static final String RURINO_KEY = "rurino";
+
   private final String oshiName;
 
   public OshiItem(Settings settings, String oshiName) {
