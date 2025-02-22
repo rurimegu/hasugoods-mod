@@ -18,7 +18,6 @@ import net.minecraft.loot.LootPool;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 
 public class BadgeItem extends OshiItem {
@@ -27,12 +26,27 @@ public class BadgeItem extends OshiItem {
       List.<ConsumeEffect>of(new ClearAllEffectsConsumeEffect(), new ToutoshiEffectsConsumeEffect()));
 
   public static final RegistryKey<Item> RURINO_BADGE_KEY = RegistryKey.of(RegistryKeys.ITEM,
-      Identifier.of(Hasugoods.MOD_ID, OshiItem.RURINO_KEY + "_badge"));
-  public static final Item RURINO_BADGE = ModItems.register(
-      new BadgeItem(new Item.Settings().maxCount(16).rarity(Rarity.COMMON)
-          .component(DataComponentTypes.DEATH_PROTECTION, HASU_BADGE_DEATH_PROTECTION)
-          .registryKey(RURINO_BADGE_KEY), OshiItem.RURINO_KEY),
-      RURINO_BADGE_KEY);
+      Hasugoods.id(OshiItem.RURINO_KEY + "_badge"));
+  public static final Item RURINO_BADGE = registerBadge(RURINO_BADGE_KEY, OshiItem.RURINO_KEY);
+
+  public static final RegistryKey<Item> MEGUMI_BADGE_KEY = RegistryKey.of(RegistryKeys.ITEM,
+      Hasugoods.id(OshiItem.MEGUMI_KEY + "_badge"));
+  public static final Item MEGUMI_BADGE = registerBadge(MEGUMI_BADGE_KEY, OshiItem.MEGUMI_KEY);
+
+  public static final RegistryKey<Item> UNOPENED_BADGE_KEY = RegistryKey.of(RegistryKeys.ITEM,
+      Hasugoods.id("unopened_badge"));
+  public static final Item UNOPENED_BADGE = ModItems.register(
+      new UnopenedBadge(new Item.Settings().maxCount(16).rarity(Rarity.COMMON).registryKey(UNOPENED_BADGE_KEY)),
+      UNOPENED_BADGE_KEY);
+
+  private static Item registerBadge(RegistryKey<Item> key, String oshiKey) {
+    Item item = ModItems.register(
+        new BadgeItem(new Item.Settings().maxCount(16).rarity(Rarity.COMMON)
+            .component(DataComponentTypes.DEATH_PROTECTION, HASU_BADGE_DEATH_PROTECTION)
+            .registryKey(key), oshiKey),
+        key);
+    return item;
+  }
 
   public BadgeItem(Settings settings, String oshiName) {
     super(settings, oshiName);
@@ -47,7 +61,8 @@ public class BadgeItem extends OshiItem {
     // Modify loot tables to include the badges
     LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
       if (source.isBuiltin() && ModConstants.BADGE_LOOT_TABLES.contains(key)) {
-        LootPool.Builder poolBuilder = LootPool.builder().with(ItemEntry.builder(RURINO_BADGE).weight(10).quality(1));
+        // Give 0~20 badges
+        LootPool.Builder poolBuilder = LootPool.builder().with(ItemEntry.builder(UNOPENED_BADGE).weight(10).quality(1));
         tableBuilder.pool(poolBuilder);
       }
     });

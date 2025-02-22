@@ -12,12 +12,11 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.DamageTypeTags;
-import net.minecraft.util.Identifier;
 
 public class ModEffects {
 
-  public static final RegistryEntry<StatusEffect> OSHI_PROTECTION = Registry.registerReference(Registries.STATUS_EFFECT,
-      Identifier.of(Hasugoods.MOD_ID, "oshi_protection"), new OshiProtectionEffect());
+  public static final RegistryEntry<StatusEffect> OSHI_PROTECTION = Registry.registerReference(
+      Registries.STATUS_EFFECT, Hasugoods.id("oshi_protection"), new OshiProtectionEffect());
 
   // #region ConsumeEffects
 

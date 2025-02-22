@@ -7,12 +7,11 @@ import org.ladysnake.cca.api.v3.entity.EntityComponentInitializer;
 
 import dev.rurino.hasugoods.Hasugoods;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.Identifier;
 
 public class ModComponents implements EntityComponentInitializer {
 
   public static final ComponentKey<IToutoshiComponent> TOUTOSHI = ComponentRegistry.getOrCreate(
-      Identifier.of(Hasugoods.MOD_ID, "toutoshi"),
+      Hasugoods.id("toutoshi"),
       IToutoshiComponent.class);
 
   @Override

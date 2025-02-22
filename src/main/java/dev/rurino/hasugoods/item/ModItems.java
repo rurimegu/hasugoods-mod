@@ -10,11 +10,10 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 
 public class ModItems {
-  public static final RegistryKey<ItemGroup> BADGE_ITEM_GROUP_KEY = RegistryKey.of(Registries.ITEM_GROUP.getKey(),
-      Identifier.of(Hasugoods.MOD_ID, "item_group"));
+  public static final RegistryKey<ItemGroup> BADGE_ITEM_GROUP_KEY = RegistryKey.of(
+      Registries.ITEM_GROUP.getKey(), Hasugoods.id("item_group"));
   public static final ItemGroup BADGE_ITEM_GROUP = FabricItemGroup.builder()
       .icon(() -> new ItemStack(BadgeItem.RURINO_BADGE))
       .displayName(Text.translatable("itemGroup.hasugoods"))
