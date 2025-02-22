@@ -5,13 +5,9 @@
       "rolls": 1,
       "entries": [
         {
-          "type": "item",
-          "name": "hasugoods:rurino_badge",
-          "weight": 1
-        },
-        {
-          "type": "item",
-          "name": "hasugoods:megumi_badge",
+          "type": "minecraft:tag",
+          "name": "hasugoods:badges",
+          "expand": true,
           "weight": 1
         }
       ]

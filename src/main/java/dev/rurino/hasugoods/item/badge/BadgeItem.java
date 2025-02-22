@@ -2,7 +2,6 @@ package dev.rurino.hasugoods.item.badge;
 
 import java.util.List;
 
-import dev.rurino.hasugoods.ModConstants;
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.effect.ToutoshiEffectsConsumeEffect;
 import dev.rurino.hasugoods.item.ModItems;
@@ -16,14 +15,19 @@ import net.minecraft.item.consume.ClearAllEffectsConsumeEffect;
 import net.minecraft.item.consume.ConsumeEffect;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.entry.ItemEntry;
+import net.minecraft.loot.function.SetCountLootFunction;
+import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
+import net.minecraft.loot.provider.number.UniformLootNumberProvider;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Rarity;
 
 public class BadgeItem extends OshiItem {
 
   public static final DeathProtectionComponent HASU_BADGE_DEATH_PROTECTION = new DeathProtectionComponent(
       List.<ConsumeEffect>of(new ClearAllEffectsConsumeEffect(), new ToutoshiEffectsConsumeEffect()));
+  public static final TagKey<Item> BADGE_TAG = TagKey.of(RegistryKeys.ITEM, Hasugoods.id("badges"));
 
   public static final RegistryKey<Item> RURINO_BADGE_KEY = RegistryKey.of(RegistryKeys.ITEM,
       Hasugoods.id(OshiItem.RURINO_KEY + "_badge"));
@@ -60,9 +64,14 @@ public class BadgeItem extends OshiItem {
 
     // Modify loot tables to include the badges
     LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
-      if (source.isBuiltin() && ModConstants.BADGE_LOOT_TABLES.contains(key)) {
-        // Give 0~20 badges
-        LootPool.Builder poolBuilder = LootPool.builder().with(ItemEntry.builder(UNOPENED_BADGE).weight(10).quality(1));
+      // Add loot table to all chests.
+      if (source.isBuiltin() && key.getValue().getPath().startsWith("chests/")) {
+        // Give 0~3 badges, or 20 badges if really lucky.
+        LootPool.Builder poolBuilder = LootPool.builder()
+            .with(ItemEntry.builder(UNOPENED_BADGE).weight(98).quality(0)
+                .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0, 3))))
+            .with(ItemEntry.builder(UNOPENED_BADGE).weight(2).quality(0)
+                .apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(20))));
         tableBuilder.pool(poolBuilder);
       }
     });

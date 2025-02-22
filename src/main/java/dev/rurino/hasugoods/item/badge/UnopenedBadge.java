@@ -27,7 +27,6 @@ public class UnopenedBadge extends Item {
 
   @Override
   public ActionResult use(World world, PlayerEntity user, Hand hand) {
-    Hasugoods.LOGGER.info("UnopenedBadge#useOnBlock");
     if (world.isClient)
       return super.use(world, user, hand);
     ServerWorld serverWorld = (ServerWorld) world;
