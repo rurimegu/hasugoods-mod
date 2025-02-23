@@ -6,9 +6,15 @@
       "entries": [
         {
           "type": "minecraft:tag",
-          "name": "hasugoods:badges",
+          "name": "hasugoods:regular_badges",
           "expand": true,
-          "weight": 1
+          "weight": 96
+        },
+        {
+          "type": "minecraft:tag",
+          "name": "hasugoods:secret_badges",
+          "expand": true,
+          "weight": 4
         }
       ]
     }
