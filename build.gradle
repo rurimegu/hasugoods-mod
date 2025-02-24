@@ -114,7 +114,16 @@ publishing {
   }
 }
 
-def generatedOutputDir = file("${projectDir}/src/main/generatedJava/dev/rurino/hasugoods/util")
+tasks.compileJava {
+  options.generatedSourceOutputDirectory = file("${projectDir}/src/main/generatedJava")
+
+  doLast {
+    mkdir("${projectDir}/src/main/generatedJava/dev/rurino/hasugoods/util/")
+    file("${projectDir}/src/main/generatedJava/HasuConfig.java").renameTo(file("${projectDir}/src/main/generatedJava/dev/rurino/hasugoods/util/HasuConfig.java"))
+  }
+}
+
+tasks.sourcesJar.dependsOn compileJava
 
 sourceSets {
   main {
@@ -122,12 +131,4 @@ sourceSets {
       srcDirs += "src/main/generatedJava"
     }
   }
-}
-
-tasks.named("compileJava") {
-  options.generatedSourceOutputDirectory = generatedOutputDir
-}
-
-tasks.named("sourcesJar").configure {
-  dependsOn("compileJava")
 }
