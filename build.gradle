@@ -124,10 +124,10 @@ sourceSets {
   }
 }
 
-tasks.withType(JavaCompile) {
+tasks.named("compileJava") {
   options.generatedSourceOutputDirectory = generatedOutputDir
 }
 
 tasks.named("sourcesJar").configure {
-  dependsOn("compileTestJava")
+  dependsOn("compileJava")
 }
