@@ -4,7 +4,14 @@
 # against bad commits.
 
 name: build
-on: [pull_request, push]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
   build:
@@ -35,3 +42,9 @@ jobs:
         with:
           name: Artifacts
           path: build/libs/
+      - name: upload build reports
+        if: ${{ matrix.java == '21' }} # Only upload artifacts built from latest java
+        uses: actions/upload-artifact@v4
+        with:
+          name: Reports
+          path: build/reports/
