@@ -113,22 +113,3 @@ publishing {
     // retrieving dependencies.
   }
 }
-
-tasks.withType(JavaCompile) {
-  options.generatedSourceOutputDirectory = file("${projectDir}/src/main/generatedJava")
-
-  doLast {
-    mkdir("${projectDir}/src/main/generatedJava/dev/rurino/hasugoods/util/")
-    file("${projectDir}/src/main/generatedJava/HasuConfig.java").renameTo(file("${projectDir}/src/main/generatedJava/dev/rurino/hasugoods/util/HasuConfig.java"))
-  }
-}
-
-tasks.sourcesJar.dependsOn tasks.withType(JavaCompile)
-
-sourceSets {
-  main {
-    java {
-      srcDirs += "src/main/generatedJava"
-    }
-  }
-}
