@@ -9,9 +9,12 @@ import org.slf4j.LoggerFactory;
 import dev.rurino.hasugoods.damage.ModDamageTypes;
 import dev.rurino.hasugoods.effect.ModEffects;
 import dev.rurino.hasugoods.item.ModItems;
+import dev.rurino.hasugoods.util.HasuConfig;
 
 public class Hasugoods implements ModInitializer {
   public static final String MOD_ID = "hasugoods";
+
+  public static final HasuConfig CONFIG = HasuConfig.createAndLoad();
 
   // This logger is used to write text to the console and the log file.
   // It is considered best practice to use your mod id as the logger's name.

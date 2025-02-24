@@ -5,7 +5,6 @@ import java.util.Optional;
 import com.mojang.serialization.MapCodec;
 
 import dev.rurino.hasugoods.Hasugoods;
-import dev.rurino.hasugoods.ModConstants;
 import dev.rurino.hasugoods.component.IToutoshiComponent;
 import dev.rurino.hasugoods.component.ModComponents;
 import dev.rurino.hasugoods.item.OshiItem;
@@ -42,6 +41,7 @@ public record ToutoshiEffectsConsumeEffect() implements ConsumeEffect {
     }
     toutoshiComponent.get().setToutoshiSourceItem((OshiItem) item);
     return user
-        .addStatusEffect(new StatusEffectInstance(ModEffects.OSHI_PROTECTION, ModConstants.TOUTOSHI_EFFECT_DURATION));
+        .addStatusEffect(
+            new StatusEffectInstance(ModEffects.OSHI_PROTECTION, Hasugoods.CONFIG.oshiProtectionDuration()));
   }
 }
