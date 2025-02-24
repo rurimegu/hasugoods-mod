@@ -17,7 +17,6 @@ import net.minecraft.item.consume.ConsumeEffect;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.function.SetCountLootFunction;
-import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 import net.minecraft.loot.provider.number.UniformLootNumberProvider;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -81,8 +80,7 @@ public class BadgeItem extends OshiItem {
         LootPool.Builder poolBuilder = LootPool.builder()
             .with(ItemEntry.builder(UNOPENED_BADGE).weight(95).quality(0)
                 .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0, 3))))
-            .with(ItemEntry.builder(UNOPENED_BADGE).weight(5).quality(0)
-                .apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(16))));
+            .with(ItemEntry.builder(ModItems.BOX_OF_BADGE).weight(5).quality(0));
         tableBuilder.pool(poolBuilder);
       }
     });
