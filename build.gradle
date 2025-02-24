@@ -114,7 +114,7 @@ publishing {
   }
 }
 
-tasks.compileJava {
+tasks.withType(JavaCompile) {
   options.generatedSourceOutputDirectory = file("${projectDir}/src/main/generatedJava")
 
   doLast {
@@ -123,7 +123,7 @@ tasks.compileJava {
   }
 }
 
-tasks.sourcesJar.dependsOn compileJava
+tasks.sourcesJar.dependsOn tasks.withType(JavaCompile)
 
 sourceSets {
   main {
