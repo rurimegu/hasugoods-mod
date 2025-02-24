@@ -116,15 +116,6 @@ publishing {
 
 def generatedOutputDir = file("${projectDir}/src/main/generatedJava/dev/rurino/hasugoods/util")
 
-compileJava {
-  doFirst {
-    generatedOutputDir.exists() || generatedOutputDir.mkdirs()
-    options.compilerArgs = [
-      '-s', "${generatedOutputDir}"
-    ]
-  }
-}
-
 sourceSets {
   main {
     java {
@@ -133,6 +124,10 @@ sourceSets {
   }
 }
 
+tasks.withType(JavaCompile) {
+  options.generatedSourceOutputDirectory = generatedOutputDir
+}
+
 tasks.named("sourcesJar").configure {
-  dependsOn("compileJava")
+  dependsOn("compileTestJava")
 }

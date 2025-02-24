@@ -15,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.consume.ClearAllEffectsConsumeEffect;
 import net.minecraft.item.consume.ConsumeEffect;
 import net.minecraft.loot.LootPool;
+import net.minecraft.loot.entry.EmptyEntry;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.function.SetCountLootFunction;
 import net.minecraft.loot.provider.number.UniformLootNumberProvider;
@@ -27,7 +28,8 @@ public class BadgeItem extends OshiItem {
   // #region Static fields
   public static final DeathProtectionComponent HASU_BADGE_DEATH_PROTECTION = new DeathProtectionComponent(
       List.<ConsumeEffect>of(new ClearAllEffectsConsumeEffect(), new ToutoshiEffectsConsumeEffect()));
-  public static final TagKey<Item> BADGE_TAG = TagKey.of(RegistryKeys.ITEM, Hasugoods.id("badges"));
+  public static final TagKey<Item> REGULAR_BADGE_TAG = TagKey.of(RegistryKeys.ITEM, Hasugoods.id("regular_badges"));
+  public static final TagKey<Item> SECRET_BADGE_TAG = TagKey.of(RegistryKeys.ITEM, Hasugoods.id("secret_badges"));
 
   public static final RegistryKey<Item> RURINO_BADGE_KEY = RegistryKey.of(RegistryKeys.ITEM,
       Hasugoods.id(OshiItem.RURINO_KEY + "_badge"));
@@ -78,9 +80,12 @@ public class BadgeItem extends OshiItem {
       if (source.isBuiltin() && key.getValue().getPath().startsWith("chests/")) {
         // Give 0~3 badges, or 20 badges if really lucky.
         LootPool.Builder poolBuilder = LootPool.builder()
-            .with(ItemEntry.builder(UNOPENED_BADGE).weight(95).quality(0)
-                .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0, 3))))
-            .with(ItemEntry.builder(ModItems.BOX_OF_BADGE).weight(5).quality(0));
+            .with(EmptyEntry.builder().weight(Hasugoods.CONFIG.chestEmptyDropWeight()))
+            .with(ItemEntry.builder(UNOPENED_BADGE).weight(Hasugoods.CONFIG.chestBadgeDropWeight())
+                .apply(SetCountLootFunction
+                    .builder(UniformLootNumberProvider.create(Hasugoods.CONFIG.chestBadgeDropMinCount(),
+                        Hasugoods.CONFIG.chestBadgeDropMaxCount()))))
+            .with(ItemEntry.builder(ModItems.BOX_OF_BADGE).weight(Hasugoods.CONFIG.chestBoxDropWeight()));
         tableBuilder.pool(poolBuilder);
       }
     });
