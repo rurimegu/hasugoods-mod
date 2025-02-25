@@ -118,14 +118,23 @@ sourceSets {
   main {
     java {
       srcDirs += "dev/generatedJava"
+      exclude "dev/rurino/hasugoods/util/HasuConfig.java"
     }
   }
 }
 
-task vscodeCopyProcessedAnnotations(type: Copy) {
+task vscodeCopyProcessedAnnotations {
   group "ide"
 
-  from 'build/generated/sources/annotationProcessor/java/main/'
-  into "dev/generatedJava/dev/rurino/hasugoods/util" // Copies to build/copiedSources
-  include '**/*.java'
+  copy {
+    from "build/generated/sources/annotationProcessor/java/main/"
+    into "dev/generatedJava/dev/rurino/hasugoods/util"
+    include '**/*.java'
+  }
+
+  copy {
+    from "bin/generated-sources/annotations/"
+    into "dev/generatedJava/dev/rurino/hasugoods/util"
+    include '**/*.java'
+  }
 }
