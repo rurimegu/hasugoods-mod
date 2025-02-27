@@ -10,10 +10,18 @@ public class ItemStackUtils {
     while (remainingCount > 0) {
       int giveCount = Math.min(remainingCount, item.getMaxCount());
       ItemStack stack = new ItemStack(item, giveCount);
-      if (!player.giveItemStack(stack)) {
-        player.dropItem(stack, false);
-      }
+      giveItemsToPlayerOrDrop(player, stack);
       remainingCount -= giveCount;
+    }
+  }
+
+  public static void giveItemsToPlayerOrDrop(PlayerEntity player, Item item) {
+    giveItemsToPlayerOrDrop(player, item, 1);
+  }
+
+  public static void giveItemsToPlayerOrDrop(PlayerEntity player, ItemStack stack) {
+    if (!player.giveItemStack(stack)) {
+      player.dropItem(stack, false);
     }
   }
 }

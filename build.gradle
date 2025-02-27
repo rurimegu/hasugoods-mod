@@ -123,7 +123,7 @@ sourceSets {
   }
 }
 
-task vscodeCopyProcessedAnnotations {
+task copyProcessedAnnotations {
   group "ide"
 
   copy {

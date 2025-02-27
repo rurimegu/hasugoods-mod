@@ -7,6 +7,7 @@ import org.ladysnake.cca.api.v3.entity.EntityComponentInitializer;
 
 import dev.rurino.hasugoods.Hasugoods;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 
 public class ModComponents implements EntityComponentInitializer {
 
@@ -14,9 +15,14 @@ public class ModComponents implements EntityComponentInitializer {
       Hasugoods.id("toutoshi"),
       IToutoshiComponent.class);
 
+  public static final ComponentKey<IOshiComponent> OSHI = ComponentRegistry.getOrCreate(
+      Hasugoods.id("oshi"),
+      IOshiComponent.class);
+
   @Override
   public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
     Hasugoods.LOGGER.info("Registering mod components");
-    registry.registerFor(LivingEntity.class, TOUTOSHI, ToutoshiComponent::new);
+    registry.registerFor(PlayerEntity.class, TOUTOSHI, ToutoshiComponent::new);
+    registry.registerFor(LivingEntity.class, OSHI, OshiComponent::new);
   }
 }

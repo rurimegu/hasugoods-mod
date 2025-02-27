@@ -1,6 +1,9 @@
 package dev.rurino.hasugoods.item.badge;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.google.common.collect.ImmutableSet;
 
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.effect.ToutoshiEffectsConsumeEffect;
@@ -8,6 +11,7 @@ import dev.rurino.hasugoods.item.ModItems;
 import dev.rurino.hasugoods.item.OshiItem;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
+import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.DeathProtectionComponent;
 import net.minecraft.item.Item;
@@ -23,6 +27,7 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Rarity;
+import net.minecraft.village.VillagerProfession;
 
 public class BadgeItem extends OshiItem {
   // #region Static fields
@@ -30,6 +35,31 @@ public class BadgeItem extends OshiItem {
       List.<ConsumeEffect>of(new ClearAllEffectsConsumeEffect(), new ToutoshiEffectsConsumeEffect()));
   public static final TagKey<Item> REGULAR_BADGE_TAG = TagKey.of(RegistryKeys.ITEM, Hasugoods.id("regular_badges"));
   public static final TagKey<Item> SECRET_BADGE_TAG = TagKey.of(RegistryKeys.ITEM, Hasugoods.id("secret_badges"));
+
+  public static final ImmutableSet<VillagerProfession> BADGE_TRADE_VILLAGER_PROFESSIONS = ImmutableSet
+      .of(VillagerProfession.ARMORER,
+          VillagerProfession.BUTCHER,
+          VillagerProfession.CARTOGRAPHER,
+          VillagerProfession.CLERIC,
+          VillagerProfession.FARMER,
+          VillagerProfession.FISHERMAN,
+          VillagerProfession.FLETCHER,
+          VillagerProfession.TOOLSMITH,
+          VillagerProfession.LEATHERWORKER,
+          VillagerProfession.LIBRARIAN,
+          VillagerProfession.MASON,
+          VillagerProfession.NITWIT,
+          VillagerProfession.SHEPHERD,
+          VillagerProfession.WEAPONSMITH);
+
+  public static final ImmutableSet<VillagerProfession> UNOPENED_BADGE_TRADE_VILLAGER_PROFESSIONS = ImmutableSet
+      .of(VillagerProfession.ARMORER,
+          VillagerProfession.CLERIC,
+          VillagerProfession.TOOLSMITH,
+          VillagerProfession.LIBRARIAN,
+          VillagerProfession.WEAPONSMITH);
+  public static final ArrayList<BadgeItem> ALL_REGULAR_BADGES = new ArrayList<BadgeItem>();
+  public static final ArrayList<BadgeItem> ALL_SECRET_BADGES = new ArrayList<BadgeItem>();
 
   public static final RegistryKey<Item> RURINO_BADGE_KEY = RegistryKey.of(RegistryKeys.ITEM,
       Hasugoods.id(OshiItem.RURINO_KEY + "_badge"));
@@ -51,12 +81,23 @@ public class BadgeItem extends OshiItem {
       new UnopenedBadge(new Item.Settings().maxCount(16).rarity(Rarity.COMMON).registryKey(UNOPENED_BADGE_KEY)),
       UNOPENED_BADGE_KEY);
 
+  public static final RegistryKey<Item> BOX_OF_BADGE_KEY = RegistryKey.of(RegistryKeys.ITEM,
+      Hasugoods.id("box_of_badge"));
+  public static final Item BOX_OF_BADGE = ModItems.register(
+      new BoxOfBadgeItem(new Item.Settings().maxCount(1).rarity(Rarity.UNCOMMON)
+          .registryKey(BOX_OF_BADGE_KEY)),
+      BOX_OF_BADGE_KEY);
+
   private static Item registerBadge(RegistryKey<Item> key, String oshiKey, boolean isSecret) {
     Item item = ModItems.register(
         new BadgeItem(new Settings().maxCount(16).rarity(isSecret ? Rarity.UNCOMMON : Rarity.COMMON)
             .component(DataComponentTypes.DEATH_PROTECTION, HASU_BADGE_DEATH_PROTECTION)
             .registryKey(key), oshiKey, isSecret),
         key);
+    if (isSecret)
+      ALL_SECRET_BADGES.add((BadgeItem) item);
+    else
+      ALL_REGULAR_BADGES.add((BadgeItem) item);
     return item;
   }
 
@@ -85,17 +126,44 @@ public class BadgeItem extends OshiItem {
                 .apply(SetCountLootFunction
                     .builder(UniformLootNumberProvider.create(Hasugoods.CONFIG.chestBadgeDropMinCount(),
                         Hasugoods.CONFIG.chestBadgeDropMaxCount()))))
-            .with(ItemEntry.builder(ModItems.BOX_OF_BADGE).weight(Hasugoods.CONFIG.chestBoxDropWeight()));
+            .with(ItemEntry.builder(BOX_OF_BADGE).weight(Hasugoods.CONFIG.chestBoxDropWeight()));
         tableBuilder.pool(poolBuilder);
       }
+    });
+
+    // Add villager trades
+    for (var profession : BADGE_TRADE_VILLAGER_PROFESSIONS) {
+      TradeOfferHelper.registerVillagerOffers(profession, 1, factories -> {
+        factories.add(new BadgeTradeOffers.Trade());
+        factories.add(new BadgeTradeOffers.Buy());
+        factories.add(new BadgeTradeOffers.Sell());
+      });
+    }
+
+    for (var profession : UNOPENED_BADGE_TRADE_VILLAGER_PROFESSIONS) {
+      TradeOfferHelper.registerVillagerOffers(profession, 1, factories -> {
+        factories.add(new BadgeTradeOffers.SellPacket());
+      });
+      TradeOfferHelper.registerVillagerOffers(profession, 3, factories -> {
+        factories.add(new BadgeTradeOffers.SellBox());
+      });
+    }
+
+    // Add wandering trader trades
+    TradeOfferHelper.registerWanderingTraderOffers(1, factories -> {
+      factories.add(new BadgeTradeOffers.Sell());
+      factories.add(new BadgeTradeOffers.SellPacket());
+    });
+    TradeOfferHelper.registerWanderingTraderOffers(3, factories -> {
+      factories.add(new BadgeTradeOffers.SellBox());
     });
   }
   // #endregion Static fields
 
   private final boolean isSecret;
 
-  public BadgeItem(Settings settings, String oshiName, boolean isSecret) {
-    super(settings, oshiName);
+  public BadgeItem(Settings settings, String oshiKey, boolean isSecret) {
+    super(settings, oshiKey);
     this.isSecret = isSecret;
   }
 
