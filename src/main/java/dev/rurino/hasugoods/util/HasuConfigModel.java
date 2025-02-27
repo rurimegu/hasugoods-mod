@@ -39,8 +39,8 @@ public class HasuConfigModel {
     public float secretProb = 0.1f;
     public int maxUses = 12;
     public int secretMaxUses = 3;
-    public int regularPrice = 2;
-    public int secretPrice = 8;
+    public int regularPrice = 1;
+    public int secretPrice = 5;
   }
 
   public static class SellConfig {
@@ -49,7 +49,7 @@ public class HasuConfigModel {
     public float secretProb = 0.1f;
     public int maxUses = 12;
     public int secretMaxUses = 3;
-    public int regularPrice = 6;
+    public int regularPrice = 4;
     public int secretPrice = 30;
   }
 
@@ -62,7 +62,7 @@ public class HasuConfigModel {
   @Nest
   public SellConfig sell = new SellConfig();
 
-  public int unopenedPacketPrice = 5;
+  public int unopenedPacketPrice = 3;
   public int unopenedPacketMaxUses = 9;
   public float unopenedBoxDiscount = 0.1f;
   public int unopenedBoxMaxUses = 2;
