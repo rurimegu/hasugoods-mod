@@ -75,6 +75,55 @@ public class BadgeItem extends OshiItem {
       Hasugoods.id(OshiItem.MEGUMI_KEY + "_secret_badge"));
   public static final Item MEGUMI_SECRET_BADGE = registerSecretBadge(MEGUMI_SECRET_BADGE_KEY, OshiItem.MEGUMI_KEY);
 
+  public static final RegistryKey<Item> GINKO_BADGE_KEY = RegistryKey.of(RegistryKeys.ITEM,
+      Hasugoods.id(OshiItem.GINKO_KEY + "_badge"));
+  public static final Item GINKO_BADGE = registerBadge(GINKO_BADGE_KEY, OshiItem.GINKO_KEY);
+  public static final RegistryKey<Item> GINKO_SECRET_BADGE_KEY = RegistryKey.of(RegistryKeys.ITEM,
+      Hasugoods.id(OshiItem.GINKO_KEY + "_secret_badge"));
+  public static final Item GINKO_SECRET_BADGE = registerSecretBadge(GINKO_SECRET_BADGE_KEY, OshiItem.GINKO_KEY);
+
+  public static final RegistryKey<Item> HIME_BADGE_KEY = RegistryKey.of(RegistryKeys.ITEM,
+      Hasugoods.id(OshiItem.HIME_KEY + "_badge"));
+  public static final Item HIME_BADGE = registerBadge(HIME_BADGE_KEY, OshiItem.HIME_KEY);
+  public static final RegistryKey<Item> HIME_SECRET_BADGE_KEY = RegistryKey.of(RegistryKeys.ITEM,
+      Hasugoods.id(OshiItem.HIME_KEY + "_secret_badge"));
+  public static final Item HIME_SECRET_BADGE = registerSecretBadge(HIME_SECRET_BADGE_KEY, OshiItem.HIME_KEY);
+
+  public static final RegistryKey<Item> SAYAKA_BADGE_KEY = RegistryKey.of(RegistryKeys.ITEM,
+      Hasugoods.id(OshiItem.SAYAKA_KEY + "_badge"));
+  public static final Item SAYAKA_BADGE = registerBadge(SAYAKA_BADGE_KEY, OshiItem.SAYAKA_KEY);
+  public static final RegistryKey<Item> SAYAKA_SECRET_BADGE_KEY = RegistryKey.of(RegistryKeys.ITEM,
+      Hasugoods.id(OshiItem.SAYAKA_KEY + "_secret_badge"));
+  public static final Item SAYAKA_SECRET_BADGE = registerSecretBadge(SAYAKA_SECRET_BADGE_KEY, OshiItem.SAYAKA_KEY);
+
+  public static final RegistryKey<Item> TSUZURI_BADGE_KEY = RegistryKey.of(RegistryKeys.ITEM,
+      Hasugoods.id(OshiItem.TSUZURI_KEY + "_badge"));
+  public static final Item TSUZURI_BADGE = registerBadge(TSUZURI_BADGE_KEY, OshiItem.TSUZURI_KEY);
+  public static final RegistryKey<Item> TSUZURI_SECRET_BADGE_KEY = RegistryKey.of(RegistryKeys.ITEM,
+      Hasugoods.id(OshiItem.TSUZURI_KEY + "_secret_badge"));
+  public static final Item TSUZURI_SECRET_BADGE = registerSecretBadge(TSUZURI_SECRET_BADGE_KEY, OshiItem.TSUZURI_KEY);
+
+  public static final RegistryKey<Item> KOSUZU_BADGE_KEY = RegistryKey.of(RegistryKeys.ITEM,
+      Hasugoods.id(OshiItem.KOSUZU_KEY + "_badge"));
+  public static final Item KOSUZU_BADGE = registerBadge(KOSUZU_BADGE_KEY, OshiItem.KOSUZU_KEY);
+  public static final RegistryKey<Item> KOSUZU_SECRET_BADGE_KEY = RegistryKey.of(RegistryKeys.ITEM,
+      Hasugoods.id(OshiItem.KOSUZU_KEY + "_secret_badge"));
+  public static final Item KOSUZU_SECRET_BADGE = registerSecretBadge(KOSUZU_SECRET_BADGE_KEY, OshiItem.KOSUZU_KEY);
+
+  public static final RegistryKey<Item> KAHO_BADGE_KEY = RegistryKey.of(RegistryKeys.ITEM,
+      Hasugoods.id(OshiItem.KAHO_KEY + "_badge"));
+  public static final Item KAHO_BADGE = registerBadge(KAHO_BADGE_KEY, OshiItem.KAHO_KEY);
+  public static final RegistryKey<Item> KAHO_SECRET_BADGE_KEY = RegistryKey.of(RegistryKeys.ITEM,
+      Hasugoods.id(OshiItem.KAHO_KEY + "_secret_badge"));
+  public static final Item KAHO_SECRET_BADGE = registerSecretBadge(KAHO_SECRET_BADGE_KEY, OshiItem.KAHO_KEY);
+
+  public static final RegistryKey<Item> KOZUE_BADGE_KEY = RegistryKey.of(RegistryKeys.ITEM,
+      Hasugoods.id(OshiItem.KOZUE_KEY + "_badge"));
+  public static final Item KOZUE_BADGE = registerBadge(KOZUE_BADGE_KEY, OshiItem.KOZUE_KEY);
+  public static final RegistryKey<Item> KOZUE_SECRET_BADGE_KEY = RegistryKey.of(RegistryKeys.ITEM,
+      Hasugoods.id(OshiItem.KOZUE_KEY + "_secret_badge"));
+  public static final Item KOZUE_SECRET_BADGE = registerSecretBadge(KOZUE_SECRET_BADGE_KEY, OshiItem.KOZUE_KEY);
+
   public static final RegistryKey<Item> UNOPENED_BADGE_KEY = RegistryKey.of(RegistryKeys.ITEM,
       Hasugoods.id("unopened_badge"));
   public static final Item UNOPENED_BADGE = ModItems.register(

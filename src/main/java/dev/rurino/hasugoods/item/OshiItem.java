@@ -16,10 +16,16 @@ public class OshiItem extends Item {
   public static final String KAHO_KEY = "kaho";
   public static final String KOZUE_KEY = "kozue";
   public static final String GINKO_KEY = "ginko";
-  // TODO: Add more oshi keys
   public static final ImmutableList<String> ALL_OSHI_KEYS = ImmutableList.of(
       RURINO_KEY,
-      MEGUMI_KEY);
+      MEGUMI_KEY,
+      HIME_KEY,
+      SAYAKA_KEY,
+      TSUZURI_KEY,
+      KOSUZU_KEY,
+      KAHO_KEY,
+      KOZUE_KEY,
+      GINKO_KEY);
 
   private final String oshiKey;
 
