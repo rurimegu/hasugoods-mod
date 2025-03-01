@@ -8,6 +8,7 @@ public class HasuConfigModel {
   // #region Toutoshi
   public float toutoshiDamage = 1000f;
   public int oshiProtectionDuration = 2 * 20;
+  public int oshiSecretProtectionDuration = 10 * 20;
   // #endregion Toutoshi
 
   // #region Common

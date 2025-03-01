@@ -7,7 +7,7 @@ import com.mojang.serialization.MapCodec;
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.component.IToutoshiComponent;
 import dev.rurino.hasugoods.component.ModComponents;
-import dev.rurino.hasugoods.item.OshiItem;
+import dev.rurino.hasugoods.item.badge.BadgeItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.Item;
@@ -35,13 +35,14 @@ public record ToutoshiEffectsConsumeEffect() implements ConsumeEffect {
       return false;
     }
     Item item = stack.getItem();
-    if (!(item instanceof OshiItem)) {
-      Hasugoods.LOGGER.warn("Toutoshi source item is not an OshiItem: {}", item);
-      return false;
+    toutoshiComponent.get().setToutoshiSourceItem(item);
+    int duration = Hasugoods.CONFIG.oshiProtectionDuration();
+    if (item instanceof BadgeItem badgeItem && badgeItem.isSecret()) {
+      duration = Hasugoods.CONFIG.oshiSecretProtectionDuration();
     }
-    toutoshiComponent.get().setToutoshiSourceItem((OshiItem) item);
-    return user
-        .addStatusEffect(
-            new StatusEffectInstance(ModEffects.OSHI_PROTECTION, Hasugoods.CONFIG.oshiProtectionDuration()));
+    if (duration <= 0)
+      return false;
+
+    return user.addStatusEffect(new StatusEffectInstance(ModEffects.OSHI_PROTECTION, duration));
   }
 }

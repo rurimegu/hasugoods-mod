@@ -21,7 +21,7 @@ public class ModComponents implements EntityComponentInitializer {
 
   @Override
   public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
-    Hasugoods.LOGGER.info("Registering mod components");
+    Hasugoods.LOGGER.info("Register mod components");
     registry.registerFor(PlayerEntity.class, TOUTOSHI, ToutoshiComponent::new);
     registry.registerFor(LivingEntity.class, OSHI, OshiComponent::new);
   }

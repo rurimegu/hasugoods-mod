@@ -132,6 +132,8 @@ public class BadgeItem extends OshiItem {
       for (Item badgeItem : badgeItems) {
         itemGroup.add(badgeItem);
       }
+      itemGroup.add(UNOPENED_BADGE);
+      itemGroup.add(BOX_OF_BADGE);
     });
 
     // Modify loot tables to include the badges
