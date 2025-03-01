@@ -73,9 +73,17 @@ public class BadgeItem extends OshiItem {
         .map(entry -> entry.item);
   }
 
+  public static Optional<BadgeItem> getBadgeItem(String oshiKey) {
+    return getBadgeItem(oshiKey, false);
+  }
+
   public static Optional<RegistryKey<Item>> getBadgeItemKey(String oshiKey, boolean isSecret) {
     return Optional.ofNullable((isSecret ? ALL_SECRET_BADGES : ALL_REGULAR_BADGES).get(oshiKey))
         .map(entry -> entry.key);
+  }
+
+  public static Optional<RegistryKey<Item>> getBadgeItemKey(String oshiKey) {
+    return getBadgeItemKey(oshiKey, false);
   }
 
   public static List<BadgeItem> getAllBadges(boolean isSecret) {
