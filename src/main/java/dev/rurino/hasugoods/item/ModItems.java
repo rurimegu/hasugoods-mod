@@ -15,7 +15,7 @@ public class ModItems {
   public static final RegistryKey<ItemGroup> BADGE_ITEM_GROUP_KEY = RegistryKey.of(
       Registries.ITEM_GROUP.getKey(), Hasugoods.id("item_group"));
   public static final ItemGroup BADGE_ITEM_GROUP = FabricItemGroup.builder()
-      .icon(() -> new ItemStack(BadgeItem.RURINO_BADGE))
+      .icon(() -> new ItemStack(BadgeItem.BOX_OF_BADGE))
       .displayName(Text.translatable("itemGroup.hasugoods"))
       .build();
 

@@ -28,8 +28,8 @@ public class BadgeTradeOffers {
         return null;
       String oshiKey = oshiComponentOptional.get().getOshiKey();
       boolean isSecret = random.nextFloat() < Hasugoods.CONFIG.trade.secretProb();
-      Item toBuy = BadgeUtils.getBadgeByOshi(oshiKey, isSecret);
-      if (toBuy == null) {
+      Optional<BadgeItem> toBuy = BadgeItem.getBadgeItem(oshiKey, isSecret);
+      if (!toBuy.isPresent()) {
         Hasugoods.LOGGER.warn("Cannot trade: %s oshiKey is not found", oshiKey);
         return null;
       }
@@ -41,7 +41,7 @@ public class BadgeTradeOffers {
       int maxUses = random.nextBetween(1,
           isSecret ? Hasugoods.CONFIG.trade.secretMaxUses() : Hasugoods.CONFIG.trade.maxUses());
       return new TradeOffer(
-          new TradedItem(toBuy, 1),
+          new TradedItem(toBuy.get(), 1),
           new ItemStack(toSell, 1),
           maxUses, Hasugoods.CONFIG.trade.exp(), 1f);
     }
@@ -59,8 +59,8 @@ public class BadgeTradeOffers {
         return null;
       boolean isSecret = random.nextFloat() < Hasugoods.CONFIG.buy.secretProb();
       String oshiKey = oshiComponentOptional.get().getOshiKey();
-      Item toBuy = BadgeUtils.getBadgeByOshi(oshiKey, isSecret);
-      if (toBuy == null) {
+      Optional<BadgeItem> toBuy = BadgeItem.getBadgeItem(oshiKey, isSecret);
+      if (!toBuy.isPresent()) {
         Hasugoods.LOGGER.warn("Cannot buy: %s oshiKey is not found", oshiKey);
         return null;
       }
@@ -68,7 +68,7 @@ public class BadgeTradeOffers {
           isSecret ? Hasugoods.CONFIG.buy.secretMaxUses() : Hasugoods.CONFIG.buy.maxUses());
       int price = isSecret ? Hasugoods.CONFIG.buy.secretPrice() : Hasugoods.CONFIG.buy.regularPrice();
       return new TradeOffer(
-          new TradedItem(toBuy, 1),
+          new TradedItem(toBuy.get(), 1),
           new ItemStack(Items.EMERALD, price),
           maxUses, Hasugoods.CONFIG.buy.exp(), 1f);
     }
