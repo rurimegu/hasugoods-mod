@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import dev.rurino.hasugoods.damage.ModDamageTypes;
 import dev.rurino.hasugoods.effect.ModEffects;
+import dev.rurino.hasugoods.entity.ModEntities;
 import dev.rurino.hasugoods.item.ModItems;
 import dev.rurino.hasugoods.util.HasuConfig;
 
@@ -36,5 +37,6 @@ public class Hasugoods implements ModInitializer {
     ModItems.initialize();
     ModDamageTypes.initialize();
     ModEffects.initialize();
+    ModEntities.initialize();
   }
 }

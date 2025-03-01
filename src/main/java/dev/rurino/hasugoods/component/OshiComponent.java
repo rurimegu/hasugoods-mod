@@ -2,8 +2,8 @@ package dev.rurino.hasugoods.component;
 
 import org.apache.commons.lang3.StringUtils;
 
-import dev.rurino.hasugoods.item.OshiItem;
 import dev.rurino.hasugoods.util.CollectionUtils;
+import dev.rurino.hasugoods.util.OshiUtils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper.WrapperLookup;
@@ -15,7 +15,7 @@ public class OshiComponent implements IOshiComponent {
 
   public OshiComponent(LivingEntity provider) {
     this.provider = provider;
-    this.oshiKey = CollectionUtils.getRandomElement(OshiItem.ALL_OSHI_KEYS, provider.getRandom());
+    this.oshiKey = CollectionUtils.getRandomElement(OshiUtils.ALL_OSHI_KEYS, provider.getRandom());
   }
 
   @Override
