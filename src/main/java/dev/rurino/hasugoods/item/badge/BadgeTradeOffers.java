@@ -5,7 +5,7 @@ import java.util.Optional;
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.component.IOshiComponent;
 import dev.rurino.hasugoods.component.ModComponents;
-import dev.rurino.hasugoods.util.BadgeUtils;
+import dev.rurino.hasugoods.util.OshiUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -33,7 +33,7 @@ public class BadgeTradeOffers {
         Hasugoods.LOGGER.warn("Cannot trade: %s oshiKey is not found", oshiKey);
         return null;
       }
-      Item toSell = BadgeUtils.getRandomBadge(random, isSecret, oshiKey);
+      Item toSell = OshiUtils.getRandomBadge(random, isSecret, oshiKey);
       if (toSell == null) {
         Hasugoods.LOGGER.warn("Cannot trade: no candidate after excluding %s", oshiKey);
         return null;
@@ -86,7 +86,7 @@ public class BadgeTradeOffers {
         return null;
       boolean isSecret = random.nextFloat() < Hasugoods.CONFIG.sell.secretProb();
       String oshiKey = oshiComponentOptional.get().getOshiKey();
-      Item toSell = BadgeUtils.getRandomBadge(random, isSecret, oshiKey);
+      Item toSell = OshiUtils.getRandomBadge(random, isSecret, oshiKey);
       if (toSell == null) {
         Hasugoods.LOGGER.warn("Cannot sell: no candidate after excluding %s", oshiKey);
         return null;

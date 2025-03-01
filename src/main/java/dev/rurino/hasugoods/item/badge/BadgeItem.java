@@ -12,6 +12,7 @@ import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.effect.ToutoshiEffectsConsumeEffect;
 import dev.rurino.hasugoods.item.ModItems;
 import dev.rurino.hasugoods.item.OshiItem;
+import dev.rurino.hasugoods.util.OshiUtils;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
@@ -104,7 +105,9 @@ public class BadgeItem extends OshiItem {
           .registryKey(BOX_OF_BADGE_KEY)),
       BOX_OF_BADGE_KEY);
 
-  private static Item registerBadge(RegistryKey<Item> key, String oshiKey, boolean isSecret) {
+  private static Item registerBadge(String oshiKey, boolean isSecret) {
+    RegistryKey<Item> key = RegistryKey.of(RegistryKeys.ITEM,
+        Hasugoods.id(oshiKey + (isSecret ? "_secret" : "") + "_badge"));
     Item item = ModItems.register(
         new BadgeItem(new Settings().maxCount(16).rarity(isSecret ? Rarity.UNCOMMON : Rarity.COMMON)
             .component(DataComponentTypes.DEATH_PROTECTION, HASU_BADGE_DEATH_PROTECTION)
@@ -120,11 +123,9 @@ public class BadgeItem extends OshiItem {
   public static void initialize() {
     // Register badges
     List<Item> badgeItems = new ArrayList<Item>();
-    for (String oshiKey : OshiItem.ALL_OSHI_KEYS) {
-      badgeItems.add(
-          registerBadge(RegistryKey.of(RegistryKeys.ITEM, Hasugoods.id(oshiKey + "_badge")), oshiKey, false));
-      badgeItems.add(
-          registerBadge(RegistryKey.of(RegistryKeys.ITEM, Hasugoods.id(oshiKey + "_secret_badge")), oshiKey, true));
+    for (String oshiKey : OshiUtils.ALL_OSHI_KEYS) {
+      badgeItems.add(registerBadge(oshiKey, false));
+      badgeItems.add(registerBadge(oshiKey, true));
     }
 
     // Add the badge to the badge item group
