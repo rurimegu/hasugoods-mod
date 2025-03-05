@@ -8,10 +8,11 @@ import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.TridentItem;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.Text;
 
 public class ModItems {
@@ -21,6 +22,9 @@ public class ModItems {
       .icon(() -> new ItemStack(BadgeItem.getBadgeItem(OshiUtils.RURINO_KEY).get()))
       .displayName(Text.translatable("itemGroup.hasugoods"))
       .build();
+
+  public static final TagKey<Item> REGULAR_BADGE_TAG = TagKey.of(RegistryKeys.ITEM, Hasugoods.id("regular_badges"));
+  public static final TagKey<Item> SECRET_BADGE_TAG = TagKey.of(RegistryKeys.ITEM, Hasugoods.id("secret_badges"));
 
   public static Item register(RegistryKey<Item> registryKey, Item item) {
     Hasugoods.LOGGER.info("Register item: " + registryKey.getValue());

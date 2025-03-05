@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -29,7 +30,6 @@ import net.minecraft.loot.function.SetCountLootFunction;
 import net.minecraft.loot.provider.number.UniformLootNumberProvider;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Rarity;
 import net.minecraft.village.VillagerProfession;
 
@@ -37,8 +37,6 @@ public class BadgeItem extends OshiItem {
   // #region Static fields
   public static final DeathProtectionComponent HASU_BADGE_DEATH_PROTECTION = new DeathProtectionComponent(
       List.<ConsumeEffect>of(new ClearAllEffectsConsumeEffect(), new ToutoshiEffectsConsumeEffect()));
-  public static final TagKey<Item> REGULAR_BADGE_TAG = TagKey.of(RegistryKeys.ITEM, Hasugoods.id("regular_badges"));
-  public static final TagKey<Item> SECRET_BADGE_TAG = TagKey.of(RegistryKeys.ITEM, Hasugoods.id("secret_badges"));
 
   public static final ImmutableSet<VillagerProfession> BADGE_TRADE_VILLAGER_PROFESSIONS = ImmutableSet
       .of(VillagerProfession.ARMORER,
@@ -88,8 +86,13 @@ public class BadgeItem extends OshiItem {
   }
 
   public static List<BadgeItem> getAllBadges(boolean isSecret) {
-    return new ArrayList<BadgeItem>((isSecret ? ALL_SECRET_BADGES : ALL_REGULAR_BADGES).values().stream()
-        .map(entry -> entry.item).toList());
+    return (isSecret ? ALL_SECRET_BADGES : ALL_REGULAR_BADGES).values().stream()
+        .map(entry -> entry.item).toList();
+  }
+
+  public static List<BadgeItem> getAllBadges() {
+    return Stream.concat(ALL_REGULAR_BADGES.values().stream(), ALL_SECRET_BADGES.values().stream())
+        .map(entry -> entry.item).toList();
   }
 
   public static final RegistryKey<Item> UNOPENED_BADGE_KEY = RegistryKey.of(RegistryKeys.ITEM,

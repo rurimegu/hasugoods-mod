@@ -3,6 +3,7 @@ package dev.rurino.hasugoods.item.badge;
 import java.util.List;
 
 import dev.rurino.hasugoods.Hasugoods;
+import dev.rurino.hasugoods.item.ModItems;
 import dev.rurino.hasugoods.util.ItemStackUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -21,8 +22,8 @@ public class UnopenedBadge extends Item {
 
   protected static final LootTable BADGE_LOOT_TABLE = LootTable.builder().type(LootContextTypes.EMPTY).pool(
       LootPool.builder()
-          .with(TagEntry.expandBuilder(BadgeItem.REGULAR_BADGE_TAG).weight(Hasugoods.CONFIG.regularBadgeDropWeight()))
-          .with(TagEntry.expandBuilder(BadgeItem.SECRET_BADGE_TAG).weight(Hasugoods.CONFIG.secretBadgeDropWeight()))
+          .with(TagEntry.expandBuilder(ModItems.REGULAR_BADGE_TAG).weight(Hasugoods.CONFIG.regularBadgeDropWeight()))
+          .with(TagEntry.expandBuilder(ModItems.SECRET_BADGE_TAG).weight(Hasugoods.CONFIG.secretBadgeDropWeight()))
           .build())
       .build();
 
