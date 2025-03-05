@@ -94,25 +94,23 @@ public class BadgeItem extends OshiItem {
 
   public static final RegistryKey<Item> UNOPENED_BADGE_KEY = RegistryKey.of(RegistryKeys.ITEM,
       Hasugoods.id("unopened_badge"));
-  public static final Item UNOPENED_BADGE = ModItems.register(
-      new UnopenedBadge(new Item.Settings().maxCount(16).rarity(Rarity.COMMON).registryKey(UNOPENED_BADGE_KEY)),
-      UNOPENED_BADGE_KEY);
+  public static final Item UNOPENED_BADGE = ModItems.register(UNOPENED_BADGE_KEY,
+      new UnopenedBadge(new Item.Settings().maxCount(16).rarity(Rarity.COMMON).registryKey(UNOPENED_BADGE_KEY)));
 
   public static final RegistryKey<Item> BOX_OF_BADGE_KEY = RegistryKey.of(RegistryKeys.ITEM,
       Hasugoods.id("box_of_badge"));
-  public static final Item BOX_OF_BADGE = ModItems.register(
+  public static final Item BOX_OF_BADGE = ModItems.register(BOX_OF_BADGE_KEY,
       new BoxOfBadgeItem(new Item.Settings().maxCount(1).rarity(Rarity.UNCOMMON)
-          .registryKey(BOX_OF_BADGE_KEY)),
-      BOX_OF_BADGE_KEY);
+          .registryKey(BOX_OF_BADGE_KEY)));
 
   private static Item registerBadge(String oshiKey, boolean isSecret) {
     RegistryKey<Item> key = RegistryKey.of(RegistryKeys.ITEM,
         Hasugoods.id(oshiKey + (isSecret ? "_secret" : "") + "_badge"));
     Item item = ModItems.register(
+        key,
         new BadgeItem(new Settings().maxCount(16).rarity(isSecret ? Rarity.UNCOMMON : Rarity.COMMON)
             .component(DataComponentTypes.DEATH_PROTECTION, HASU_BADGE_DEATH_PROTECTION)
-            .registryKey(key), oshiKey, isSecret),
-        key);
+            .registryKey(key), oshiKey, isSecret));
     if (isSecret)
       ALL_SECRET_BADGES.put(oshiKey, new BadgeItemEntry(key, (BadgeItem) item));
     else

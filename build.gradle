@@ -25,6 +25,11 @@ repositories {
     name = "owo-lib"
     url = "https://maven.wispforest.io"
   }
+
+  maven {
+      name = "FelNull Maven"
+      url = "https://maven.felnull.dev"
+  }
 }
 
 loom {
@@ -66,6 +71,11 @@ dependencies {
   modImplementation "io.wispforest:owo-lib:${project.owo_version}"
   annotationProcessor "io.wispforest:owo-lib:${project.owo_version}"
   include "io.wispforest:owo-sentinel:${project.owo_version}"
+
+  // Special Model Loader
+  modApi "dev.felnull:special-model-loader:${project.sml_version}"
+  //Required if you want this mod to be embedded by jar-in-jar
+  include "dev.felnull:special-model-loader:${project.sml_version}"
 }
 
 processResources {

@@ -30,12 +30,12 @@ public class BadgeTradeOffers {
       boolean isSecret = random.nextFloat() < Hasugoods.CONFIG.trade.secretProb();
       Optional<BadgeItem> toBuy = BadgeItem.getBadgeItem(oshiKey, isSecret);
       if (!toBuy.isPresent()) {
-        Hasugoods.LOGGER.warn("Cannot trade: %s oshiKey is not found", oshiKey);
+        Hasugoods.LOGGER.warn("Cannot trade: {} oshiKey is not found", oshiKey);
         return null;
       }
       Item toSell = OshiUtils.getRandomBadge(random, isSecret, oshiKey);
       if (toSell == null) {
-        Hasugoods.LOGGER.warn("Cannot trade: no candidate after excluding %s", oshiKey);
+        Hasugoods.LOGGER.warn("Cannot trade: no candidate after excluding {}", oshiKey);
         return null;
       }
       int maxUses = random.nextBetween(1,
@@ -61,7 +61,7 @@ public class BadgeTradeOffers {
       String oshiKey = oshiComponentOptional.get().getOshiKey();
       Optional<BadgeItem> toBuy = BadgeItem.getBadgeItem(oshiKey, isSecret);
       if (!toBuy.isPresent()) {
-        Hasugoods.LOGGER.warn("Cannot buy: %s oshiKey is not found", oshiKey);
+        Hasugoods.LOGGER.warn("Cannot buy: {} oshiKey is not found", oshiKey);
         return null;
       }
       int maxUses = random.nextBetween(1,
@@ -88,7 +88,7 @@ public class BadgeTradeOffers {
       String oshiKey = oshiComponentOptional.get().getOshiKey();
       Item toSell = OshiUtils.getRandomBadge(random, isSecret, oshiKey);
       if (toSell == null) {
-        Hasugoods.LOGGER.warn("Cannot sell: no candidate after excluding %s", oshiKey);
+        Hasugoods.LOGGER.warn("Cannot sell: no candidate after excluding {}", oshiKey);
         return null;
       }
       int maxUses = random.nextBetween(1,

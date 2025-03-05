@@ -10,9 +10,9 @@ import dev.rurino.hasugoods.Hasugoods;
 
 @Mixin(LivingEntity.class)
 public class LivingEntityMixin {
-	// @Inject(at = @At("HEAD"), method =
-	// "hasStatusEffect(Lnet/minecraft/registry/entry/RegistryEntry)Z")
-	// private void hasStatusEffect(CallbackInfo info) {
-	// Hasugoods.LOGGER.info("hasStatusEffect mixin");
-	// }
+  // @Inject(at = @At("HEAD"), method =
+  // "hasStatusEffect(Lnet/minecraft/registry/entry/RegistryEntry)Z")
+  // private void hasStatusEffect(CallbackInfo info) {
+  // Hasugoods.LOGGER.info("hasStatusEffect mixin");
+  // }
 }

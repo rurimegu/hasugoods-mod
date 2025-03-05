@@ -5,7 +5,9 @@ import java.util.stream.Stream;
 
 import com.google.common.collect.ImmutableList;
 
+import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.item.badge.BadgeItem;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.random.Random;
 
 public class OshiUtils {
@@ -29,6 +31,11 @@ public class OshiUtils {
       KOZUE_KEY,
       GINKO_KEY);
 
+  public static Text getOshiDisplayName(String oshiKey) {
+    return Text.translatable(String.format("text.%s.%s", Hasugoods.MOD_ID, oshiKey));
+  }
+
+  // #region Badge
   public static BadgeItem getRandomBadge(Random random, boolean isSecret, String... excludes) {
     List<BadgeItem> badgeList = BadgeItem.getAllBadges(isSecret)
         .stream()
@@ -36,4 +43,17 @@ public class OshiUtils {
         .toList();
     return CollectionUtils.getRandomElement(badgeList, random);
   }
+  // #endregion Badge
+
+  // #region Neso
+  public static enum NesoSize {
+    SMALL,
+    MEDIUM,
+    LARGE
+  }
+
+  public static String nesoKey(String oshiKey, NesoSize size) {
+    return oshiKey + "_neso_" + size.name().toLowerCase();
+  }
+  // #endregion Neso
 }
