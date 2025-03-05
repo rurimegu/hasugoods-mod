@@ -31,7 +31,6 @@ public class NesoEntityRenderer extends EntityRenderer<NesoEntity, EntityRenderS
     ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
     matrices.push();
 
-    matrices.scale(2, 2, 2);
     itemRenderer.renderItem(stack, ModelTransformationMode.GROUND, light, OverlayTexture.DEFAULT_UV, matrices,
         vertexConsumers, null, 0);
 

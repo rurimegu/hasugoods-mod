@@ -52,12 +52,23 @@ public class NesoEntity extends LivingEntity {
   public static EntityType<NesoEntity> registerNeso(String oshiKey, NesoSize size) {
     String itemKey = OshiUtils.nesoKey(oshiKey, size);
     RegistryKey<EntityType<?>> key = RegistryKey.of(RegistryKeys.ENTITY_TYPE, Hasugoods.id(itemKey));
-    EntityType<NesoEntity> entityType = ModEntities.register(
-        key,
-        EntityType.Builder.<NesoEntity>create(
-            (type, world) -> new NesoEntity(type, world, oshiKey, size), SpawnGroup.MISC).dimensions(1f, 1f)
-            .dropsNothing()
-            .build(key));
+    float width = switch (size) {
+      case SMALL -> 0.5f;
+      case MEDIUM -> 1f;
+      case LARGE -> 2f;
+    };
+    float height = switch (size) {
+      case SMALL -> 0.25f;
+      case MEDIUM -> 0.5f;
+      case LARGE -> 1f;
+    };
+    EntityType<NesoEntity> entityType = EntityType.Builder.<NesoEntity>create(
+        (type, world) -> new NesoEntity(type, world, oshiKey, size), SpawnGroup.MISC).dimensions(width, height)
+        .eyeHeight(height * 0.4f)
+        .dropsNothing()
+        .build(key);
+    entityType = ModEntities.register(key, entityType);
+
     ALL_NESOS.put(itemKey, new NesoEntityEntry(key, entityType));
     FabricDefaultAttributeRegistry.register(entityType, NesoEntity.createLivingAttributes());
     return entityType;
