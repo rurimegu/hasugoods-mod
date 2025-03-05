@@ -6,6 +6,8 @@ import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.Gson;
+
 import dev.rurino.hasugoods.damage.ModDamageTypes;
 import dev.rurino.hasugoods.effect.ModEffects;
 import dev.rurino.hasugoods.entity.ModEntities;
@@ -16,6 +18,8 @@ public class Hasugoods implements ModInitializer {
   public static final String MOD_ID = "hasugoods";
 
   public static final HasuConfig CONFIG = HasuConfig.createAndLoad();
+
+  public static final Gson GSON = new Gson();
 
   // This logger is used to write text to the console and the log file.
   // It is considered best practice to use your mod id as the logger's name.
