@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.item.neso.NesoItem;
@@ -15,6 +16,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnGroup;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -25,6 +27,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class NesoEntity extends LivingEntity {
@@ -73,6 +76,25 @@ public class NesoEntity extends LivingEntity {
     return entityType;
   }
 
+  public static NesoEntity spawnFromItemStack(EntityType<NesoEntity> entityType, ServerWorld world, ItemStack stack,
+      PlayerEntity player, BlockPos pos,
+      SpawnReason spawnReason, boolean alignPosition, boolean invertY, float initYaw) {
+    Consumer<NesoEntity> consumer;
+    if (stack != null) {
+      consumer = EntityType.copier(world, stack, player);
+    } else {
+      consumer = (entity) -> {
+      };
+    }
+    NesoEntity entity = entityType.create(world, consumer, pos, spawnReason, alignPosition, invertY);
+    if (entity != null) {
+      entity.rotate(initYaw, 0);
+      world.spawnEntityAndPassengers(entity);
+    }
+
+    return entity;
+  }
+
   public static void Initialize() {
     for (NesoSize size : NesoSize.values()) {
       registerNeso(OshiUtils.KAHO_KEY, size);
@@ -92,6 +114,9 @@ public class NesoEntity extends LivingEntity {
   @Override
   public boolean damage(ServerWorld world, DamageSource source, float amount) {
     if (!source.isIn(DamageTypeTags.IS_FIRE)) {
+      if (!source.isIn(DamageTypeTags.IS_PLAYER_ATTACK)) {
+        return false;
+      }
       amount = 0;
     }
     return super.damage(world, source, amount);
@@ -127,6 +152,11 @@ public class NesoEntity extends LivingEntity {
     this.dropStack((ServerWorld) player.getWorld(), entityItem);
     this.discard();
     return ActionResult.SUCCESS;
+  }
+
+  @Override
+  protected float getMaxRelativeHeadRotation() {
+    return 0f;
   }
 
   public String getOshiKey() {

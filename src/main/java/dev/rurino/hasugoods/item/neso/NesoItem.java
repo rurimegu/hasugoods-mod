@@ -126,10 +126,17 @@ public class NesoItem extends OshiItem {
     if (!world.isSpaceEmpty(entityType.getSpawnBox(blockPos2.getX() + 0.5, blockPos2.getY(), blockPos2.getZ() + 0.5))) {
       return ActionResult.PASS;
     }
-    if (entityType.spawnFromItemStack(
-        (ServerWorld) world, itemStack, context.getPlayer(), blockPos2,
-        SpawnReason.SPAWN_ITEM_USE, true,
-        !Objects.equals(blockPos, blockPos2) && direction == Direction.UP) == null) {
+
+    NesoEntity entity = NesoEntity.spawnFromItemStack(
+        entityType,
+        (ServerWorld) world,
+        itemStack, context.getPlayer(),
+        blockPos2,
+        SpawnReason.SPAWN_ITEM_USE,
+        true,
+        !Objects.equals(blockPos, blockPos2) && direction == Direction.UP,
+        context.getPlayer().getYaw());
+    if (entity == null) {
       return ActionResult.PASS;
     }
 

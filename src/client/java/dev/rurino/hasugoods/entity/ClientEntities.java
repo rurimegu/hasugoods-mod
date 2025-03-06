@@ -31,7 +31,7 @@ public class ClientEntities {
         }
         Hasugoods.LOGGER.info("Register entity renderer for {} {}", oshiKey, size);
         EntityRendererRegistry.register(entityType.get(), (context) -> {
-          return new NesoEntityRenderer(context, item.get().getDefaultStack());
+          return new NesoEntityRenderer(context, new NesoEntityModel(item.get()));
         });
       }
     }
