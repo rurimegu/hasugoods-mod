@@ -27,8 +27,8 @@ public class HasugoodsModelProvider extends FabricModelProvider {
             "scale", new double[] { 1, 1, 1 }),
         "ground", ImmutableMap.of(
             "rotation", new int[] { 0, 0, 0 },
-            "translation", new double[] { 0, 1, 0 },
-            "scale", new double[] { 0.12, 0.12, 0.12 }),
+            "translation", new double[] { 0, 2, -1 },
+            "scale", new double[] { 0.24, 0.24, 0.24 }),
         "fixed", ImmutableMap.of(
             "rotation", new int[] { 0, 0, 0 },
             "translation", new double[] { 0, 0, 0 },
@@ -52,8 +52,8 @@ public class HasugoodsModelProvider extends FabricModelProvider {
             "scale", new double[] { 1, 1, 1 }),
         "ground", ImmutableMap.of(
             "rotation", new int[] { 0, 0, 0 },
-            "translation", new double[] { 0, 2, 0 },
-            "scale", new double[] { 0.24, 0.24, 0.24 }),
+            "translation", new double[] { 0, 4, -2 },
+            "scale", new double[] { 0.48, 0.48, 0.48 }),
         "fixed", ImmutableMap.of(
             "rotation", new int[] { 0, 0, 0 },
             "translation", new double[] { 0, 0, 0 },
@@ -77,8 +77,8 @@ public class HasugoodsModelProvider extends FabricModelProvider {
             "scale", new double[] { 1, 1, 1 }),
         "ground", ImmutableMap.of(
             "rotation", new int[] { 0, 0, 0 },
-            "translation", new double[] { 0, 4, 0 },
-            "scale", new double[] { 0.48, 0.48, 0.48 }),
+            "translation", new double[] { 0, 8, -4 },
+            "scale", new double[] { 0.96, 0.96, 0.96 }),
         "fixed", ImmutableMap.of(
             "rotation", new int[] { 0, 0, 0 },
             "translation", new double[] { 0, 0, 0 },

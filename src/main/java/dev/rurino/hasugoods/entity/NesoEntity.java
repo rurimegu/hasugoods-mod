@@ -8,7 +8,6 @@ import java.util.Optional;
 
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.item.neso.NesoItem;
-import dev.rurino.hasugoods.util.ItemStackUtils;
 import dev.rurino.hasugoods.util.OshiUtils;
 import dev.rurino.hasugoods.util.OshiUtils.NesoSize;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
@@ -53,14 +52,14 @@ public class NesoEntity extends LivingEntity {
     String itemKey = OshiUtils.nesoKey(oshiKey, size);
     RegistryKey<EntityType<?>> key = RegistryKey.of(RegistryKeys.ENTITY_TYPE, Hasugoods.id(itemKey));
     float width = switch (size) {
-      case SMALL -> 0.5f;
-      case MEDIUM -> 1f;
-      case LARGE -> 2f;
+      case SMALL -> 0.4f;
+      case MEDIUM -> 0.8f;
+      case LARGE -> 1.6f;
     };
     float height = switch (size) {
-      case SMALL -> 0.25f;
-      case MEDIUM -> 0.5f;
-      case LARGE -> 1f;
+      case SMALL -> 0.24f;
+      case MEDIUM -> 0.48f;
+      case LARGE -> 0.96f;
     };
     EntityType<NesoEntity> entityType = EntityType.Builder.<NesoEntity>create(
         (type, world) -> new NesoEntity(type, world, oshiKey, size), SpawnGroup.MISC).dimensions(width, height)
@@ -125,7 +124,7 @@ public class NesoEntity extends LivingEntity {
       return ActionResult.CONSUME;
 
     ItemStack entityItem = new ItemStack(getNesoItem());
-    ItemStackUtils.giveItemsToPlayerOrDrop(player, entityItem);
+    this.dropStack((ServerWorld) player.getWorld(), entityItem);
     this.discard();
     return ActionResult.SUCCESS;
   }

@@ -106,7 +106,7 @@ public class NesoItem extends OshiItem {
 
   @Override
   public ActionResult useOnBlock(ItemUsageContext context) {
-    // Place the neso entity on the block if the block is not solid
+    // Place the neso entity on the block if the top block is not solid
     World world = context.getWorld();
     if (world.isClient)
       return ActionResult.CONSUME;
@@ -123,13 +123,18 @@ public class NesoItem extends OshiItem {
     } else {
       blockPos2 = blockPos.offset(direction);
     }
-
-    if (entityType.spawnFromItemStack((ServerWorld) world, itemStack, context.getPlayer(), blockPos2,
-        SpawnReason.SPAWN_ITEM_USE, true,
-        !Objects.equals(blockPos, blockPos2) && direction == Direction.UP) != null) {
-      itemStack.decrement(1);
-      world.emitGameEvent(context.getPlayer(), GameEvent.ENTITY_PLACE, blockPos);
+    if (!world.isSpaceEmpty(entityType.getSpawnBox(blockPos2.getX() + 0.5, blockPos2.getY(), blockPos2.getZ() + 0.5))) {
+      return ActionResult.PASS;
     }
+    if (entityType.spawnFromItemStack(
+        (ServerWorld) world, itemStack, context.getPlayer(), blockPos2,
+        SpawnReason.SPAWN_ITEM_USE, true,
+        !Objects.equals(blockPos, blockPos2) && direction == Direction.UP) == null) {
+      return ActionResult.PASS;
+    }
+
+    itemStack.decrement(1);
+    world.emitGameEvent(context.getPlayer(), GameEvent.ENTITY_PLACE, blockPos);
 
     return ActionResult.SUCCESS;
   }
