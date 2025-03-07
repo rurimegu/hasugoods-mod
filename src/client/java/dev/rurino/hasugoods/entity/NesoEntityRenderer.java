@@ -23,6 +23,12 @@ public class NesoEntityRenderer extends LivingEntityRenderer<NesoEntity, LivingE
   }
 
   @Override
+  protected boolean hasLabel(NesoEntity livingEntity, double d) {
+    return super.hasLabel(livingEntity, d) && (livingEntity.shouldRenderName()
+        || livingEntity.hasCustomName() && livingEntity == this.dispatcher.targetedEntity);
+  }
+
+  @Override
   public void render(LivingEntityRenderState state, MatrixStack matrixStack, VertexConsumerProvider vertexConsumers,
       int light) {
     matrixStack.push();
