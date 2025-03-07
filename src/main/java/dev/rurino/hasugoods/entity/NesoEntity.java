@@ -18,6 +18,8 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -74,8 +76,17 @@ public class NesoEntity extends LivingEntity {
     entityType = ModEntities.register(key, entityType);
 
     ALL_NESOS.put(itemKey, new NesoEntityEntry(key, entityType));
-    FabricDefaultAttributeRegistry.register(entityType, NesoEntity.createLivingAttributes());
+    FabricDefaultAttributeRegistry.register(entityType, NesoEntity.createNesoAttributes(size));
     return entityType;
+  }
+
+  public static DefaultAttributeContainer.Builder createNesoAttributes(NesoSize size) {
+    float maxHealth = switch (size) {
+      case SMALL -> 10;
+      case MEDIUM -> 20;
+      case LARGE -> 40;
+    };
+    return createLivingAttributes().add(EntityAttributes.MAX_HEALTH, maxHealth);
   }
 
   public static NesoEntity spawnFromItemStack(EntityType<NesoEntity> entityType, ServerWorld world, ItemStack stack,
