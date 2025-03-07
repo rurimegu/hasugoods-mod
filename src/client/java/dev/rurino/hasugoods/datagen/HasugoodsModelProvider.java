@@ -9,92 +9,85 @@ import com.google.gson.JsonObject;
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.item.badge.BadgeItem;
 import dev.rurino.hasugoods.item.neso.NesoItem;
+import dev.rurino.hasugoods.util.OshiUtils.NesoSize;
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.client.data.BlockStateModelGenerator;
 import net.minecraft.client.data.ItemModelGenerator;
+import net.minecraft.client.data.ItemModels;
+import net.minecraft.client.data.ModelIds;
 import net.minecraft.client.data.ModelSupplier;
 import net.minecraft.client.data.Models;
+import net.minecraft.client.render.item.model.ItemModel;
+import net.minecraft.client.render.item.property.bool.CustomModelDataFlagProperty;
 import net.minecraft.util.Identifier;
 
 public class HasugoodsModelProvider extends FabricModelProvider {
   private static class NesoModelSupplier implements ModelSupplier {
     private static final Identifier PARENT = Identifier.of("special-model-loader", "builtin/obj");
-    private static final ImmutableMap<String, Map<String, ?>> DISPLAY_SMALL = ImmutableMap.of(
-        "gui", ImmutableMap.of(
-            "rotation", new int[] { 30, 225, 0 },
-            "translation", new double[] { 0, 0, 0 },
-            "scale", new double[] { 1, 1, 1 }),
-        "ground", ImmutableMap.of(
-            "rotation", new int[] { 0, 0, 0 },
-            "translation", new double[] { 0, 2, -1 },
-            "scale", new double[] { 0.24, 0.24, 0.24 }),
-        "fixed", ImmutableMap.of(
-            "rotation", new int[] { 0, 0, 0 },
-            "translation", new double[] { 0, 0, 0 },
-            "scale", new double[] { 0.5, 0.5, 0.5 }),
-        "thirdperson_righthand", ImmutableMap.of(
-            "rotation", new int[] { 75, 45, 0 },
-            "translation", new double[] { 0, 2.5, 0 },
-            "scale", new double[] { 0.375, 0.375, 0.375 }),
-        "firstperson_righthand", ImmutableMap.of(
-            "rotation", new int[] { 0, 45, 0 },
-            "translation", new double[] { 0, 0, 0 },
-            "scale", new double[] { 0.40, 0.40, 0.40 }),
-        "firstperson_lefthand", ImmutableMap.of(
-            "rotation", new int[] { 0, 225, 0 },
-            "translation", new double[] { 0, 0, 0 },
-            "scale", new double[] { 0.40, 0.40, 0.40 }));
-    private static final ImmutableMap<String, Map<String, ?>> DISPLAY_MEDIUM = ImmutableMap.of(
-        "gui", ImmutableMap.of(
-            "rotation", new int[] { 30, 225, 0 },
-            "translation", new double[] { 0, 0, 0 },
-            "scale", new double[] { 1, 1, 1 }),
-        "ground", ImmutableMap.of(
-            "rotation", new int[] { 0, 0, 0 },
-            "translation", new double[] { 0, 4, -2 },
-            "scale", new double[] { 0.48, 0.48, 0.48 }),
-        "fixed", ImmutableMap.of(
-            "rotation", new int[] { 0, 0, 0 },
-            "translation", new double[] { 0, 0, 0 },
-            "scale", new double[] { 0.5, 0.5, 0.5 }),
-        "thirdperson_righthand", ImmutableMap.of(
-            "rotation", new int[] { 75, 45, 0 },
-            "translation", new double[] { 0, 2.5, 0 },
-            "scale", new double[] { 0.375, 0.375, 0.375 }),
-        "firstperson_righthand", ImmutableMap.of(
-            "rotation", new int[] { 0, 45, 0 },
-            "translation", new double[] { 0, 0, 0 },
-            "scale", new double[] { 0.40, 0.40, 0.40 }),
-        "firstperson_lefthand", ImmutableMap.of(
-            "rotation", new int[] { 0, 225, 0 },
-            "translation", new double[] { 0, 0, 0 },
-            "scale", new double[] { 0.40, 0.40, 0.40 }));
-    private static final ImmutableMap<String, Map<String, ?>> DISPLAY_LARGE = ImmutableMap.of(
-        "gui", ImmutableMap.of(
-            "rotation", new int[] { 30, 225, 0 },
-            "translation", new double[] { 0, 0, 0 },
-            "scale", new double[] { 1, 1, 1 }),
-        "ground", ImmutableMap.of(
-            "rotation", new int[] { 0, 0, 0 },
-            "translation", new double[] { 0, 8, -4 },
-            "scale", new double[] { 0.96, 0.96, 0.96 }),
-        "fixed", ImmutableMap.of(
-            "rotation", new int[] { 0, 0, 0 },
-            "translation", new double[] { 0, 0, 0 },
-            "scale", new double[] { 0.5, 0.5, 0.5 }),
-        "thirdperson_righthand", ImmutableMap.of(
-            "rotation", new int[] { 75, 45, 0 },
-            "translation", new double[] { 0, 2.5, 0 },
-            "scale", new double[] { 0.375, 0.375, 0.375 }),
-        "firstperson_righthand", ImmutableMap.of(
-            "rotation", new int[] { 0, 45, 0 },
-            "translation", new double[] { 0, 0, 0 },
-            "scale", new double[] { 0.40, 0.40, 0.40 }),
-        "firstperson_lefthand", ImmutableMap.of(
-            "rotation", new int[] { 0, 225, 0 },
-            "translation", new double[] { 0, 0, 0 },
-            "scale", new double[] { 0.40, 0.40, 0.40 }));
+
+    private static double getMultiplier(NesoSize size) {
+      return switch (size) {
+        case SMALL -> 1;
+        case MEDIUM -> 2;
+        case LARGE -> 4;
+      };
+    }
+
+    private static ImmutableMap<String, ?> ground(NesoSize size) {
+      int[] rotation = new int[] { 0, 0, 0 };
+      double[] translation = new double[] { 0, 2, -1 };
+      double[] scale = new double[] { 0.24, 0.24, 0.24 };
+      double multiplier = getMultiplier(size);
+      for (int i = 0; i < scale.length; i++) {
+        scale[i] *= multiplier;
+      }
+      for (int i = 0; i < translation.length; i++) {
+        translation[i] *= multiplier;
+      }
+      return ImmutableMap.of("rotation", rotation, "translation", translation, "scale", scale);
+    }
+
+    private static ImmutableMap<String, ?> thirdPerson(NesoSize size, boolean left) {
+      int[] rotation = new int[] { 100, size == NesoSize.LARGE ? 180 : 195, 0 };
+      double[] translation = new double[] { 0, 0, 0 };
+      double[] scale = new double[] { 0.18, 0.18, 0.18 };
+      double multiplier = getMultiplier(size);
+      for (int i = 0; i < scale.length; i++) {
+        scale[i] *= multiplier;
+      }
+      for (int i = 0; i < translation.length; i++) {
+        translation[i] *= multiplier;
+      }
+      return ImmutableMap.of("rotation", rotation, "translation", translation, "scale", scale);
+    }
+
+    private static ImmutableMap<String, ?> firstPerson(NesoSize size, boolean left) {
+      int[] rotation = new int[] {
+          size == NesoSize.LARGE ? 30 : 45,
+          size == NesoSize.LARGE ? 180 : 195,
+          0 };
+      double[] translation = new double[] { 1, size == NesoSize.LARGE ? -0.25 : 0, 0 };
+      double[] scale = new double[] { 0.18, 0.18, 0.18 };
+      double multiplier = getMultiplier(size);
+      for (int i = 0; i < scale.length; i++) {
+        scale[i] *= multiplier;
+      }
+      for (int i = 0; i < translation.length; i++) {
+        translation[i] *= multiplier;
+      }
+      return ImmutableMap.of("rotation", rotation, "translation", translation, "scale", scale);
+    }
+
+    private static ImmutableMap<String, Map<String, ?>> display(NesoSize size) {
+      return ImmutableMap.of(
+          "ground", ground(size),
+          "firstperson_lefthand", firstPerson(size, true),
+          "firstperson_righthand", firstPerson(size, false),
+          "thirdperson_lefthand", thirdPerson(size, true),
+          "thirdperson_righthand", thirdPerson(size, false));
+    }
+
     private final NesoItem item;
 
     public NesoModelSupplier(NesoItem item) {
@@ -105,14 +98,9 @@ public class HasugoodsModelProvider extends FabricModelProvider {
       String oshiKey = item.getOshiKey();
       Identifier modelId = Hasugoods.id("models/item/neso/" + oshiKey + "/model.obj");
       JsonObject jsonObject = new JsonObject();
-      var DISPLAY = switch (item.getNesoSize()) {
-        case SMALL -> DISPLAY_SMALL;
-        case MEDIUM -> DISPLAY_MEDIUM;
-        case LARGE -> DISPLAY_LARGE;
-      };
       jsonObject.addProperty("parent", PARENT.toString());
       jsonObject.addProperty("model", modelId.toString());
-      jsonObject.add("display", Hasugoods.GSON.toJsonTree(DISPLAY));
+      jsonObject.add("display", Hasugoods.GSON.toJsonTree(display(item.getNesoSize())));
       return jsonObject;
     }
   }
@@ -132,10 +120,14 @@ public class HasugoodsModelProvider extends FabricModelProvider {
       itemModelGenerator.register(item, Models.GENERATED);
     }
     for (var neso : NesoItem.getAllNesos()) {
-      String oshiKey = neso.getOshiKey();
-      Identifier modelId = Hasugoods.id("item/" + NesoItem.nesoKey(oshiKey, neso.getNesoSize()));
-      itemModelGenerator.modelCollector.accept(modelId, new NesoModelSupplier(neso));
-      itemModelGenerator.register(neso);
+      Identifier inhandModelId = ModelIds.getItemSubModelId(neso, "_in_hand");
+      Identifier modelId = ModelIds.getItemModelId(BadgeItem.getBadgeItem(neso.getOshiKey()).get());
+      itemModelGenerator.modelCollector.accept(inhandModelId, new NesoModelSupplier(neso));
+      // Register hand model
+      ItemModel.Unbaked guiModel = ItemModels.basic(modelId);
+      ItemModel.Unbaked handModel = ItemModels.basic(inhandModelId);
+      ItemModel.Unbaked model = ItemModels.condition(new CustomModelDataFlagProperty(0), handModel, guiModel);
+      itemModelGenerator.output.accept(neso, ItemModelGenerator.createModelWithInHandVariant(model, handModel));
     }
   }
 

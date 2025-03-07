@@ -1,6 +1,31 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "hasugoods:item/kaho_neso_large"
+    "type": "minecraft:select",
+    "cases": [
+      {
+        "model": {
+          "type": "minecraft:condition",
+          "on_false": {
+            "type": "minecraft:model",
+            "model": "hasugoods:item/kaho_badge"
+          },
+          "on_true": {
+            "type": "minecraft:model",
+            "model": "hasugoods:item/kaho_neso_large_in_hand"
+          },
+          "property": "minecraft:custom_model_data"
+        },
+        "when": [
+          "gui",
+          "ground",
+          "fixed"
+        ]
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "hasugoods:item/kaho_neso_large_in_hand"
+    },
+    "property": "minecraft:display_context"
   }
 }

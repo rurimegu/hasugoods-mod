@@ -7,6 +7,8 @@ import dev.rurino.hasugoods.item.neso.NesoItem;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.render.entity.state.LivingEntityRenderState;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.CustomModelDataComponent;
 import net.minecraft.item.ItemStack;
 
 public class NesoEntityModel extends EntityModel<LivingEntityRenderState> {
@@ -18,6 +20,8 @@ public class NesoEntityModel extends EntityModel<LivingEntityRenderState> {
     super(new ModelPart(List.of(), Map.of()));
     this.item = item;
     this.stack = new ItemStack(item);
+    this.stack.set(DataComponentTypes.CUSTOM_MODEL_DATA, new CustomModelDataComponent(
+        List.of(), List.of(true), List.of(), List.of()));
   }
 
   public NesoItem getItem() {
