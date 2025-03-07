@@ -12,6 +12,7 @@ import dev.rurino.hasugoods.item.neso.NesoItem;
 import dev.rurino.hasugoods.util.OshiUtils;
 import dev.rurino.hasugoods.util.OshiUtils.NesoSize;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -24,6 +25,7 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
@@ -148,8 +150,7 @@ public class NesoEntity extends LivingEntity {
     if (player.getWorld().isClient)
       return ActionResult.CONSUME;
 
-    ItemStack entityItem = new ItemStack(getNesoItem());
-    this.dropStack((ServerWorld) player.getWorld(), entityItem);
+    this.dropStack((ServerWorld) player.getWorld(), convertToNesoItemStack());
     this.discard();
     return ActionResult.SUCCESS;
   }
@@ -173,5 +174,15 @@ public class NesoEntity extends LivingEntity {
       Hasugoods.LOGGER.error("NesoItem not found: {} {}", oshiKey, nesoSize);
     }
     return item.get();
+  }
+
+  protected ItemStack convertToNesoItemStack() {
+    ItemStack stack = new ItemStack(getNesoItem());
+    // Set custom name
+    Text text = this.getCustomName();
+    if (text != null) {
+      stack.set(DataComponentTypes.CUSTOM_NAME, text);
+    }
+    return stack;
   }
 }
