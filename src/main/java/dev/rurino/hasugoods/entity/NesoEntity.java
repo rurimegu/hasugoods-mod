@@ -109,8 +109,8 @@ public class NesoEntity extends LivingEntity {
   }
 
   public static void Initialize() {
-    for (NesoSize size : NesoSize.values()) {
-      registerNeso(OshiUtils.KAHO_KEY, size);
+    for (NesoItem neso : NesoItem.getAllNesos()) {
+      registerNeso(neso.getOshiKey(), neso.getNesoSize());
     }
   }
   // #endregion Static fields

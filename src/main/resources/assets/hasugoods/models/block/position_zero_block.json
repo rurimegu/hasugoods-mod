@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "north": "minecraft:block/white_concrete",
+    "east": "minecraft:block/white_concrete",
+    "south": "minecraft:block/white_concrete",
+    "west": "minecraft:block/white_concrete",
+    "up": "hasugoods:block/position_zero_block_top",
+    "down": "minecraft:block/white_concrete",
+    "particle": "minecraft:block/white_concrete"
+  }
+}

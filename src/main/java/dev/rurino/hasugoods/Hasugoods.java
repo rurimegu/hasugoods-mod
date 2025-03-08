@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
+import dev.rurino.hasugoods.block.ModBlocks;
 import dev.rurino.hasugoods.damage.ModDamageTypes;
 import dev.rurino.hasugoods.effect.ModEffects;
 import dev.rurino.hasugoods.entity.ModEntities;
@@ -39,6 +40,7 @@ public class Hasugoods implements ModInitializer {
     LOGGER.info("Initializing Hasugoods");
 
     ModItems.initialize();
+    ModBlocks.initialize();
     ModDamageTypes.initialize();
     ModEffects.initialize();
     ModEntities.initialize();

@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "hasugoods:block/position_zero_block"
+    }
+  }
+}
