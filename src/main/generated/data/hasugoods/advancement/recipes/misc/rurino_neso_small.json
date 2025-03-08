@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_rurino_badge": {
+      "conditions": {
+        "items": [
+          {
+            "items": "hasugoods:rurino_badge"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "hasugoods:rurino_neso_small"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_rurino_badge"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "hasugoods:rurino_neso_small"
+    ]
+  }
+}

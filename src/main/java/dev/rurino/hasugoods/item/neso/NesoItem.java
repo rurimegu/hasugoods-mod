@@ -78,8 +78,10 @@ public class NesoItem extends OshiItem {
   }
 
   public static void initialize() {
-    for (NesoSize size : NesoSize.values()) {
-      registerNeso(OshiUtils.KAHO_KEY, size);
+    for (String oshiKey : List.of(OshiUtils.KAHO_KEY, OshiUtils.RURINO_KEY)) {
+      for (NesoSize size : NesoSize.values()) {
+        registerNeso(oshiKey, size);
+      }
     }
   }
 

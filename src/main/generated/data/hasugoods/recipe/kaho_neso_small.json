@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": "minecraft:light_blue_wool",
+    "O": "minecraft:orange_wool",
+    "W": "minecraft:white_wool",
+    "X": "hasugoods:kaho_badge"
+  },
+  "pattern": [
+    "BO ",
+    "OXB",
+    " BW"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hasugoods:kaho_neso_small"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": "hasugoods:kaho_badge",
+    "S": "hasugoods:kaho_secret_badge",
+    "X": "hasugoods:kaho_neso_small"
+  },
+  "pattern": [
+    "BSB",
+    "BXB",
+    "BBB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hasugoods:kaho_neso_medium"
+  }
+}
