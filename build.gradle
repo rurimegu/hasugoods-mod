@@ -1,5 +1,5 @@
 plugins {
-  id 'fabric-loom' version '1.9-SNAPSHOT'
+  id 'fabric-loom' version '1.10-SNAPSHOT'
   id 'maven-publish'
 }
 
@@ -18,17 +18,22 @@ repositories {
   // for more information about repositories.
   maven {
     name = "Ladysnake Mods"
-    url = "https://maven.ladysnake.org/releases"
+    url = "https://maven.ladysnake.org/releases" // for Cardinal Components
   }
   
   maven {
     name = "owo-lib"
-    url = "https://maven.wispforest.io"
+    url = "https://maven.wispforest.io" // for owo-lib
   }
 
   maven {
       name = "FelNull Maven"
-      url = "https://maven.felnull.dev"
+      url = "https://maven.felnull.dev" // for Special Model Loader
+  }
+
+  maven {
+      name = "Jared"
+      url = "https://maven.blamejared.com/" // for Patchouli
   }
 }
 
@@ -76,6 +81,9 @@ dependencies {
   modApi "dev.felnull:special-model-loader:${project.sml_version}"
   //Required if you want this mod to be embedded by jar-in-jar
   include "dev.felnull:special-model-loader:${project.sml_version}"
+
+  // Patchouli
+  // modImplementation "vazkii.patchouli:Patchouli:1.21-88-FABRIC"
 }
 
 processResources {

@@ -126,6 +126,9 @@ public class NesoEntity extends LivingEntity {
 
   @Override
   public boolean damage(ServerWorld world, DamageSource source, float amount) {
+    if (getNesoSize() == NesoSize.LARGE) {
+      return false;
+    }
     if (!source.isIn(DamageTypeTags.IS_FIRE)) {
       if (!source.isIn(DamageTypeTags.IS_PLAYER_ATTACK)) {
         return false;
