@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 
 public class NesoBaseBlockEntity extends BlockEntity {
   protected static final String NESO_ITEM_STACK_KEY = "nesoItemStack";
-  protected static final int TICK_PER_SIDE = 4;
+  protected static final int TICK_PER_SIDE = 6;
 
   protected ItemStack nesoItemStack = ItemStack.EMPTY;
   protected int displayTick = 0;
