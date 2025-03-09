@@ -82,4 +82,16 @@ public abstract class AbstractNesoBaseBlock extends BlockWithEntity {
     return actionResult;
   }
 
+  @Override
+  public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+    if (!world.isClient && world.getBlockEntity(pos) instanceof AbstractNesoBaseBlockEntity blockEntity) {
+      ItemStack itemStack = blockEntity.getItemStack();
+      if (!itemStack.isEmpty()) {
+        Block.dropStack(world, pos, itemStack);
+        blockEntity.setItemStack(ItemStack.EMPTY);
+      }
+    }
+    return super.onBreak(world, pos, state, player);
+  }
+
 }

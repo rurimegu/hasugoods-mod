@@ -27,11 +27,12 @@ import net.minecraft.world.World;
 public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
   // #region Static members
   protected static final String NESO_ITEM_STACK_KEY = "nesoItemStack";
-  protected static final int TICK_PER_SIDE = 6;
-  protected static final int TICK_PER_WAVE = TICK_PER_SIDE << 2;
+  protected static final int PARTICLE_PER_SIDE = 4;
+  protected static final int TICK_PER_PARTICLE = 2;
+  protected static final int PARTICLE_PER_WAVE = PARTICLE_PER_SIDE << 2;
   protected static final Vec3d SPIRAL_VELOCITY = new Vec3d(0, 0.02, 0);
   protected static final Vec3d WAVE_VELOCITY = new Vec3d(0, 0.04, 0);
-  protected static final float RANDOM_PARTICLE_PROB = 0.2f;
+  protected static final float RANDOM_PARTICLE_PROB = 0.1f;
 
   protected static final Map<String, NoteParticleEffect> OSHI_KEY_TO_PARTICLE_EFFECT = OshiUtils.OSHI_COLOR_MAP
       .entrySet().stream()
@@ -45,9 +46,9 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
     WAVE
   }
 
-  protected static Vec3d getSidePos(int tick, BlockPos blockPos) {
-    int side = tick / TICK_PER_SIDE;
-    double sideProgress = (tick % TICK_PER_SIDE) / (double) TICK_PER_SIDE;
+  protected static Vec3d getSidePos(int particleNo, BlockPos blockPos) {
+    int side = particleNo / PARTICLE_PER_SIDE;
+    double sideProgress = (particleNo % PARTICLE_PER_SIDE) / (double) PARTICLE_PER_SIDE;
     double x;
     double z;
     switch (side) {
@@ -127,14 +128,16 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
   }
 
   protected void createSpiralNoteParticles(World world, BlockPos blockPos, BlockState blockState) {
-    Vec3d pos = getSidePos(displayTick, blockPos);
+    if (displayTick % TICK_PER_PARTICLE != 0)
+      return;
+    Vec3d pos = getSidePos(displayTick / TICK_PER_PARTICLE, blockPos);
     createNoteParticle(world, pos, SPIRAL_VELOCITY);
   }
 
   protected void createWaveNoteParticles(World world, BlockPos blockPos, BlockState blockState) {
     if (displayTick != 0)
       return;
-    for (int i = 0; i < TICK_PER_WAVE; i++) {
+    for (int i = 0; i < PARTICLE_PER_WAVE; i++) {
       Vec3d pos = getSidePos(i, blockPos);
       createNoteParticle(world, pos, WAVE_VELOCITY);
     }
@@ -175,7 +178,7 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
 
   protected void clientTick(World world, BlockPos blockPos, BlockState blockState) {
     displayTick++;
-    displayTick %= TICK_PER_WAVE;
+    displayTick %= PARTICLE_PER_WAVE * TICK_PER_PARTICLE;
     maybeCreateNoteParticles(world, blockPos, blockState);
   }
 
