@@ -47,8 +47,10 @@ public class OshiUtils {
     return Text.translatable(String.format("text.%s.%s", Hasugoods.MOD_ID, oshiKey));
   }
 
+  public static final int DEFAULT_OSHI_COLOR = 0xFFFFFF;
+
   public static int getOshiColor(String oshiKey) {
-    return OSHI_COLOR_MAP.getOrDefault(oshiKey, 0xFFFFFF);
+    return OSHI_COLOR_MAP.getOrDefault(oshiKey, DEFAULT_OSHI_COLOR);
   }
 
   // #region Badge

@@ -10,7 +10,7 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class PositionZeroBlock extends NesoBaseBlock {
+public class PositionZeroBlock extends AbstractNesoBaseBlock {
   public PositionZeroBlock(Settings settings) {
     super(settings);
   }
