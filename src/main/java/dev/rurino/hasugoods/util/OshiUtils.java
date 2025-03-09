@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.item.badge.BadgeItem;
@@ -31,8 +32,23 @@ public class OshiUtils {
       KOZUE_KEY,
       GINKO_KEY);
 
+  public static final ImmutableMap<String, Integer> OSHI_COLOR_MAP = ImmutableMap.of(
+      RURINO_KEY, 0xE7609E,
+      MEGUMI_KEY, 0xC8C2C6,
+      HIME_KEY, 0x9D8DE2,
+      SAYAKA_KEY, 0x5383C3,
+      TSUZURI_KEY, 0xC22D3B,
+      KOSUZU_KEY, 0xFAD764,
+      KAHO_KEY, 0xF8B500,
+      KOZUE_KEY, 0x68BE8D,
+      GINKO_KEY, 0xA2D7DD);
+
   public static Text getOshiDisplayName(String oshiKey) {
     return Text.translatable(String.format("text.%s.%s", Hasugoods.MOD_ID, oshiKey));
+  }
+
+  public static int getOshiColor(String oshiKey) {
+    return OSHI_COLOR_MAP.getOrDefault(oshiKey, 0xFFFFFF);
   }
 
   // #region Badge

@@ -1,7 +1,19 @@
 {
   "variants": {
-    "": {
+    "facing=east": {
+      "model": "hasugoods:block/neso_base_block",
+      "y": 90
+    },
+    "facing=north": {
       "model": "hasugoods:block/neso_base_block"
+    },
+    "facing=south": {
+      "model": "hasugoods:block/neso_base_block",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "hasugoods:block/neso_base_block",
+      "y": 270
     }
   }
 }

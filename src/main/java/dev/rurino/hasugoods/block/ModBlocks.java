@@ -36,7 +36,7 @@ public class ModBlocks {
     return Registry.register(Registries.BLOCK, blockKey, block);
   }
 
-  public static final Block NESO_BASE_BLOCK = register("neso_base_block", Block::new,
+  public static final Block NESO_BASE_BLOCK = register("neso_base_block", NesoBaseBlock::new,
       AbstractBlock.Settings.create()
           .sounds(BlockSoundGroup.STONE)
           .mapColor(MapColor.WHITE)
@@ -44,7 +44,7 @@ public class ModBlocks {
           .strength(1.8F)
           .luminance((state) -> 14),
       true);
-  public static final Block POSITION_ZERO_BLOCK = register("position_zero_block", Block::new,
+  public static final Block POSITION_ZERO_BLOCK = register("position_zero_block", PositionZeroBlock::new,
       AbstractBlock.Settings.create()
           .sounds(BlockSoundGroup.STONE)
           .mapColor(MapColor.WHITE)
