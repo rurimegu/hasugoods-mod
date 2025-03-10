@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": "hasugoods:tsuzuri_badge",
+    "S": "hasugoods:tsuzuri_secret_badge",
+    "X": "hasugoods:tsuzuri_neso_small"
+  },
+  "pattern": [
+    "BSB",
+    "BXB",
+    "BBB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hasugoods:tsuzuri_neso_medium"
+  }
+}

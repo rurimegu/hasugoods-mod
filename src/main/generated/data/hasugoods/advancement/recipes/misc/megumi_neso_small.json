@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_megumi_badge": {
+      "conditions": {
+        "items": [
+          {
+            "items": "hasugoods:megumi_badge"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "hasugoods:megumi_neso_small"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_megumi_badge"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "hasugoods:megumi_neso_small"
+    ]
+  }
+}

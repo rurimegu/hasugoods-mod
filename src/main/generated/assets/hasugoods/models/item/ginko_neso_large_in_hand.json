@@ -1,0 +1,91 @@
+{
+  "parent": "special-model-loader:builtin/obj",
+  "display": {
+    "firstperson_lefthand": {
+      "rotation": [
+        30,
+        180,
+        0
+      ],
+      "scale": [
+        0.72,
+        0.72,
+        0.72
+      ],
+      "translation": [
+        4.0,
+        -1.0,
+        0.0
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        30,
+        180,
+        0
+      ],
+      "scale": [
+        0.72,
+        0.72,
+        0.72
+      ],
+      "translation": [
+        4.0,
+        -1.0,
+        0.0
+      ]
+    },
+    "ground": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.96,
+        0.96,
+        0.96
+      ],
+      "translation": [
+        0.0,
+        8.0,
+        -4.0
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        100,
+        180,
+        0
+      ],
+      "scale": [
+        0.72,
+        0.72,
+        0.72
+      ],
+      "translation": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "thirdperson_righthand": {
+      "rotation": [
+        100,
+        180,
+        0
+      ],
+      "scale": [
+        0.72,
+        0.72,
+        0.72
+      ],
+      "translation": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "model": "hasugoods:models/item/neso/ginko/model.obj"
+}

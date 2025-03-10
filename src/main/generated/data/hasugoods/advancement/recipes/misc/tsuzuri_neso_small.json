@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "hasugoods:tsuzuri_neso_small"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_tsuzuri_badge": {
+      "conditions": {
+        "items": [
+          {
+            "items": "hasugoods:tsuzuri_badge"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_tsuzuri_badge"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "hasugoods:tsuzuri_neso_small"
+    ]
+  }
+}

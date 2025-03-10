@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": "hasugoods:megumi_badge",
+    "S": "hasugoods:megumi_secret_badge",
+    "X": "hasugoods:megumi_neso_small"
+  },
+  "pattern": [
+    "BSB",
+    "BXB",
+    "BBB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hasugoods:megumi_neso_medium"
+  }
+}

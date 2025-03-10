@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": "hasugoods:sayaka_badge",
+    "S": "hasugoods:sayaka_secret_badge",
+    "X": "hasugoods:sayaka_neso_small"
+  },
+  "pattern": [
+    "BSB",
+    "BXB",
+    "BBB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hasugoods:sayaka_neso_medium"
+  }
+}

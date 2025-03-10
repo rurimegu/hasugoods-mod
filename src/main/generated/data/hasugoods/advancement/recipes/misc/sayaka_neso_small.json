@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_sayaka_badge": {
+      "conditions": {
+        "items": [
+          {
+            "items": "hasugoods:sayaka_badge"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "hasugoods:sayaka_neso_small"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_sayaka_badge"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "hasugoods:sayaka_neso_small"
+    ]
+  }
+}

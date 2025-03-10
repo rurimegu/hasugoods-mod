@@ -23,10 +23,57 @@ public class HasugoodsRecipeProvider extends FabricRecipeProvider {
     super(output, registriesFuture);
   }
 
-  protected ShapedRecipeJsonBuilder buildKahoRecipe(ShapedRecipeJsonBuilder builder, NesoItem smallNeso,
+  protected ShapedRecipeJsonBuilder buildGinkoRecipe(
+      ShapedRecipeJsonBuilder builder,
+      NesoItem smallNeso,
       BadgeItem badge) {
     return builder
-        .pattern("BO ")
+        .pattern("OR ")
+        .pattern("OXB")
+        .pattern(" BW")
+        .input('O', Items.BLACK_WOOL)
+        .input('R', Items.RED_WOOL)
+        .input('B', Items.LIGHT_BLUE_WOOL)
+        .input('W', Items.WHITE_WOOL)
+        .input('X', badge);
+  }
+
+  protected ShapedRecipeJsonBuilder buildHimeRecipe(
+      ShapedRecipeJsonBuilder builder,
+      NesoItem smallNeso,
+      BadgeItem badge) {
+    return builder
+        .pattern("PO ")
+        .pattern("PXW")
+        .pattern(" WB")
+        .input('O', Items.BLACK_WOOL)
+        .input('P', Items.MAGENTA_WOOL)
+        .input('B', Items.LIGHT_BLUE_WOOL)
+        .input('W', Items.WHITE_WOOL)
+        .input('X', badge);
+  }
+
+  protected ShapedRecipeJsonBuilder buildKosuzuRecipe(
+      ShapedRecipeJsonBuilder builder,
+      NesoItem smallNeso,
+      BadgeItem badge) {
+    return builder
+        .pattern("RG ")
+        .pattern("GXB")
+        .pattern(" BW")
+        .input('R', Items.BROWN_WOOL)
+        .input('G', Items.LIGHT_GRAY_WOOL)
+        .input('B', Items.LIGHT_BLUE_WOOL)
+        .input('W', Items.WHITE_WOOL)
+        .input('X', badge);
+  }
+
+  protected ShapedRecipeJsonBuilder buildKahoRecipe(
+      ShapedRecipeJsonBuilder builder,
+      NesoItem smallNeso,
+      BadgeItem badge) {
+    return builder
+        .pattern("OB ")
         .pattern("OXB")
         .pattern(" BW")
         .input('O', Items.ORANGE_WOOL)
@@ -35,15 +82,74 @@ public class HasugoodsRecipeProvider extends FabricRecipeProvider {
         .input('X', badge);
   }
 
-  protected ShapedRecipeJsonBuilder buildRurinoRecipe(ShapedRecipeJsonBuilder builder, NesoItem smallNeso,
+  protected ShapedRecipeJsonBuilder buildRurinoRecipe(
+      ShapedRecipeJsonBuilder builder,
+      NesoItem smallNeso,
       BadgeItem badge) {
     return builder
-        .pattern("PY ")
+        .pattern("YP ")
         .pattern("CXB")
         .pattern(" BW")
         .input('P', Items.PINK_WOOL)
         .input('Y', Items.YELLOW_WOOL)
         .input('C', Items.CYAN_WOOL)
+        .input('B', Items.LIGHT_BLUE_WOOL)
+        .input('W', Items.WHITE_WOOL)
+        .input('X', badge);
+  }
+
+  protected ShapedRecipeJsonBuilder buildSayakaRecipe(
+      ShapedRecipeJsonBuilder builder,
+      NesoItem smallNeso,
+      BadgeItem badge) {
+    return builder
+        .pattern("OO ")
+        .pattern("OXB")
+        .pattern(" BW")
+        .input('O', Items.BLUE_WOOL)
+        .input('B', Items.LIGHT_BLUE_WOOL)
+        .input('W', Items.WHITE_WOOL)
+        .input('X', badge);
+  }
+
+  protected ShapedRecipeJsonBuilder buildKozueRecipe(
+      ShapedRecipeJsonBuilder builder,
+      NesoItem smallNeso,
+      BadgeItem badge) {
+    return builder
+        .pattern("PG ")
+        .pattern("PXB")
+        .pattern(" BW")
+        .input('P', Items.PURPLE_WOOL)
+        .input('G', Items.GREEN_WOOL)
+        .input('B', Items.LIGHT_BLUE_WOOL)
+        .input('W', Items.WHITE_WOOL)
+        .input('X', badge);
+  }
+
+  protected ShapedRecipeJsonBuilder buildMegumiRecipe(
+      ShapedRecipeJsonBuilder builder,
+      NesoItem smallNeso,
+      BadgeItem badge) {
+    return builder
+        .pattern("OO ")
+        .pattern("OXB")
+        .pattern(" BW")
+        .input('O', Items.BROWN_WOOL)
+        .input('B', Items.LIGHT_BLUE_WOOL)
+        .input('W', Items.WHITE_WOOL)
+        .input('X', badge);
+  }
+
+  protected ShapedRecipeJsonBuilder buildTsuzuriRecipe(
+      ShapedRecipeJsonBuilder builder,
+      NesoItem smallNeso,
+      BadgeItem badge) {
+    return builder
+        .pattern("WW ")
+        .pattern("RXB")
+        .pattern(" BW")
+        .input('R', Items.RED_WOOL)
         .input('B', Items.LIGHT_BLUE_WOOL)
         .input('W', Items.WHITE_WOOL)
         .input('X', badge);
@@ -76,8 +182,30 @@ public class HasugoodsRecipeProvider extends FabricRecipeProvider {
             case OshiUtils.RURINO_KEY:
               smallBuilder = buildRurinoRecipe(smallBuilder, smallNeso, badge);
               break;
+            case OshiUtils.HIME_KEY:
+              smallBuilder = buildHimeRecipe(smallBuilder, smallNeso, badge);
+              break;
+            case OshiUtils.SAYAKA_KEY:
+              smallBuilder = buildSayakaRecipe(smallBuilder, smallNeso, badge);
+              break;
+            case OshiUtils.TSUZURI_KEY:
+              smallBuilder = buildTsuzuriRecipe(smallBuilder, smallNeso, badge);
+              break;
+            case OshiUtils.KOSUZU_KEY:
+              smallBuilder = buildKosuzuRecipe(smallBuilder, smallNeso, badge);
+              break;
+            case OshiUtils.KOZUE_KEY:
+              smallBuilder = buildKozueRecipe(smallBuilder, smallNeso, badge);
+              break;
+            case OshiUtils.MEGUMI_KEY:
+              smallBuilder = buildMegumiRecipe(smallBuilder, smallNeso, badge);
+              break;
+            case OshiUtils.GINKO_KEY:
+              smallBuilder = buildGinkoRecipe(smallBuilder, smallNeso, badge);
+              break;
             default:
               Hasugoods.LOGGER.error("Unknown oshi key: {} when building neso recipe", mediumNeso.getOshiKey());
+              continue;
           }
           smallBuilder
               .criterion(hasItem(badge), conditionsFromItem(badge))

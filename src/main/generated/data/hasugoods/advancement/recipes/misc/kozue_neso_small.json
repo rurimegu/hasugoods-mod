@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_kozue_badge": {
+      "conditions": {
+        "items": [
+          {
+            "items": "hasugoods:kozue_badge"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "hasugoods:kozue_neso_small"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_kozue_badge"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "hasugoods:kozue_neso_small"
+    ]
+  }
+}

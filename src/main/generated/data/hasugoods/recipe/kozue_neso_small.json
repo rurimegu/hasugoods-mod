@@ -3,19 +3,18 @@
   "category": "misc",
   "key": {
     "B": "minecraft:light_blue_wool",
-    "C": "minecraft:cyan_wool",
-    "P": "minecraft:pink_wool",
+    "G": "minecraft:green_wool",
+    "P": "minecraft:purple_wool",
     "W": "minecraft:white_wool",
-    "X": "hasugoods:rurino_badge",
-    "Y": "minecraft:yellow_wool"
+    "X": "hasugoods:kozue_badge"
   },
   "pattern": [
-    "YP ",
-    "CXB",
+    "PG ",
+    "PXB",
     " BW"
   ],
   "result": {
     "count": 1,
-    "id": "hasugoods:rurino_neso_small"
+    "id": "hasugoods:kozue_neso_small"
   }
 }
