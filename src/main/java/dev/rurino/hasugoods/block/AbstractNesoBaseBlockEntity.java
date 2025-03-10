@@ -95,6 +95,7 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
   protected ItemStack nesoItemStack = ItemStack.EMPTY;
   protected NoteParticleEffect noteParticleEffect = DEFAULT_NOTE_PARTICLE_EFFECT;
   protected int curTick = 0;
+  public float animProgress = 0;
 
   public AbstractNesoBaseBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
     super(type, pos, state);
