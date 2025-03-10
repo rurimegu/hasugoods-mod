@@ -12,6 +12,11 @@ public class ModParticles {
       NoteParticleEffect.CODEC,
       NoteParticleEffect.PACKET_CODEC);
 
+  public static final ParticleType<QuestionMarkParticleEffect> QUESTION_MARK_PARTICLE_EFFECT = FabricParticleTypes
+      .complex(
+          QuestionMarkParticleEffect.CODEC,
+          QuestionMarkParticleEffect.PACKET_CODEC);
+
   public static void register(String name, ParticleType<?> particleType) {
     Identifier id = Hasugoods.id(name);
     Hasugoods.LOGGER.info("Register particle: {}", id);
@@ -20,5 +25,6 @@ public class ModParticles {
 
   public static void initialize() {
     register("note_particle", NOTE_PARTICLE_EFFECT);
+    register("question_mark_particle", QUESTION_MARK_PARTICLE_EFFECT);
   }
 }

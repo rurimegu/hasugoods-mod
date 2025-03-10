@@ -6,5 +6,7 @@ public class ClientParticles {
 
   public static void initialize() {
     ParticleFactoryRegistry.getInstance().register(ModParticles.NOTE_PARTICLE_EFFECT, NoteParticleFactory::new);
+    ParticleFactoryRegistry.getInstance().register(ModParticles.QUESTION_MARK_PARTICLE_EFFECT,
+        QuestionMarkParticleFactory::new);
   }
 }
