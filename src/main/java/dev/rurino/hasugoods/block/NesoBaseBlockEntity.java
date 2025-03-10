@@ -75,6 +75,8 @@ public class NesoBaseBlockEntity extends AbstractNesoBaseBlockEntity {
     super.readNbt(nbt, registries);
     if (nbt.contains(NBT_POS_0)) {
       pos0 = BlockPos.fromLong(nbt.getLong(NBT_POS_0));
+    } else {
+      pos0 = null;
     }
   }
 

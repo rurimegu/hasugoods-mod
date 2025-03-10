@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.item.OshiItem;
 import dev.rurino.hasugoods.particle.NoteParticleEffect;
+import dev.rurino.hasugoods.particle.QuestionMarkParticleEffect;
 import dev.rurino.hasugoods.util.CollectionUtils;
 import dev.rurino.hasugoods.util.OshiUtils;
 import net.minecraft.block.BlockState;
@@ -16,6 +17,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.particle.ParticleEffect;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.RegistryWrapper.WrapperLookup;
 import net.minecraft.util.math.BlockPos;
@@ -34,11 +36,14 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
   protected static final Vec3d WAVE_VELOCITY = new Vec3d(0, 0.04, 0);
   protected static final float RANDOM_PARTICLE_PROB = 0.1f;
 
-  protected static final Map<String, NoteParticleEffect> OSHI_KEY_TO_PARTICLE_EFFECT = OshiUtils.OSHI_COLOR_MAP
+  protected static final Map<String, NoteParticleEffect> OSHI_KEY_TO_NOTE_PARTICLE_EFFECT = OshiUtils.OSHI_COLOR_MAP
       .entrySet().stream()
       .collect(Collectors.toMap(Map.Entry::getKey, e -> new NoteParticleEffect(e.getValue())));
   protected static final NoteParticleEffect DEFAULT_NOTE_PARTICLE_EFFECT = new NoteParticleEffect(
       OshiUtils.DEFAULT_OSHI_COLOR);
+
+  protected static final QuestionMarkParticleEffect QUESTION_MARK_PARTICLE_EFFECT = new QuestionMarkParticleEffect(
+      0xFF0000);
 
   protected static enum ParticleState {
     RANDOM,
@@ -102,7 +107,7 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
   protected void setItemStackNoSync(ItemStack itemStack) {
     nesoItemStack = itemStack;
     if (itemStack.getItem() instanceof OshiItem oshiItem) {
-      noteParticleEffect = OSHI_KEY_TO_PARTICLE_EFFECT.getOrDefault(oshiItem.getOshiKey(),
+      noteParticleEffect = OSHI_KEY_TO_NOTE_PARTICLE_EFFECT.getOrDefault(oshiItem.getOshiKey(),
           DEFAULT_NOTE_PARTICLE_EFFECT);
     } else {
       if (!itemStack.isEmpty()) {
@@ -130,12 +135,12 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
     return curTick % (PARTICLE_PER_WAVE * TICK_PER_PARTICLE);
   }
 
-  protected void createNoteParticle(NoteParticleEffect effect, World world, Vec3d pos, Vec3d velocity) {
+  protected static void createParticle(ParticleEffect effect, World world, Vec3d pos, Vec3d velocity) {
     world.addParticle(effect, pos.x, pos.y, pos.z, velocity.x, velocity.y, velocity.z);
   }
 
   protected void createNoteParticle(World world, Vec3d pos, Vec3d velocity) {
-    createNoteParticle(noteParticleEffect, world, pos, velocity);
+    createParticle(noteParticleEffect, world, pos, velocity);
   }
 
   protected void createSpiralNoteParticles(World world, BlockPos blockPos, BlockState blockState) {
@@ -166,10 +171,10 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
     double z = blockPos.getZ() + random.nextDouble();
     Vec3d pos = new Vec3d(x, y, z);
     NoteParticleEffect effect = CollectionUtils.getRandomElement(
-        OSHI_KEY_TO_PARTICLE_EFFECT.values().stream().toList(),
+        OSHI_KEY_TO_NOTE_PARTICLE_EFFECT.values().stream().toList(),
         random);
     Vec3d velocity = new Vec3d(0, MathHelper.nextDouble(random, 0.015, 0.025), 0);
-    createNoteParticle(effect, world, pos, velocity);
+    createParticle(effect, world, pos, velocity);
   }
 
   abstract protected ParticleState getParticleState();

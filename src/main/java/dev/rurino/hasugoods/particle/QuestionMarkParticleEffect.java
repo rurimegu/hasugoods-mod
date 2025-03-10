@@ -30,7 +30,7 @@ public class QuestionMarkParticleEffect extends NoteParticleEffect {
 
   @Override
   public ParticleType<?> getType() {
-    return ModParticles.NOTE_PARTICLE_EFFECT;
+    return ModParticles.QUESTION_MARK_PARTICLE_EFFECT;
   }
 
 }

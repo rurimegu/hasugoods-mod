@@ -34,7 +34,7 @@ public class PositionZeroBlock extends AbstractNesoBaseBlock {
 
   @Override
   public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-    if (world.getBlockEntity(pos) instanceof PositionZeroBlockEntity blockEntity) {
+    if (!world.isClient && world.getBlockEntity(pos) instanceof PositionZeroBlockEntity blockEntity) {
       blockEntity.unlinkNesoBases();
     }
     return super.onBreak(world, pos, state, player);

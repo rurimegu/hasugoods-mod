@@ -53,6 +53,39 @@ public class OshiUtils {
     return OSHI_COLOR_MAP.getOrDefault(oshiKey, DEFAULT_OSHI_COLOR);
   }
 
+  // #region Groups
+
+  public static enum HasuUnit {
+    NONE,
+    CERISE_BOUQUET,
+    DOLLCHESTRA,
+    MIRACRA_PARK
+  }
+
+  public static HasuUnit getUnit(String oshiKey) {
+    if (oshiKey == null)
+      return HasuUnit.NONE;
+    return switch (oshiKey) {
+      case KOZUE_KEY, KAHO_KEY, GINKO_KEY -> HasuUnit.CERISE_BOUQUET;
+      case TSUZURI_KEY, SAYAKA_KEY, KOSUZU_KEY -> HasuUnit.DOLLCHESTRA;
+      case MEGUMI_KEY, RURINO_KEY, HIME_KEY -> HasuUnit.MIRACRA_PARK;
+      default -> HasuUnit.NONE;
+    };
+  }
+
+  public static int getGrade(String oshiKey) {
+    if (oshiKey == null)
+      return -1;
+    return switch (oshiKey) {
+      case KOZUE_KEY, TSUZURI_KEY, MEGUMI_KEY -> 102;
+      case KAHO_KEY, SAYAKA_KEY, RURINO_KEY -> 103;
+      case GINKO_KEY, KOSUZU_KEY, HIME_KEY -> 104;
+      default -> -1;
+    };
+  }
+
+  // #endregion Group
+
   // #region Badge
   public static BadgeItem getRandomBadge(Random random, boolean isSecret, String... excludes) {
     List<BadgeItem> badgeList = BadgeItem.getAllBadges(isSecret)
