@@ -26,7 +26,7 @@ import net.minecraft.world.World;
 
 public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
   // #region Static members
-  protected static final String NESO_ITEM_STACK_KEY = "nesoItemStack";
+  protected static final String NBT_NESO_ITEM_STACK = "nesoItemStack";
   protected static final int PARTICLE_PER_SIDE = 4;
   protected static final int TICK_PER_PARTICLE = 2;
   protected static final int PARTICLE_PER_WAVE = PARTICLE_PER_SIDE << 2;
@@ -79,6 +79,7 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
 
   public static <T extends AbstractNesoBaseBlockEntity> void tick(
       World world, BlockPos blockPos, BlockState blockState, T entity) {
+    entity.tick(world, blockPos, blockState);
     if (world.isClient) {
       entity.clientTick(world, blockPos, blockState);
     }
@@ -88,7 +89,7 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
 
   protected ItemStack nesoItemStack = ItemStack.EMPTY;
   protected NoteParticleEffect noteParticleEffect = DEFAULT_NOTE_PARTICLE_EFFECT;
-  protected int displayTick = 0;
+  protected int curTick = 0;
 
   public AbstractNesoBaseBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
     super(type, pos, state);
@@ -98,7 +99,7 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
     return nesoItemStack;
   }
 
-  public void setItemStack(ItemStack itemStack) {
+  protected void setItemStackNoSync(ItemStack itemStack) {
     nesoItemStack = itemStack;
     if (itemStack.getItem() instanceof OshiItem oshiItem) {
       noteParticleEffect = OSHI_KEY_TO_PARTICLE_EFFECT.getOrDefault(oshiItem.getOshiKey(),
@@ -109,6 +110,10 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
       }
       noteParticleEffect = DEFAULT_NOTE_PARTICLE_EFFECT;
     }
+  }
+
+  public void setItemStack(ItemStack itemStack) {
+    setItemStackNoSync(itemStack);
     markDirty();
     sync();
   }
@@ -117,6 +122,12 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
     if (getItemStack().isEmpty() || !(getItemStack().getItem() instanceof OshiItem oshiItem))
       return OshiUtils.DEFAULT_OSHI_COLOR;
     return OshiUtils.OSHI_COLOR_MAP.get(oshiItem.getOshiKey());
+  }
+
+  // #region Particles
+
+  protected int getParticleTick() {
+    return curTick % (PARTICLE_PER_WAVE * TICK_PER_PARTICLE);
   }
 
   protected void createNoteParticle(NoteParticleEffect effect, World world, Vec3d pos, Vec3d velocity) {
@@ -128,14 +139,15 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
   }
 
   protected void createSpiralNoteParticles(World world, BlockPos blockPos, BlockState blockState) {
-    if (displayTick % TICK_PER_PARTICLE != 0)
+    int particleTick = getParticleTick();
+    if (particleTick % TICK_PER_PARTICLE != 0)
       return;
-    Vec3d pos = getSidePos(displayTick / TICK_PER_PARTICLE, blockPos);
+    Vec3d pos = getSidePos(particleTick / TICK_PER_PARTICLE, blockPos);
     createNoteParticle(world, pos, SPIRAL_VELOCITY);
   }
 
   protected void createWaveNoteParticles(World world, BlockPos blockPos, BlockState blockState) {
-    if (displayTick != 0)
+    if (getParticleTick() != 0)
       return;
     for (int i = 0; i < PARTICLE_PER_WAVE; i++) {
       Vec3d pos = getSidePos(i, blockPos);
@@ -144,6 +156,8 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
   }
 
   protected void createRandomNoteParticles(World world, BlockPos blockPos, BlockState blockState) {
+    if (getParticleTick() % TICK_PER_PARTICLE != 0)
+      return;
     Random random = world.getRandom();
     if (random.nextFloat() >= RANDOM_PARTICLE_PROB)
       return;
@@ -176,22 +190,28 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
     }
   }
 
+  // #endregion Particles
+
   protected void clientTick(World world, BlockPos blockPos, BlockState blockState) {
-    displayTick++;
-    displayTick %= PARTICLE_PER_WAVE * TICK_PER_PARTICLE;
     maybeCreateNoteParticles(world, blockPos, blockState);
   }
+
+  protected void tick(World world, BlockPos blockPos, BlockState blockState) {
+    curTick++;
+  }
+
+  // #region Serialization
 
   @Override
   protected void writeNbt(NbtCompound nbt, WrapperLookup registries) {
     super.writeNbt(nbt, registries);
-    nbt.put(NESO_ITEM_STACK_KEY, getItemStack().toNbtAllowEmpty(registries));
+    nbt.put(NBT_NESO_ITEM_STACK, getItemStack().toNbtAllowEmpty(registries));
   }
 
   @Override
   protected void readNbt(NbtCompound nbt, WrapperLookup registries) {
     super.readNbt(nbt, registries);
-    setItemStack(ItemStack.fromNbtOrEmpty(registries, nbt.getCompound(NESO_ITEM_STACK_KEY)));
+    setItemStackNoSync(ItemStack.fromNbtOrEmpty(registries, nbt.getCompound(NBT_NESO_ITEM_STACK)));
   }
 
   @Override
@@ -211,4 +231,5 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
     }
   }
 
+  // #endregion Serialization
 }

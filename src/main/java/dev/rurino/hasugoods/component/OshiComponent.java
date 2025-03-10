@@ -9,7 +9,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper.WrapperLookup;
 
 public class OshiComponent implements IOshiComponent {
-  private static final String OSHI_KEY = "oshi_key";
+  private static final String NBT_OSHI = "oshiKey";
   private final LivingEntity provider;
   private String oshiKey;
 
@@ -25,15 +25,15 @@ public class OshiComponent implements IOshiComponent {
 
   @Override
   public void readFromNbt(NbtCompound tag, WrapperLookup registryLookup) {
-    oshiKey = tag.getString(OSHI_KEY);
+    oshiKey = tag.getString(NBT_OSHI);
   }
 
   @Override
   public void writeToNbt(NbtCompound tag, WrapperLookup registryLookup) {
     if (StringUtils.isEmpty(oshiKey)) {
-      tag.remove(OSHI_KEY);
+      tag.remove(NBT_OSHI);
     } else {
-      tag.putString(OSHI_KEY, oshiKey);
+      tag.putString(NBT_OSHI, oshiKey);
     }
   }
 }
