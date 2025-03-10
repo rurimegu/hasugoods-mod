@@ -13,6 +13,9 @@ import net.minecraft.item.ItemStack;
 
 public class NesoEntityModel extends EntityModel<LivingEntityRenderState> {
 
+  public static final CustomModelDataComponent NESO_3D_CUSTOM_MODEL_DATA = new CustomModelDataComponent(
+      List.of(), List.of(true), List.of(), List.of());
+
   protected final NesoItem item;
   protected final ItemStack stack;
 
@@ -20,8 +23,7 @@ public class NesoEntityModel extends EntityModel<LivingEntityRenderState> {
     super(new ModelPart(List.of(), Map.of()));
     this.item = item;
     this.stack = new ItemStack(item);
-    this.stack.set(DataComponentTypes.CUSTOM_MODEL_DATA, new CustomModelDataComponent(
-        List.of(), List.of(true), List.of(), List.of()));
+    this.stack.set(DataComponentTypes.CUSTOM_MODEL_DATA, NESO_3D_CUSTOM_MODEL_DATA);
   }
 
   public NesoItem getItem() {

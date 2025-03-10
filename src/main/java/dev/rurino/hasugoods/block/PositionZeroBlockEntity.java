@@ -170,6 +170,7 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
         continue;
       }
       String oshiKey = nesoItem.getOshiKey();
+      nodes[i] = oshiKey;
       if (appeared.containsKey(oshiKey)) {
         ret[i] = NesoBaseState.ERROR;
         ret[appeared.get(oshiKey)] = NesoBaseState.ERROR;
@@ -179,8 +180,6 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
       // Must be medium size
       if (nesoItem.getNesoSize() != NesoSize.MEDIUM) {
         ret[i] = NesoBaseState.ERROR;
-      } else {
-        nodes[i] = oshiKey;
       }
     }
     // All units must be adjacent

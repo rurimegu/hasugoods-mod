@@ -129,6 +129,10 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
     return OshiUtils.OSHI_COLOR_MAP.get(oshiItem.getOshiKey());
   }
 
+  public boolean isTopAir() {
+    return world.getBlockState(pos.up()).isAir();
+  }
+
   // #region Particles
 
   protected int getParticleTick() {
@@ -196,6 +200,10 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
   }
 
   // #endregion Particles
+
+  public int getCurTick() {
+    return curTick;
+  }
 
   protected void clientTick(World world, BlockPos blockPos, BlockState blockState) {
     maybeCreateNoteParticles(world, blockPos, blockState);
