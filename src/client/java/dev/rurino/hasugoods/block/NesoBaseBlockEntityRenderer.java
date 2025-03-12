@@ -58,7 +58,8 @@ public class NesoBaseBlockEntityRenderer implements BlockEntityRenderer<Abstract
         light,
         overlay,
         matrices,
-        vertexConsumers,
+        // Do not show crumbling animation
+        renderLayer -> vertexConsumers.getBuffer(NoCrumblingRenderLayer.get(renderLayer)),
         null,
         0);
 

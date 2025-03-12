@@ -62,6 +62,11 @@ public abstract class AbstractNesoBaseBlock extends BlockWithEntity {
     }
     ItemStack prevItemStack = blockEntity.getItemStack();
     ItemStack stackInHand = player.getStackInHand(player.getActiveHand());
+
+    if (!stackInHand.isEmpty() && !(stackInHand.getItem() instanceof NesoItem)) {
+      return ActionResult.PASS;
+    }
+
     ActionResult actionResult = ActionResult.PASS;
 
     if (!prevItemStack.isEmpty()) {
