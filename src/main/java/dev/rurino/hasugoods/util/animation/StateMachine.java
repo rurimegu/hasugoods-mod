@@ -33,7 +33,7 @@ public class StateMachine {
     this.curState = new InnerState(null, initialState, 0);
   }
 
-  public KeyFrame getFrame() {
+  public KeyFrame get() {
     if (curState.frame == null)
       return update(0);
 
@@ -55,7 +55,7 @@ public class StateMachine {
     return curState.frame;
   }
 
-  public void setState(int state, Animation animation) {
+  public void set(int state, Animation animation) {
     states.put(state, animation);
   }
 

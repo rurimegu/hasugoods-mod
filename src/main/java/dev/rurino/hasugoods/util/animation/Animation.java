@@ -48,12 +48,13 @@ public class Animation {
     return keyFrames.size();
   }
 
-  protected int getPrevKeyFrameIndex(double tick) {
+  protected KeyFrame interpolate(double tick) {
     if (keyFrames.size() == 0)
       throw new IllegalStateException("No keyframes added");
 
-    if (keyFrames.size() == 1)
-      return 0;
+    if (keyFrames.size() == 1) {
+      return keyFrames.get(0);
+    }
 
     if (loop == LoopType.LOOP) {
       tick %= duration();
@@ -64,39 +65,29 @@ public class Animation {
         tick = duration - tick;
       }
     } else if (tick > duration()) {
-      return keyFrames.size() - 1;
+      return keyFrames.get(keyFrames.size() - 1);
     }
 
     for (int i = 1; i < keyFrames.size(); i++) {
-      if (keyFrames.get(i).tick() >= tick) {
-        return i - 1;
+      KeyFrame b = keyFrames.get(i);
+      if (b.tick() >= tick) {
+        KeyFrame a = keyFrames.get(i - 1);
+        Interpolator interpolator = interpolators.get(i - 1);
+        KeyFrame interpolated = interpolator.interpolate(a, b, tick);
+        return interpolated;
       }
     }
 
-    return keyFrames.size() - 1;
+    return keyFrames.get(keyFrames.size() - 1);
   }
 
   public KeyFrame getKeyFrame(double tick, KeyFrame prev) {
-    int prevIdx = getPrevKeyFrameIndex(tick);
-    if (prevIdx == keyFrames.size() - 1) {
-      return keyFrames.get(prevIdx);
-    }
-    KeyFrame a = keyFrames.get(prevIdx);
-    KeyFrame b = keyFrames.get(prevIdx + 1);
-    Interpolator interpolator = interpolators.get(prevIdx);
-    KeyFrame result = interpolator.interpolate(a, b, tick);
+    KeyFrame frame = interpolate(tick);
     double ratio = Math.min(1, tick / MAX_TRANSITION_TICK);
-    return Interpolator.LINEAR.interpolate(prev, result, ratio);
+    return Interpolator.LINEAR.interpolate(prev, frame, ratio);
   }
 
   public KeyFrame getKeyFrame(double tick) {
-    int prevIdx = getPrevKeyFrameIndex(tick);
-    if (prevIdx == keyFrames.size() - 1) {
-      return keyFrames.get(prevIdx);
-    }
-    KeyFrame a = keyFrames.get(prevIdx);
-    KeyFrame b = keyFrames.get(prevIdx + 1);
-    Interpolator interpolator = interpolators.get(prevIdx);
-    return interpolator.interpolate(a, b, tick);
+    return interpolate(tick);
   }
 }

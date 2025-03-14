@@ -1,6 +1,7 @@
 package dev.rurino.hasugoods.block;
 
 import dev.rurino.hasugoods.entity.NesoEntityModel;
+import dev.rurino.hasugoods.util.ClientAnimation;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
@@ -11,12 +12,9 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ModelTransformationMode;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 
 public class NesoBaseBlockEntityRenderer implements BlockEntityRenderer<AbstractNesoBaseBlockEntity> {
-  protected static final float ANIM_DURATION_TICK = 80;
-  protected static final float Y_TRANSLATION = 0.1f;
 
   protected final ItemRenderer itemRenderer;
 
@@ -35,22 +33,16 @@ public class NesoBaseBlockEntityRenderer implements BlockEntityRenderer<Abstract
     BlockState blockState = entity.getCachedState();
     if (stack.isEmpty() || !entity.isTopAir())
       return;
-    entity.animProgress += tickDelta;
-    entity.animProgress %= ANIM_DURATION_TICK;
-    float progress = entity.animProgress / ANIM_DURATION_TICK;
-    if (progress > 0.5)
-      progress = (1 - progress) * 2;
-    else
-      progress *= 2;
-
-    float translateY = MathHelper.easeInOutSine(progress) * Y_TRANSLATION;
 
     stack.set(DataComponentTypes.CUSTOM_MODEL_DATA, NesoEntityModel.NESO_3D_CUSTOM_MODEL_DATA);
+
     matrices.push();
-    matrices.translate(0.5, 1.2 + translateY, 0.5);
+    matrices.translate(0.5, 1, 0.5);
 
     Direction direction = blockState.get(AbstractNesoBaseBlock.FACING);
     matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(direction.getPositiveHorizontalDegrees()));
+
+    ClientAnimation.apply(entity.getStateMachine().update(tickDelta), matrices);
 
     itemRenderer.renderItem(
         stack,

@@ -8,7 +8,13 @@ import dev.rurino.hasugoods.item.OshiItem;
 import dev.rurino.hasugoods.particle.NoteParticleEffect;
 import dev.rurino.hasugoods.particle.QuestionMarkParticleEffect;
 import dev.rurino.hasugoods.util.CollectionUtils;
+import dev.rurino.hasugoods.util.Easing;
 import dev.rurino.hasugoods.util.OshiUtils;
+import dev.rurino.hasugoods.util.animation.Animation;
+import dev.rurino.hasugoods.util.animation.Animation.LoopType;
+import dev.rurino.hasugoods.util.animation.Interpolator;
+import dev.rurino.hasugoods.util.animation.KeyFrame;
+import dev.rurino.hasugoods.util.animation.StateMachine;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -95,10 +101,26 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
   protected ItemStack nesoItemStack = ItemStack.EMPTY;
   protected NoteParticleEffect noteParticleEffect = DEFAULT_NOTE_PARTICLE_EFFECT;
   protected int curTick = 0;
-  public float animProgress = 0;
+
+  // #region Animation
+  public static int ANIM_STATE_IDLE = 0;
+
+  protected final StateMachine stateMachine = new StateMachine(ANIM_STATE_IDLE);
+
+  public StateMachine getStateMachine() {
+    return stateMachine;
+  }
+  // #endregion Animation
 
   public AbstractNesoBaseBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
     super(type, pos, state);
+
+    // Build idle animation
+    Animation anim = new Animation(
+        KeyFrame.Regular.translate(0, new Vec3d(0, 0.2, 0)),
+        LoopType.PING_PONG);
+    anim.addKeyFrame(KeyFrame.Regular.translate(80, new Vec3d(0, 0.3, 0)), Interpolator.of(Easing::easeInOutSine));
+    stateMachine.set(ANIM_STATE_IDLE, anim);
   }
 
   public ItemStack getItemStack() {

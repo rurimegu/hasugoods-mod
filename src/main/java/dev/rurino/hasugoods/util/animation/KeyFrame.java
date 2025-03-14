@@ -1,7 +1,6 @@
 package dev.rurino.hasugoods.util.animation;
 
 import org.joml.Quaternionf;
-
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 
@@ -36,6 +35,14 @@ public interface KeyFrame {
       return new Regular(tick, translation, axis.rotationDegrees(rotationDegrees), scale);
     }
 
+    public static Regular translate(double tick, Vec3d translation) {
+      return translate(tick, translation, new Vec3d(1, 1, 1));
+    }
+
+    public static Regular translate(double tick, Vec3d translation, Vec3d scale) {
+      return new Regular(tick, translation, new Quaternionf(), scale);
+    }
+
     @Override
     public double tick() {
       return tick;
@@ -54,6 +61,12 @@ public interface KeyFrame {
     @Override
     public Vec3d scale() {
       return scale;
+    }
+
+    @Override
+    public String toString() {
+      return String.format("KeyFrame(tick=%f, translation=%s, rotation=%s, scale=%s)", tick, translation, rotation,
+          scale);
     }
   }
 }
