@@ -4,36 +4,67 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class StateMachine {
-  protected int currentState;
-  protected float currentTick = 0;
-  protected KeyFrame currentFrame;
+
+  protected static class InnerState {
+    public KeyFrame frame;
+    public int state;
+    public double tick;
+
+    public InnerState(KeyFrame frame, int state, double tick) {
+      this.frame = frame;
+      this.state = state;
+      this.tick = tick;
+    }
+
+    public InnerState(InnerState other) {
+      this(other.frame, other.state, other.tick);
+    }
+
+    public InnerState clone() {
+      return new InnerState(this);
+    }
+  }
+
+  protected InnerState curState;
+  protected KeyFrame prevFrame;
   protected final Map<Integer, Animation> states = new HashMap<>();
 
   public StateMachine(int initialState) {
-    this.currentState = initialState;
+    this.curState = new InnerState(null, initialState, 0);
   }
 
   public KeyFrame getFrame() {
-    return currentFrame;
+    if (curState.frame == null)
+      return update(0);
+
+    return curState.frame;
   }
 
-  public KeyFrame update(float tick) {
-    Animation currentAnimation = states.get(currentState);
+  public KeyFrame update(double tick) {
+    curState.tick += tick;
+    Animation currentAnimation = states.get(curState.state);
     if (currentAnimation == null) {
-      throw new IllegalStateException("No animation for state " + currentState);
+      throw new IllegalStateException("No animation for state " + curState.state);
     }
 
-    currentTick += tick;
-    currentFrame = currentAnimation.getKeyFrame(currentTick, currentFrame);
-    return currentFrame;
+    if (prevFrame == null) {
+      curState.frame = currentAnimation.getKeyFrame(curState.tick);
+    } else {
+      curState.frame = currentAnimation.getKeyFrame(tick, prevFrame);
+    }
+    return curState.frame;
   }
 
-  public void addState(int state, Animation animation) {
+  public void setState(int state, Animation animation) {
     states.put(state, animation);
   }
 
   public void transit(int state) {
-    currentState = state;
-    currentTick = 0;
+    if (!states.containsKey(state)) {
+      throw new IllegalStateException("No animation for state " + state);
+    }
+    curState.tick = 0;
+    curState.state = state;
+    prevFrame = curState.frame;
   }
 }
