@@ -35,6 +35,7 @@ import net.minecraft.world.World;
 public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
   // #region Static members
   protected static final String NBT_NESO_ITEM_STACK = "nesoItemStack";
+  protected static final String NBT_LOCK_ITEM_STACK = "lockItemStack";
   protected static final int PARTICLE_PER_SIDE = 4;
   protected static final int TICK_PER_PARTICLE = 2;
   protected static final int PARTICLE_PER_WAVE = PARTICLE_PER_SIDE << 2;
@@ -98,17 +99,30 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
 
   // #endregion Static members
 
-  protected ItemStack nesoItemStack = ItemStack.EMPTY;
+  private ItemStack nesoItemStack = ItemStack.EMPTY;
   protected NoteParticleEffect noteParticleEffect = DEFAULT_NOTE_PARTICLE_EFFECT;
   protected int curTick = 0;
 
   // #region Animation
   public static int ANIM_STATE_IDLE = 0;
+  protected static final Animation ANIM_IDLE = new Animation(
+      new KeyFrame.Regular.Builder().tick(0).translation(new Vec3d(0, 0.2, 0)).build(),
+      LoopType.PING_PONG)
+      .addKeyFrame(
+          new KeyFrame.Regular.Builder().tick(80).translation(new Vec3d(0, 0.3, 0)).build(),
+          Interpolator.of(Easing::easeInOutSine));
 
-  protected final StateMachine stateMachine = new StateMachine(ANIM_STATE_IDLE);
+  private final StateMachine stateMachine = new StateMachine(ANIM_STATE_IDLE);
 
   public StateMachine getStateMachine() {
     return stateMachine;
+  }
+
+  public Vec3d getAnimatedEntityPos() {
+    KeyFrame frame = stateMachine.get();
+    Vec3d translation = frame.translation();
+    Vec3d scale = frame.scale();
+    return getPos().toBottomCenterPos().add(new Vec3d(0, 1.0 + scale.y * 0.3, 0)).add(translation);
   }
   // #endregion Animation
 
@@ -116,18 +130,36 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
     super(type, pos, state);
 
     // Build idle animation
-    Animation anim = new Animation(
-        KeyFrame.Regular.translate(0, new Vec3d(0, 0.2, 0)),
-        LoopType.PING_PONG);
-    anim.addKeyFrame(KeyFrame.Regular.translate(80, new Vec3d(0, 0.3, 0)), Interpolator.of(Easing::easeInOutSine));
-    stateMachine.set(ANIM_STATE_IDLE, anim);
+    stateMachine.set(ANIM_STATE_IDLE, ANIM_IDLE);
+  }
+
+  // #region Item stack
+
+  private boolean itemStackLocked = false;
+
+  public boolean isItemStackLocked() {
+    return itemStackLocked;
+  }
+
+  public void lockItemStack() {
+    itemStackLocked = true;
+    markDirty();
+    sync();
+  }
+
+  public void unlockItemStack() {
+    itemStackLocked = false;
+    markDirty();
+    sync();
   }
 
   public ItemStack getItemStack() {
     return nesoItemStack;
   }
 
-  protected void setItemStackNoSync(ItemStack itemStack) {
+  protected boolean setItemStackNoSync(ItemStack itemStack) {
+    if (isItemStackLocked())
+      return false;
     nesoItemStack = itemStack;
     if (itemStack.getItem() instanceof OshiItem oshiItem) {
       noteParticleEffect = OSHI_KEY_TO_NOTE_PARTICLE_EFFECT.getOrDefault(oshiItem.getOshiKey(),
@@ -138,12 +170,16 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
       }
       noteParticleEffect = DEFAULT_NOTE_PARTICLE_EFFECT;
     }
+    return true;
   }
 
-  public void setItemStack(ItemStack itemStack) {
-    setItemStackNoSync(itemStack);
+  public boolean setItemStack(ItemStack itemStack) {
+    if (!setItemStackNoSync(itemStack)) {
+      return false;
+    }
     markDirty();
     sync();
+    return true;
   }
 
   public int getItemColor() {
@@ -151,6 +187,8 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
       return OshiUtils.DEFAULT_OSHI_COLOR;
     return OshiUtils.OSHI_COLOR_MAP.get(oshiItem.getOshiKey());
   }
+
+  // #endregion Item stack
 
   public boolean isTopAir() {
     return world.getBlockState(pos.up()).isAir();
@@ -242,12 +280,17 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
   protected void writeNbt(NbtCompound nbt, WrapperLookup registries) {
     super.writeNbt(nbt, registries);
     nbt.put(NBT_NESO_ITEM_STACK, getItemStack().toNbtAllowEmpty(registries));
+    nbt.putBoolean(NBT_LOCK_ITEM_STACK, isItemStackLocked());
   }
 
   @Override
   protected void readNbt(NbtCompound nbt, WrapperLookup registries) {
     super.readNbt(nbt, registries);
+    itemStackLocked = false;
     setItemStackNoSync(ItemStack.fromNbtOrEmpty(registries, nbt.getCompound(NBT_NESO_ITEM_STACK)));
+    if (nbt.contains(NBT_LOCK_ITEM_STACK) && nbt.getBoolean(NBT_LOCK_ITEM_STACK)) {
+      itemStackLocked = true;
+    }
   }
 
   @Override

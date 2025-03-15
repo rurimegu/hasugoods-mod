@@ -2,6 +2,7 @@ package dev.rurino.hasugoods;
 
 import dev.rurino.hasugoods.block.ClientBlocks;
 import dev.rurino.hasugoods.entity.ClientEntities;
+import dev.rurino.hasugoods.network.ClientNetwork;
 import dev.rurino.hasugoods.particle.ClientParticles;
 import net.fabricmc.api.ClientModInitializer;
 
@@ -11,5 +12,6 @@ public class HasugoodsClient implements ClientModInitializer {
     ClientEntities.initialize();
     ClientParticles.initialize();
     ClientBlocks.initialize();
+    ClientNetwork.initialize();
   }
 }

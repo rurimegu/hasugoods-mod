@@ -3,7 +3,6 @@ package dev.rurino.hasugoods.util.animation;
 import java.util.ArrayList;
 
 public class Animation {
-  protected static float MAX_TRANSITION_TICK = 20;
 
   public enum LoopType {
     NONE,
@@ -14,33 +13,28 @@ public class Animation {
   protected final ArrayList<KeyFrame> keyFrames = new ArrayList<>();
   protected final ArrayList<Interpolator> interpolators = new ArrayList<>();
   protected final LoopType loop;
-  protected final float maxTransition;
-
-  public Animation(KeyFrame initState, LoopType loop, float maxTransition) {
-    keyFrames.add(initState);
-    this.loop = loop;
-    this.maxTransition = maxTransition;
-  }
 
   public Animation(KeyFrame initState, LoopType loop) {
-    this(initState, loop, MAX_TRANSITION_TICK);
+    keyFrames.add(initState);
+    this.loop = loop;
   }
 
   public Animation(KeyFrame initState) {
     this(initState, LoopType.NONE);
   }
 
-  public void addKeyFrame(KeyFrame frame, Interpolator interpolator) {
+  public Animation addKeyFrame(KeyFrame frame, Interpolator interpolator) {
     keyFrames.add(frame);
     interpolators.add(interpolator);
+    return this;
   }
 
-  public void addKeyFrame(KeyFrame frame) {
-    addKeyFrame(frame, Interpolator.LINEAR);
+  public Animation addKeyFrame(KeyFrame frame) {
+    return addKeyFrame(frame, Interpolator.LINEAR);
   }
 
   public double duration() {
-    double lastTick = keyFrames.get(keyFrames.size() - 1).tick();
+    double lastTick = last().tick();
     return loop == LoopType.PING_PONG ? lastTick * 2 : lastTick;
   }
 
@@ -48,12 +42,24 @@ public class Animation {
     return keyFrames.size();
   }
 
+  public KeyFrame at(int index) {
+    return keyFrames.get(index);
+  }
+
+  public KeyFrame first() {
+    return keyFrames.get(0);
+  }
+
+  public KeyFrame last() {
+    return keyFrames.get(keyFrames.size() - 1);
+  }
+
   protected KeyFrame interpolate(double tick) {
     if (keyFrames.size() == 0)
       throw new IllegalStateException("No keyframes added");
 
     if (keyFrames.size() == 1) {
-      return keyFrames.get(0);
+      return first();
     }
 
     if (loop == LoopType.LOOP) {
@@ -65,7 +71,7 @@ public class Animation {
         tick = duration - tick;
       }
     } else if (tick > duration()) {
-      return keyFrames.get(keyFrames.size() - 1);
+      return last();
     }
 
     for (int i = 1; i < keyFrames.size(); i++) {
@@ -81,9 +87,9 @@ public class Animation {
     return keyFrames.get(keyFrames.size() - 1);
   }
 
-  public KeyFrame getKeyFrame(double tick, KeyFrame prev) {
+  public KeyFrame getKeyFrame(double tick, double transitTick, KeyFrame prev) {
     KeyFrame frame = interpolate(tick);
-    double ratio = Math.min(1, tick / MAX_TRANSITION_TICK);
+    double ratio = Math.min(1, tick / transitTick);
     return Interpolator.LINEAR.interpolate(prev, frame, ratio);
   }
 

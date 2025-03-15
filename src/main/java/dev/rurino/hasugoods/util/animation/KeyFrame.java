@@ -1,7 +1,6 @@
 package dev.rurino.hasugoods.util.animation;
 
 import org.joml.Quaternionf;
-import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 
 public interface KeyFrame {
@@ -19,6 +18,41 @@ public interface KeyFrame {
     private final Quaternionf rotation;
     private final Vec3d scale;
 
+    public static class Builder {
+      private double tick = 0;
+      private Vec3d translation = Vec3d.ZERO;
+      private Quaternionf rotation = new Quaternionf();
+      private Vec3d scale = new Vec3d(1, 1, 1);
+
+      public Builder tick(double tick) {
+        this.tick = tick;
+        return this;
+      }
+
+      public Builder translation(Vec3d translation) {
+        this.translation = translation;
+        return this;
+      }
+
+      public Builder rotation(Quaternionf rotation) {
+        this.rotation = rotation;
+        return this;
+      }
+
+      public Builder scale(Vec3d scale) {
+        this.scale = scale;
+        return this;
+      }
+
+      public Builder scale(double scale) {
+        return scale(new Vec3d(scale, scale, scale));
+      }
+
+      public Regular build() {
+        return new Regular(tick, translation, rotation, scale);
+      }
+    }
+
     public Regular(double tick, Vec3d translation, Quaternionf rotation, Vec3d scale) {
       this.tick = tick;
       this.translation = translation;
@@ -26,21 +60,8 @@ public interface KeyFrame {
       this.scale = scale;
     }
 
-    public static Regular rotateBy(
-        RotationAxis axis,
-        double tick,
-        Vec3d translation,
-        float rotationDegrees,
-        Vec3d scale) {
-      return new Regular(tick, translation, axis.rotationDegrees(rotationDegrees), scale);
-    }
-
-    public static Regular translate(double tick, Vec3d translation) {
-      return translate(tick, translation, new Vec3d(1, 1, 1));
-    }
-
-    public static Regular translate(double tick, Vec3d translation, Vec3d scale) {
-      return new Regular(tick, translation, new Quaternionf(), scale);
+    public Builder toBuilder() {
+      return new Builder().tick(tick).translation(translation).rotation(rotation).scale(scale);
     }
 
     @Override

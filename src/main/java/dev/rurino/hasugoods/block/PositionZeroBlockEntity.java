@@ -9,22 +9,34 @@ import com.google.common.collect.ImmutableList;
 
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.item.neso.NesoItem;
+import dev.rurino.hasugoods.network.BlockPosPayload.PlayNesoMergeAnim;
+import dev.rurino.hasugoods.network.BlockPosPayload.StopNesoMergeAnim;
+import dev.rurino.hasugoods.util.Easing;
 import dev.rurino.hasugoods.util.OshiUtils;
+import dev.rurino.hasugoods.util.Timer;
 import dev.rurino.hasugoods.util.OshiUtils.HasuUnit;
 import dev.rurino.hasugoods.util.OshiUtils.NesoSize;
+import dev.rurino.hasugoods.util.animation.Animation;
+import dev.rurino.hasugoods.util.animation.Interpolator;
+import dev.rurino.hasugoods.util.animation.KeyFrame;
+import dev.rurino.hasugoods.util.animation.StateMachine;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.registry.RegistryWrapper.WrapperLookup;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
-  protected static final int CHECK_STRUCTURE_INTERVAL = 8;
-  protected static final float LINK_PARTICLE_VELOCITY = 0.1f;
-  protected static final String NBT_NESOBASES = "nesobases";
+  private static final int CHECK_STRUCTURE_INTERVAL = 8;
+  private static final float LINK_PARTICLE_VELOCITY = 0.1f;
+  private static final String NBT_NESOBASES = "nesobases";
+
   protected static final ImmutableList<BlockPos> NESO_BASE_OFFSETS = ImmutableList.of(
       new BlockPos(3, 0, 0),
       new BlockPos(2, 0, -2),
@@ -35,7 +47,7 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
       new BlockPos(0, 0, 3),
       new BlockPos(2, 0, 2));
 
-  protected boolean linkedNesoBases = false;
+  private boolean linkedNesoBases = false;
 
   public PositionZeroBlockEntity(BlockPos pos, BlockState state) {
     super(ModBlockEntities.POSITION_ZERO_BLOCK_ENTITY_TYPE, pos, state);
@@ -47,6 +59,68 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
       return ParticleState.RANDOM;
     return ParticleState.WAVE;
   }
+
+  // #region Animation
+  public static final int ANIM_STATE_MERGE = 1;
+  private static final Animation[] ANIM_NESO_MERGE = new Animation[NESO_BASE_OFFSETS.size()];
+  private static final Animation ANIM_NESO_MERGE_0;
+
+  static {
+    KeyFrame.Regular first = (KeyFrame.Regular) ANIM_IDLE.first();
+    KeyFrame.Regular second = first.toBuilder()
+        .tick(60)
+        .translation(first.translation().add(0, 2, 0))
+        .build();
+    for (int i = 0; i < NESO_BASE_OFFSETS.size(); i++) {
+      Vec3d offset = new Vec3d(NESO_BASE_OFFSETS.get(i).multiply(-1));
+      KeyFrame.Regular third = second.toBuilder()
+          .tick(120)
+          .translation(second.translation().add(offset))
+          .scale(0.5)
+          .build();
+      Animation anim = new Animation(first)
+          .addKeyFrame(second, Interpolator.of(Easing::easeOutSine))
+          .addKeyFrame(third, Interpolator.of(Easing::easeOutSine));
+      ANIM_NESO_MERGE[i] = anim;
+    }
+    ANIM_NESO_MERGE_0 = new Animation(first)
+        .addKeyFrame(second, Interpolator.of(Easing::easeOutSine))
+        .addKeyFrame(second.toBuilder().tick(100).build())
+        .addKeyFrame(second.toBuilder().tick(140).scale(2).build());
+  }
+
+  public void playMergeAnimation() {
+    if (!hasLinkedNesoBases()) {
+      Hasugoods.LOGGER.warn("Position zero {}: Cannot play merge animation without linked nesobases", pos);
+      return;
+    }
+    var nesobases = getLinkedNesoBases();
+    if (nesobases.length != NESO_BASE_OFFSETS.size()) {
+      Hasugoods.LOGGER.warn("Position zero {}: Cannot play merge animation with incomplete nesobases", pos);
+      return;
+    }
+    for (int i = 0; i < NESO_BASE_OFFSETS.size(); i++) {
+      StateMachine stateMachine = nesobases[i].getStateMachine();
+      stateMachine.set(ANIM_STATE_MERGE, ANIM_NESO_MERGE[i]);
+      stateMachine.transit(ANIM_STATE_MERGE, 10);
+    }
+    StateMachine stateMachine = getStateMachine();
+    stateMachine.set(ANIM_STATE_MERGE, ANIM_NESO_MERGE_0);
+    stateMachine.transit(ANIM_STATE_MERGE, 10);
+  }
+
+  public void stopMergeAnimation() {
+    if (!hasLinkedNesoBases()) {
+      Hasugoods.LOGGER.warn("Position zero {}: Cannot stop merge animation without linked nesobases", pos);
+      return;
+    }
+    var nesobases = getLinkedNesoBases();
+    for (NesoBaseBlockEntity e : nesobases) {
+      e.getStateMachine().transit(ANIM_STATE_IDLE, 10);
+    }
+    getStateMachine().transit(ANIM_STATE_IDLE, 10);
+  }
+  // #endregion Animation
 
   // #region Multi-block structure
 
@@ -78,7 +152,7 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
     return linkedNesoBases;
   }
 
-  protected NesoBaseBlockEntity[] getPossiblyLinkedNesoBases() {
+  private NesoBaseBlockEntity[] getPossiblyLinkedNesoBases() {
     return NESO_BASE_OFFSETS.stream()
         .map(pos::add)
         .map(world::getBlockEntity)
@@ -88,7 +162,7 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
         .toArray(NesoBaseBlockEntity[]::new);
   }
 
-  protected NesoBaseBlockEntity[] getLinkedNesoBases() {
+  private NesoBaseBlockEntity[] getLinkedNesoBases() {
     var ret = Arrays.stream(getPossiblyLinkedNesoBases())
         .filter(e -> pos.equals(e.getPos0()))
         .toArray(NesoBaseBlockEntity[]::new);
@@ -98,7 +172,7 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
     return ret;
   }
 
-  protected static <T> boolean[] checkIsolatedComponents(T[] groupByIdx, Predicate<T> isEmpty) {
+  private static <T> boolean[] checkIsolatedComponents(T[] groupByIdx, Predicate<T> isEmpty) {
     int n = groupByIdx.length;
     boolean[] isolated = new boolean[n];
 
@@ -136,7 +210,7 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
     return isolated;
   }
 
-  protected NesoBaseState[] checkNesoBaseState(NesoBaseBlockEntity[] nesobases) {
+  private NesoBaseState[] checkNesoBaseState(NesoBaseBlockEntity[] nesobases) {
     int n = nesobases.length;
     NesoBaseState[] ret = new NesoBaseState[n];
     // Center item
@@ -205,7 +279,9 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
     return ret;
   }
 
-  protected void syncStructure() {
+  private Timer mergeAnimTimer = null;
+
+  private void syncStructure(ServerWorld world) {
     NesoBaseBlockEntity[] nesobases = getPossiblyLinkedNesoBases();
     if (nesobases.length != NESO_BASE_OFFSETS.size()) {
       unlinkNesoBases(nesobases);
@@ -216,21 +292,29 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
         e.setPos0(pos);
       }
     }
+
     if (!this.linkedNesoBases) {
       Hasugoods.LOGGER.info("Position zero {}: Linked nesobases", pos);
-      this.linkedNesoBases = true;
       markDirty();
       sync();
+    }
+    if (mergeAnimTimer == null && Arrays.stream(checkNesoBaseState(nesobases)).allMatch(s -> s == NesoBaseState.OK)) {
+      var packet = new PlayNesoMergeAnim(pos);
+      var stopPacket = new StopNesoMergeAnim(pos);
+      var players = PlayerLookup.tracking(world, pos);
+      players.forEach(p -> ServerPlayNetworking.send(p, packet));
+      mergeAnimTimer = new Timer(160, () -> {
+        players.forEach(p -> ServerPlayNetworking.send(p, stopPacket));
+        mergeAnimTimer = null;
+      });
     }
   }
 
   // #endregion Multi-block structure
 
-  protected static void createLineParticle(ParticleEffect effect, World world, BlockPos from, BlockPos to) {
-    Vec3d fromVec = new Vec3d(from.getX() + 0.5, from.getY() + 1.5, from.getZ() + 0.5);
-    Vec3d toVec = new Vec3d(to.getX() + 0.5, to.getY() + 1.5, to.getZ() + 0.5);
-    Vec3d velocity = toVec.subtract(fromVec).normalize().multiply(LINK_PARTICLE_VELOCITY);
-    createParticle(effect, world, fromVec, velocity);
+  protected static void createLineParticle(ParticleEffect effect, World world, Vec3d from, Vec3d to) {
+    Vec3d velocity = to.subtract(from).normalize().multiply(LINK_PARTICLE_VELOCITY);
+    createParticle(effect, world, from, velocity);
   }
 
   protected void maybeCreateLinkParticles(World world, BlockPos blockPos, BlockState blockState) {
@@ -238,12 +322,13 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
       return;
     NesoBaseBlockEntity[] nesobases = getLinkedNesoBases();
     NesoBaseState[] states = checkNesoBaseState(nesobases);
+    Vec3d pos = getAnimatedEntityPos();
     for (int i = 0; i < nesobases.length; i++) {
-      if (states[i] == NesoBaseState.OK) {
-        createLineParticle(nesobases[i].noteParticleEffect, world, nesobases[i].getPos(), blockPos);
-      } else if (states[i] == NesoBaseState.ERROR) {
-        createLineParticle(QUESTION_MARK_PARTICLE_EFFECT, world, nesobases[i].getPos(), blockPos);
-      }
+      if (states[i] == NesoBaseState.NONE)
+        continue;
+      ParticleEffect effect = states[i] == NesoBaseState.OK ? nesobases[i].noteParticleEffect
+          : QUESTION_MARK_PARTICLE_EFFECT;
+      createLineParticle(effect, world, nesobases[i].getAnimatedEntityPos(), pos);
     }
   }
 
@@ -251,7 +336,7 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
   protected void tick(World world, BlockPos blockPos, BlockState blockState) {
     super.tick(world, blockPos, blockState);
     if (!world.isClient && curTick % CHECK_STRUCTURE_INTERVAL == 0) {
-      syncStructure();
+      syncStructure((ServerWorld) world);
     }
   }
 

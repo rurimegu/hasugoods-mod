@@ -14,6 +14,7 @@ import dev.rurino.hasugoods.damage.ModDamageTypes;
 import dev.rurino.hasugoods.effect.ModEffects;
 import dev.rurino.hasugoods.entity.ModEntities;
 import dev.rurino.hasugoods.item.ModItems;
+import dev.rurino.hasugoods.network.ModNetwork;
 import dev.rurino.hasugoods.particle.ModParticles;
 import dev.rurino.hasugoods.util.HasuConfig;
 
@@ -48,5 +49,6 @@ public class Hasugoods implements ModInitializer {
     ModEffects.initialize();
     ModEntities.initialize();
     ModParticles.initialize();
+    ModNetwork.initialize();
   }
 }

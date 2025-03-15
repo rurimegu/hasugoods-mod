@@ -2,6 +2,7 @@ package dev.rurino.hasugoods.block;
 
 import com.mojang.serialization.MapCodec;
 
+import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.item.neso.NesoItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -63,7 +64,7 @@ public abstract class AbstractNesoBaseBlock extends BlockWithEntity {
     ItemStack prevItemStack = blockEntity.getItemStack();
     ItemStack stackInHand = player.getStackInHand(player.getActiveHand());
 
-    if (!stackInHand.isEmpty() && !(stackInHand.getItem() instanceof NesoItem)) {
+    if (blockEntity.isItemStackLocked() || !stackInHand.isEmpty() && !(stackInHand.getItem() instanceof NesoItem)) {
       return ActionResult.PASS;
     }
 
@@ -71,14 +72,20 @@ public abstract class AbstractNesoBaseBlock extends BlockWithEntity {
 
     if (!prevItemStack.isEmpty()) {
       Block.dropStack(world, pos, hit.getSide(), prevItemStack);
-      blockEntity.setItemStack(ItemStack.EMPTY);
-      actionResult = ActionResult.SUCCESS;
+      if (blockEntity.setItemStack(ItemStack.EMPTY)) {
+        actionResult = ActionResult.SUCCESS;
+      } else {
+        Hasugoods.LOGGER.warn("Failed to empty neso base block item stack at {}", pos);
+      }
     }
 
     if (!stackInHand.isEmpty() && stackInHand.getItem() instanceof NesoItem) {
-      blockEntity.setItemStack(stackInHand.copyWithCount(1));
-      stackInHand.decrement(1);
-      actionResult = ActionResult.SUCCESS;
+      if (blockEntity.setItemStack(stackInHand.copyWithCount(1))) {
+        stackInHand.decrement(1);
+        actionResult = ActionResult.SUCCESS;
+      } else {
+        Hasugoods.LOGGER.warn("Failed to set neso base block item stack to {} at {}", stackInHand, pos);
+      }
     }
 
     if (actionResult == ActionResult.SUCCESS) {

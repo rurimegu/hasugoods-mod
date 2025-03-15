@@ -25,9 +25,10 @@ public class StateMachine {
     }
   }
 
-  protected InnerState curState;
-  protected KeyFrame prevFrame;
-  protected final Map<Integer, Animation> states = new HashMap<>();
+  private InnerState curState;
+  private double transitTick;
+  private KeyFrame prevFrame;
+  private final Map<Integer, Animation> states = new HashMap<>();
 
   public StateMachine(int initialState) {
     this.curState = new InnerState(null, initialState, 0);
@@ -50,7 +51,7 @@ public class StateMachine {
     if (prevFrame == null) {
       curState.frame = currentAnimation.getKeyFrame(curState.tick);
     } else {
-      curState.frame = currentAnimation.getKeyFrame(tick, prevFrame);
+      curState.frame = currentAnimation.getKeyFrame(tick, transitTick, prevFrame);
     }
     return curState.frame;
   }
@@ -59,12 +60,16 @@ public class StateMachine {
     states.put(state, animation);
   }
 
-  public void transit(int state) {
+  public void transit(int state, double tick) {
     if (!states.containsKey(state)) {
       throw new IllegalStateException("No animation for state " + state);
     }
+    if (state == curState.state) {
+      return;
+    }
     curState.tick = 0;
     curState.state = state;
+    transitTick = tick;
     prevFrame = curState.frame;
   }
 }
