@@ -47,11 +47,13 @@ public class StateMachine {
     if (currentAnimation == null) {
       throw new IllegalStateException("No animation for state " + curState.state);
     }
+    curState.frame = currentAnimation.getKeyFrame(curState.tick);
 
-    if (prevFrame == null) {
-      curState.frame = currentAnimation.getKeyFrame(curState.tick);
-    } else {
-      curState.frame = currentAnimation.getKeyFrame(tick, transitTick, prevFrame);
+    if (prevFrame != null) {
+      double progress = curState.tick / transitTick;
+      if (progress < 1) {
+        curState.frame = Interpolator.LINEAR.interpolate(prevFrame, curState.frame, progress);
+      }
     }
     return curState.frame;
   }

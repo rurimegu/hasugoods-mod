@@ -5,20 +5,25 @@ import dev.rurino.hasugoods.util.MathUtils;
 import net.minecraft.util.math.MathHelper;
 
 public interface Interpolator {
-  public KeyFrame interpolate(KeyFrame a, KeyFrame b, double tick);
+  public KeyFrame interpolate(KeyFrame a, KeyFrame b, double ratio);
+
+  default public KeyFrame interpolateTick(KeyFrame a, KeyFrame b, double tick) {
+    if (MathUtils.approx(a.tick(), b.tick())) {
+      return interpolate(a, b, tick < b.tick() ? 0 : 1);
+    }
+    double ratio = MathHelper.getLerpProgress(tick, a.tick(), b.tick());
+    return interpolate(a, b, ratio);
+  }
 
   public static Interpolator of(Easing easing) {
-    return (a, b, tick) -> {
-      if (MathUtils.approx(a.tick(), b.tick())) {
-        return tick < b.tick() ? a : b;
-      }
-      double progress = easing.ease(
-          MathHelper.clamp(
-              MathHelper.getLerpProgress(tick, a.tick(), b.tick()), 0, 1));
-      return new KeyFrame.Regular(tick,
-          MathUtils.lerp(a.translation(), b.translation(), progress),
+    return (a, b, ratio) -> {
+      ratio = MathHelper.clamp(ratio, 0, 1);
+      double progress = easing.ease(ratio);
+      return new KeyFrame.Regular(
+          MathHelper.lerp(progress, a.tick(), b.tick()),
+          MathUtils.lerp(progress, a.translation(), b.translation()),
           a.rotation().nlerp(b.rotation(), (float) progress),
-          MathUtils.lerp(a.scale(), b.scale(), progress));
+          MathUtils.lerp(progress, a.scale(), b.scale()));
     };
   }
 

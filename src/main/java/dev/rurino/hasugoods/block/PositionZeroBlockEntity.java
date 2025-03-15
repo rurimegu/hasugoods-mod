@@ -74,19 +74,19 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
     for (int i = 0; i < NESO_BASE_OFFSETS.size(); i++) {
       Vec3d offset = new Vec3d(NESO_BASE_OFFSETS.get(i).multiply(-1));
       KeyFrame.Regular third = second.toBuilder()
-          .tick(120)
+          .tick(160)
           .translation(second.translation().add(offset))
           .scale(0.5)
           .build();
       Animation anim = new Animation(first)
-          .addKeyFrame(second, Interpolator.of(Easing::easeOutSine))
-          .addKeyFrame(third, Interpolator.of(Easing::easeOutSine));
+          .addKeyFrame(second, Interpolator.of(Easing::easeOutCubic))
+          .addKeyFrame(third, Interpolator.of(Easing::easeOutCubic));
       ANIM_NESO_MERGE[i] = anim;
     }
     ANIM_NESO_MERGE_0 = new Animation(first)
-        .addKeyFrame(second, Interpolator.of(Easing::easeOutSine))
-        .addKeyFrame(second.toBuilder().tick(100).build())
-        .addKeyFrame(second.toBuilder().tick(140).scale(2).build());
+        .addKeyFrame(second, Interpolator.of(Easing::easeOutCubic))
+        .addKeyFrame(second.toBuilder().tick(120).build())
+        .addKeyFrame(second.toBuilder().tick(180).scale(2).build());
   }
 
   public void playMergeAnimation() {
@@ -99,6 +99,8 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
       Hasugoods.LOGGER.warn("Position zero {}: Cannot play merge animation with incomplete nesobases", pos);
       return;
     }
+
+    Hasugoods.LOGGER.info("Position zero {}: Playing merge animation", pos);
     for (int i = 0; i < NESO_BASE_OFFSETS.size(); i++) {
       StateMachine stateMachine = nesobases[i].getStateMachine();
       stateMachine.set(ANIM_STATE_MERGE, ANIM_NESO_MERGE[i]);
@@ -114,27 +116,38 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
       Hasugoods.LOGGER.warn("Position zero {}: Cannot stop merge animation without linked nesobases", pos);
       return;
     }
-    var nesobases = getLinkedNesoBases();
-    for (NesoBaseBlockEntity e : nesobases) {
-      e.getStateMachine().transit(ANIM_STATE_IDLE, 10);
-    }
+    var nesobases = getPossiblyLinkedNesoBases();
+    Hasugoods.LOGGER.info("Position zero {}: Stopping merge animation, total {} bases", pos, nesobases.length);
+    Arrays.stream(nesobases)
+        .filter(b -> pos.equals(b.getPos0()))
+        .map(NesoBaseBlockEntity::getStateMachine)
+        .forEach(sm -> sm.transit(ANIM_STATE_IDLE, 10));
     getStateMachine().transit(ANIM_STATE_IDLE, 10);
   }
   // #endregion Animation
 
   // #region Multi-block structure
 
-  protected enum NesoBaseState {
+  private enum NesoBaseState {
     NONE,
     ERROR,
     OK
   }
 
-  protected void unlinkNesoBases(NesoBaseBlockEntity[] nesobases) {
+  private void unlinkNesoBases(NesoBaseBlockEntity[] nesobases) {
+    if (!hasLinkedNesoBases())
+      return;
     Hasugoods.LOGGER.info("Position zero {}: Unlinked nesobases", pos);
+    if (mergeAnimTimer != null) {
+      mergeAnimTimer.run();
+      mergeAnimTimer = null;
+    }
     for (NesoBaseBlockEntity e : nesobases) {
       if (pos.equals(e.getPos0())) {
         e.setPos0(null);
+      } else {
+        Hasugoods.LOGGER.warn("Position zero {}: Cannot unlink nesobase {} with invalid pos0 {}", pos, e.getPos(),
+            e.getPos0());
       }
     }
     this.linkedNesoBases = false;
@@ -295,6 +308,7 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
 
     if (!this.linkedNesoBases) {
       Hasugoods.LOGGER.info("Position zero {}: Linked nesobases", pos);
+      this.linkedNesoBases = true;
       markDirty();
       sync();
     }
@@ -303,9 +317,8 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
       var stopPacket = new StopNesoMergeAnim(pos);
       var players = PlayerLookup.tracking(world, pos);
       players.forEach(p -> ServerPlayNetworking.send(p, packet));
-      mergeAnimTimer = new Timer(160, () -> {
+      mergeAnimTimer = new Timer((int) ANIM_NESO_MERGE_0.duration() + 10, () -> {
         players.forEach(p -> ServerPlayNetworking.send(p, stopPacket));
-        mergeAnimTimer = null;
       });
     }
   }
@@ -335,8 +348,13 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
   @Override
   protected void tick(World world, BlockPos blockPos, BlockState blockState) {
     super.tick(world, blockPos, blockState);
-    if (!world.isClient && curTick % CHECK_STRUCTURE_INTERVAL == 0) {
-      syncStructure((ServerWorld) world);
+    if (!world.isClient) {
+      if (mergeAnimTimer != null && mergeAnimTimer.tick()) {
+        mergeAnimTimer = null;
+      }
+      if (curTick % CHECK_STRUCTURE_INTERVAL == 0) {
+        syncStructure((ServerWorld) world);
+      }
     }
   }
 

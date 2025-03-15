@@ -21,7 +21,7 @@ public class MathUtils {
     return approx0(a, EPS);
   }
 
-  public static Vec3d lerp(Vec3d a, Vec3d b, double progress) {
+  public static Vec3d lerp(double progress, Vec3d a, Vec3d b) {
     return a.add(b.subtract(a).multiply(progress));
   }
 }

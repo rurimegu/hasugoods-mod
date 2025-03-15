@@ -79,18 +79,12 @@ public class Animation {
       if (b.tick() >= tick) {
         KeyFrame a = keyFrames.get(i - 1);
         Interpolator interpolator = interpolators.get(i - 1);
-        KeyFrame interpolated = interpolator.interpolate(a, b, tick);
+        KeyFrame interpolated = interpolator.interpolateTick(a, b, tick);
         return interpolated;
       }
     }
 
     return keyFrames.get(keyFrames.size() - 1);
-  }
-
-  public KeyFrame getKeyFrame(double tick, double transitTick, KeyFrame prev) {
-    KeyFrame frame = interpolate(tick);
-    double ratio = Math.min(1, tick / transitTick);
-    return Interpolator.LINEAR.interpolate(prev, frame, ratio);
   }
 
   public KeyFrame getKeyFrame(double tick) {

@@ -1,5 +1,6 @@
 package dev.rurino.hasugoods.block;
 
+import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.entity.NesoEntityModel;
 import dev.rurino.hasugoods.util.ClientAnimation;
 import net.minecraft.block.BlockState;
@@ -39,10 +40,10 @@ public class NesoBaseBlockEntityRenderer implements BlockEntityRenderer<Abstract
     matrices.push();
     matrices.translate(0.5, 1, 0.5);
 
+    ClientAnimation.apply(entity.getStateMachine().update(tickDelta), matrices);
+
     Direction direction = blockState.get(AbstractNesoBaseBlock.FACING);
     matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(direction.getPositiveHorizontalDegrees()));
-
-    ClientAnimation.apply(entity.getStateMachine().update(tickDelta), matrices);
 
     itemRenderer.renderItem(
         stack,

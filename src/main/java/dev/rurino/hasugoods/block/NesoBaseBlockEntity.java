@@ -19,7 +19,6 @@ public class NesoBaseBlockEntity extends AbstractNesoBaseBlockEntity {
 
   public void setPos0(BlockPos pos0) {
     this.pos0 = pos0;
-    getStateMachine().transit(ANIM_STATE_IDLE, 10);
     this.unlockItemStack();
     this.markDirty();
     this.sync();
