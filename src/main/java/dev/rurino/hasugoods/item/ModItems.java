@@ -3,7 +3,7 @@ package dev.rurino.hasugoods.item;
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.item.badge.BadgeItem;
 import dev.rurino.hasugoods.item.neso.NesoItem;
-import dev.rurino.hasugoods.util.OshiUtils;
+import dev.rurino.hasugoods.util.CharaUtils;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -19,7 +19,7 @@ public class ModItems {
   public static final RegistryKey<ItemGroup> BADGE_ITEM_GROUP_KEY = RegistryKey.of(
       Registries.ITEM_GROUP.getKey(), Hasugoods.id("item_group"));
   public static final ItemGroup BADGE_ITEM_GROUP = FabricItemGroup.builder()
-      .icon(() -> new ItemStack(BadgeItem.getBadgeItem(OshiUtils.RURINO_KEY).get()))
+      .icon(() -> new ItemStack(BadgeItem.getBadgeItem(CharaUtils.RURINO_KEY).get()))
       .displayName(Text.translatable("itemGroup.hasugoods"))
       .build();
 

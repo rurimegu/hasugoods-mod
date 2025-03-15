@@ -9,8 +9,8 @@ import java.util.function.Consumer;
 
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.item.neso.NesoItem;
-import dev.rurino.hasugoods.util.OshiUtils;
-import dev.rurino.hasugoods.util.OshiUtils.NesoSize;
+import dev.rurino.hasugoods.util.CharaUtils;
+import dev.rurino.hasugoods.util.CharaUtils.NesoSize;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.EntityType;
@@ -41,8 +41,8 @@ public class NesoEntity extends LivingEntity {
 
   protected static final Map<String, NesoEntityEntry> ALL_NESOS = new HashMap<>();
 
-  public static Optional<EntityType<NesoEntity>> getNesoEntityType(String oshiKey, NesoSize size) {
-    return Optional.ofNullable(ALL_NESOS.get(OshiUtils.nesoKey(oshiKey, size))).map(entry -> entry.entity());
+  public static Optional<EntityType<NesoEntity>> getNesoEntityType(String charaKey, NesoSize size) {
+    return Optional.ofNullable(ALL_NESOS.get(CharaUtils.nesoKey(charaKey, size))).map(entry -> entry.entity());
   }
 
   public static List<EntityType<NesoEntity>> getAllNesos(NesoSize size) {
@@ -55,8 +55,8 @@ public class NesoEntity extends LivingEntity {
     return ALL_NESOS.values().stream().map(entry -> entry.entity()).toList();
   }
 
-  public static EntityType<NesoEntity> registerNeso(String oshiKey, NesoSize size) {
-    String itemKey = OshiUtils.nesoKey(oshiKey, size);
+  public static EntityType<NesoEntity> registerNeso(String charaKey, NesoSize size) {
+    String itemKey = CharaUtils.nesoKey(charaKey, size);
     RegistryKey<EntityType<?>> key = RegistryKey.of(RegistryKeys.ENTITY_TYPE, Hasugoods.id(itemKey));
     float width = switch (size) {
       case SMALL -> 0.4f;
@@ -69,7 +69,7 @@ public class NesoEntity extends LivingEntity {
       case LARGE -> 0.96f;
     };
     EntityType<NesoEntity> entityType = EntityType.Builder.<NesoEntity>create(
-        (type, world) -> new NesoEntity(type, world, oshiKey, size), SpawnGroup.MISC).dimensions(width, height)
+        (type, world) -> new NesoEntity(type, world, charaKey, size), SpawnGroup.MISC).dimensions(width, height)
         .eyeHeight(height * 0.4f)
         .dropsNothing()
         .build(key);
@@ -110,17 +110,17 @@ public class NesoEntity extends LivingEntity {
 
   public static void Initialize() {
     for (NesoItem neso : NesoItem.getAllNesos()) {
-      registerNeso(neso.getOshiKey(), neso.getNesoSize());
+      registerNeso(neso.getCharaKey(), neso.getNesoSize());
     }
   }
   // #endregion Static fields
 
-  protected final String oshiKey;
+  protected final String charaKey;
   protected final NesoSize nesoSize;
 
-  public NesoEntity(EntityType<? extends LivingEntity> type, World world, String oshiKey, NesoSize size) {
+  public NesoEntity(EntityType<? extends LivingEntity> type, World world, String charaKey, NesoSize size) {
     super(type, world);
-    this.oshiKey = oshiKey;
+    this.charaKey = charaKey;
     this.nesoSize = size;
   }
 
@@ -174,8 +174,8 @@ public class NesoEntity extends LivingEntity {
     return 0f;
   }
 
-  public String getOshiKey() {
-    return oshiKey;
+  public String getCharaKey() {
+    return charaKey;
   }
 
   public NesoSize getNesoSize() {
@@ -183,9 +183,9 @@ public class NesoEntity extends LivingEntity {
   }
 
   public NesoItem getNesoItem() {
-    Optional<NesoItem> item = NesoItem.getNesoItem(oshiKey, nesoSize);
+    Optional<NesoItem> item = NesoItem.getNesoItem(charaKey, nesoSize);
     if (item.isEmpty()) {
-      Hasugoods.LOGGER.error("NesoItem not found: {} {}", oshiKey, nesoSize);
+      Hasugoods.LOGGER.error("NesoItem not found: {} {}", charaKey, nesoSize);
     }
     return item.get();
   }

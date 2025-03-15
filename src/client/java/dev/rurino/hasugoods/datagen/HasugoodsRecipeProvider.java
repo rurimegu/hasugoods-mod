@@ -5,8 +5,8 @@ import java.util.concurrent.CompletableFuture;
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.item.badge.BadgeItem;
 import dev.rurino.hasugoods.item.neso.NesoItem;
-import dev.rurino.hasugoods.util.OshiUtils;
-import dev.rurino.hasugoods.util.OshiUtils.NesoSize;
+import dev.rurino.hasugoods.util.CharaUtils;
+import dev.rurino.hasugoods.util.CharaUtils.NesoSize;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.data.recipe.RecipeExporter;
@@ -161,9 +161,9 @@ public class HasugoodsRecipeProvider extends FabricRecipeProvider {
       @Override
       public void generate() {
         for (NesoItem mediumNeso : NesoItem.getAllNesos(NesoSize.MEDIUM)) {
-          NesoItem smallNeso = NesoItem.getNesoItem(mediumNeso.getOshiKey(), NesoSize.SMALL).orElseThrow();
-          BadgeItem badge = BadgeItem.getBadgeItem(mediumNeso.getOshiKey(), false).orElseThrow();
-          BadgeItem secretBadge = BadgeItem.getBadgeItem(mediumNeso.getOshiKey(), true).orElseThrow();
+          NesoItem smallNeso = NesoItem.getNesoItem(mediumNeso.getCharaKey(), NesoSize.SMALL).orElseThrow();
+          BadgeItem badge = BadgeItem.getBadgeItem(mediumNeso.getCharaKey(), false).orElseThrow();
+          BadgeItem secretBadge = BadgeItem.getBadgeItem(mediumNeso.getCharaKey(), true).orElseThrow();
           createShaped(RecipeCategory.MISC, mediumNeso)
               .pattern("BSB")
               .pattern("BXB")
@@ -175,36 +175,36 @@ public class HasugoodsRecipeProvider extends FabricRecipeProvider {
               .showNotification(true)
               .offerTo(exporter);
           ShapedRecipeJsonBuilder smallBuilder = createShaped(RecipeCategory.MISC, smallNeso);
-          switch (mediumNeso.getOshiKey()) {
-            case OshiUtils.KAHO_KEY:
+          switch (mediumNeso.getCharaKey()) {
+            case CharaUtils.KAHO_KEY:
               smallBuilder = buildKahoRecipe(smallBuilder, smallNeso, badge);
               break;
-            case OshiUtils.RURINO_KEY:
+            case CharaUtils.RURINO_KEY:
               smallBuilder = buildRurinoRecipe(smallBuilder, smallNeso, badge);
               break;
-            case OshiUtils.HIME_KEY:
+            case CharaUtils.HIME_KEY:
               smallBuilder = buildHimeRecipe(smallBuilder, smallNeso, badge);
               break;
-            case OshiUtils.SAYAKA_KEY:
+            case CharaUtils.SAYAKA_KEY:
               smallBuilder = buildSayakaRecipe(smallBuilder, smallNeso, badge);
               break;
-            case OshiUtils.TSUZURI_KEY:
+            case CharaUtils.TSUZURI_KEY:
               smallBuilder = buildTsuzuriRecipe(smallBuilder, smallNeso, badge);
               break;
-            case OshiUtils.KOSUZU_KEY:
+            case CharaUtils.KOSUZU_KEY:
               smallBuilder = buildKosuzuRecipe(smallBuilder, smallNeso, badge);
               break;
-            case OshiUtils.KOZUE_KEY:
+            case CharaUtils.KOZUE_KEY:
               smallBuilder = buildKozueRecipe(smallBuilder, smallNeso, badge);
               break;
-            case OshiUtils.MEGUMI_KEY:
+            case CharaUtils.MEGUMI_KEY:
               smallBuilder = buildMegumiRecipe(smallBuilder, smallNeso, badge);
               break;
-            case OshiUtils.GINKO_KEY:
+            case CharaUtils.GINKO_KEY:
               smallBuilder = buildGinkoRecipe(smallBuilder, smallNeso, badge);
               break;
             default:
-              Hasugoods.LOGGER.error("Unknown oshi key: {} when building neso recipe", mediumNeso.getOshiKey());
+              Hasugoods.LOGGER.error("Unknown chara key: {} when building neso recipe", mediumNeso.getCharaKey());
               continue;
           }
           smallBuilder

@@ -12,8 +12,8 @@ import com.google.common.collect.ImmutableSet;
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.effect.ToutoshiEffectsConsumeEffect;
 import dev.rurino.hasugoods.item.ModItems;
-import dev.rurino.hasugoods.item.OshiItem;
-import dev.rurino.hasugoods.util.OshiUtils;
+import dev.rurino.hasugoods.item.CharaItem;
+import dev.rurino.hasugoods.util.CharaUtils;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
@@ -33,7 +33,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Rarity;
 import net.minecraft.village.VillagerProfession;
 
-public class BadgeItem extends OshiItem {
+public class BadgeItem extends CharaItem {
   // #region Static fields
   public static final DeathProtectionComponent HASU_BADGE_DEATH_PROTECTION = new DeathProtectionComponent(
       List.<ConsumeEffect>of(new ClearAllEffectsConsumeEffect(), new ToutoshiEffectsConsumeEffect()));
@@ -67,22 +67,22 @@ public class BadgeItem extends OshiItem {
   protected static final Map<String, BadgeItemEntry> ALL_REGULAR_BADGES = new HashMap<String, BadgeItemEntry>();
   protected static final Map<String, BadgeItemEntry> ALL_SECRET_BADGES = new HashMap<String, BadgeItemEntry>();
 
-  public static Optional<BadgeItem> getBadgeItem(String oshiKey, boolean isSecret) {
-    return Optional.ofNullable((isSecret ? ALL_SECRET_BADGES : ALL_REGULAR_BADGES).get(oshiKey))
+  public static Optional<BadgeItem> getBadgeItem(String charaKey, boolean isSecret) {
+    return Optional.ofNullable((isSecret ? ALL_SECRET_BADGES : ALL_REGULAR_BADGES).get(charaKey))
         .map(entry -> entry.item);
   }
 
-  public static Optional<BadgeItem> getBadgeItem(String oshiKey) {
-    return getBadgeItem(oshiKey, false);
+  public static Optional<BadgeItem> getBadgeItem(String charaKey) {
+    return getBadgeItem(charaKey, false);
   }
 
-  public static Optional<RegistryKey<Item>> getBadgeItemKey(String oshiKey, boolean isSecret) {
-    return Optional.ofNullable((isSecret ? ALL_SECRET_BADGES : ALL_REGULAR_BADGES).get(oshiKey))
+  public static Optional<RegistryKey<Item>> getBadgeItemKey(String charaKey, boolean isSecret) {
+    return Optional.ofNullable((isSecret ? ALL_SECRET_BADGES : ALL_REGULAR_BADGES).get(charaKey))
         .map(entry -> entry.key);
   }
 
-  public static Optional<RegistryKey<Item>> getBadgeItemKey(String oshiKey) {
-    return getBadgeItemKey(oshiKey, false);
+  public static Optional<RegistryKey<Item>> getBadgeItemKey(String charaKey) {
+    return getBadgeItemKey(charaKey, false);
   }
 
   public static List<BadgeItem> getAllBadges(boolean isSecret) {
@@ -106,27 +106,27 @@ public class BadgeItem extends OshiItem {
       new BoxOfBadgeItem(new Item.Settings().maxCount(1).rarity(Rarity.UNCOMMON)
           .registryKey(BOX_OF_BADGE_KEY)));
 
-  private static Item registerBadge(String oshiKey, boolean isSecret) {
+  private static Item registerBadge(String charaKey, boolean isSecret) {
     RegistryKey<Item> key = RegistryKey.of(RegistryKeys.ITEM,
-        Hasugoods.id(oshiKey + (isSecret ? "_secret" : "") + "_badge"));
+        Hasugoods.id(charaKey + (isSecret ? "_secret" : "") + "_badge"));
     Item item = ModItems.register(
         key,
         new BadgeItem(new Settings().maxCount(16).rarity(isSecret ? Rarity.UNCOMMON : Rarity.COMMON)
             .component(DataComponentTypes.DEATH_PROTECTION, HASU_BADGE_DEATH_PROTECTION)
-            .registryKey(key), oshiKey, isSecret));
+            .registryKey(key), charaKey, isSecret));
     if (isSecret)
-      ALL_SECRET_BADGES.put(oshiKey, new BadgeItemEntry(key, (BadgeItem) item));
+      ALL_SECRET_BADGES.put(charaKey, new BadgeItemEntry(key, (BadgeItem) item));
     else
-      ALL_REGULAR_BADGES.put(oshiKey, new BadgeItemEntry(key, (BadgeItem) item));
+      ALL_REGULAR_BADGES.put(charaKey, new BadgeItemEntry(key, (BadgeItem) item));
     return item;
   }
 
   public static void initialize() {
     // Register badges
     List<Item> badgeItems = new ArrayList<Item>();
-    for (String oshiKey : OshiUtils.ALL_OSHI_KEYS) {
-      badgeItems.add(registerBadge(oshiKey, false));
-      badgeItems.add(registerBadge(oshiKey, true));
+    for (String charaKey : CharaUtils.ALL_CHARA_KEYS) {
+      badgeItems.add(registerBadge(charaKey, false));
+      badgeItems.add(registerBadge(charaKey, true));
     }
 
     // Add the badge to the badge item group
@@ -185,8 +185,8 @@ public class BadgeItem extends OshiItem {
 
   private final boolean isSecret;
 
-  public BadgeItem(Settings settings, String oshiKey, boolean isSecret) {
-    super(settings, oshiKey);
+  public BadgeItem(Settings settings, String charaKey, boolean isSecret) {
+    super(settings, charaKey);
     this.isSecret = isSecret;
   }
 

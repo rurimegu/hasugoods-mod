@@ -12,10 +12,10 @@ import dev.rurino.hasugoods.item.neso.NesoItem;
 import dev.rurino.hasugoods.network.BlockPosPayload.PlayNesoMergeAnim;
 import dev.rurino.hasugoods.network.BlockPosPayload.StopNesoMergeAnim;
 import dev.rurino.hasugoods.util.Easing;
-import dev.rurino.hasugoods.util.OshiUtils;
+import dev.rurino.hasugoods.util.CharaUtils;
 import dev.rurino.hasugoods.util.Timer;
-import dev.rurino.hasugoods.util.OshiUtils.HasuUnit;
-import dev.rurino.hasugoods.util.OshiUtils.NesoSize;
+import dev.rurino.hasugoods.util.CharaUtils.HasuUnit;
+import dev.rurino.hasugoods.util.CharaUtils.NesoSize;
 import dev.rurino.hasugoods.util.animation.Animation;
 import dev.rurino.hasugoods.util.animation.Interpolator;
 import dev.rurino.hasugoods.util.animation.KeyFrame;
@@ -232,7 +232,7 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
     // No duplicates
     Map<String, Integer> appeared = new HashMap<>();
     String[] nodes = new String[n + 1];
-    nodes[n] = centerNesoItem.getOshiKey();
+    nodes[n] = centerNesoItem.getCharaKey();
     for (int i = 0; i < n; i++) {
       ItemStack itemStack = nesobases[i].getItemStack();
       if (itemStack.isEmpty()) {
@@ -243,13 +243,13 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
         ret[i] = NesoBaseState.NONE;
         continue;
       }
-      String oshiKey = nesoItem.getOshiKey();
-      nodes[i] = oshiKey;
-      if (appeared.containsKey(oshiKey)) {
+      String charaKey = nesoItem.getCharaKey();
+      nodes[i] = charaKey;
+      if (appeared.containsKey(charaKey)) {
         ret[i] = NesoBaseState.ERROR;
-        ret[appeared.get(oshiKey)] = NesoBaseState.ERROR;
+        ret[appeared.get(charaKey)] = NesoBaseState.ERROR;
       } else {
-        appeared.put(oshiKey, i);
+        appeared.put(charaKey, i);
       }
       // Must be medium size
       if (nesoItem.getNesoSize() != NesoSize.MEDIUM) {
@@ -258,7 +258,7 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
     }
     // All units must be adjacent
     HasuUnit[] units = Arrays.stream(nodes)
-        .map(OshiUtils::getUnit)
+        .map(CharaUtils::getUnit)
         .toArray(HasuUnit[]::new);
     boolean[] isolated = checkIsolatedComponents(units, u -> u == HasuUnit.NONE);
     for (int i = 0; i < n; i++) {
@@ -268,7 +268,7 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
     }
     // All grades must be adjacent
     Integer[] grades = Arrays.stream(nodes)
-        .map(OshiUtils::getGrade)
+        .map(CharaUtils::getGrade)
         .toArray(Integer[]::new);
     isolated = checkIsolatedComponents(grades, g -> g < 0);
     for (int i = 0; i < n; i++) {

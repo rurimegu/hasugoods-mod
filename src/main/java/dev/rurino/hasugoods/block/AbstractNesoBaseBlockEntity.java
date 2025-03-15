@@ -4,12 +4,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import dev.rurino.hasugoods.Hasugoods;
-import dev.rurino.hasugoods.item.OshiItem;
+import dev.rurino.hasugoods.item.CharaItem;
 import dev.rurino.hasugoods.particle.NoteParticleEffect;
 import dev.rurino.hasugoods.particle.QuestionMarkParticleEffect;
 import dev.rurino.hasugoods.util.CollectionUtils;
 import dev.rurino.hasugoods.util.Easing;
-import dev.rurino.hasugoods.util.OshiUtils;
+import dev.rurino.hasugoods.util.CharaUtils;
 import dev.rurino.hasugoods.util.animation.Animation;
 import dev.rurino.hasugoods.util.animation.Animation.LoopType;
 import dev.rurino.hasugoods.util.animation.Interpolator;
@@ -43,11 +43,11 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
   protected static final Vec3d WAVE_VELOCITY = new Vec3d(0, 0.04, 0);
   protected static final float RANDOM_PARTICLE_PROB = 0.1f;
 
-  protected static final Map<String, NoteParticleEffect> OSHI_KEY_TO_NOTE_PARTICLE_EFFECT = OshiUtils.OSHI_COLOR_MAP
+  protected static final Map<String, NoteParticleEffect> CHARA_KEY_TO_NOTE_PARTICLE_EFFECT = CharaUtils.CHARA_COLOR_MAP
       .entrySet().stream()
       .collect(Collectors.toMap(Map.Entry::getKey, e -> new NoteParticleEffect(e.getValue())));
   protected static final NoteParticleEffect DEFAULT_NOTE_PARTICLE_EFFECT = new NoteParticleEffect(
-      OshiUtils.DEFAULT_OSHI_COLOR);
+      CharaUtils.DEFAULT_CHARA_COLOR);
 
   protected static final QuestionMarkParticleEffect QUESTION_MARK_PARTICLE_EFFECT = new QuestionMarkParticleEffect(
       0xFF0000);
@@ -161,8 +161,8 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
     if (isItemStackLocked())
       return false;
     nesoItemStack = itemStack;
-    if (itemStack.getItem() instanceof OshiItem oshiItem) {
-      noteParticleEffect = OSHI_KEY_TO_NOTE_PARTICLE_EFFECT.getOrDefault(oshiItem.getOshiKey(),
+    if (itemStack.getItem() instanceof CharaItem charaItem) {
+      noteParticleEffect = CHARA_KEY_TO_NOTE_PARTICLE_EFFECT.getOrDefault(charaItem.getCharaKey(),
           DEFAULT_NOTE_PARTICLE_EFFECT);
     } else {
       if (!itemStack.isEmpty()) {
@@ -183,9 +183,9 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
   }
 
   public int getItemColor() {
-    if (getItemStack().isEmpty() || !(getItemStack().getItem() instanceof OshiItem oshiItem))
-      return OshiUtils.DEFAULT_OSHI_COLOR;
-    return OshiUtils.OSHI_COLOR_MAP.get(oshiItem.getOshiKey());
+    if (getItemStack().isEmpty() || !(getItemStack().getItem() instanceof CharaItem charaItem))
+      return CharaUtils.DEFAULT_CHARA_COLOR;
+    return CharaUtils.CHARA_COLOR_MAP.get(charaItem.getCharaKey());
   }
 
   // #endregion Item stack
@@ -236,7 +236,7 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
     double z = blockPos.getZ() + random.nextDouble();
     Vec3d pos = new Vec3d(x, y, z);
     NoteParticleEffect effect = CollectionUtils.getRandomElement(
-        OSHI_KEY_TO_NOTE_PARTICLE_EFFECT.values().stream().toList(),
+        CHARA_KEY_TO_NOTE_PARTICLE_EFFECT.values().stream().toList(),
         random);
     Vec3d velocity = new Vec3d(0, MathHelper.nextDouble(random, 0.015, 0.025), 0);
     createParticle(effect, world, pos, velocity);

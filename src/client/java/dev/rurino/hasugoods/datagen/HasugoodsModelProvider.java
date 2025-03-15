@@ -9,7 +9,7 @@ import com.google.gson.JsonObject;
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.item.badge.BadgeItem;
 import dev.rurino.hasugoods.item.neso.NesoItem;
-import dev.rurino.hasugoods.util.OshiUtils.NesoSize;
+import dev.rurino.hasugoods.util.CharaUtils.NesoSize;
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.client.data.BlockStateModelGenerator;
@@ -95,8 +95,8 @@ public class HasugoodsModelProvider extends FabricModelProvider {
     }
 
     public JsonElement get() {
-      String oshiKey = item.getOshiKey();
-      Identifier modelId = Hasugoods.id("models/item/neso/" + oshiKey + "/model.obj");
+      String charaKey = item.getCharaKey();
+      Identifier modelId = Hasugoods.id("models/item/neso/" + charaKey + "/model.obj");
       JsonObject jsonObject = new JsonObject();
       jsonObject.addProperty("parent", PARENT.toString());
       jsonObject.addProperty("model", modelId.toString());
@@ -121,7 +121,7 @@ public class HasugoodsModelProvider extends FabricModelProvider {
     }
     for (var neso : NesoItem.getAllNesos()) {
       Identifier inhandModelId = ModelIds.getItemSubModelId(neso, "_in_hand");
-      Identifier modelId = ModelIds.getItemModelId(BadgeItem.getBadgeItem(neso.getOshiKey()).get());
+      Identifier modelId = ModelIds.getItemModelId(BadgeItem.getBadgeItem(neso.getCharaKey()).get());
       itemModelGenerator.modelCollector.accept(inhandModelId, new NesoModelSupplier(neso));
       // Register hand model
       ItemModel.Unbaked guiModel = ItemModels.basic(modelId);

@@ -11,7 +11,7 @@ import dev.rurino.hasugoods.item.badge.BadgeItem;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.random.Random;
 
-public class OshiUtils {
+public class CharaUtils {
   public static final String RURINO_KEY = "rurino";
   public static final String MEGUMI_KEY = "megumi";
   public static final String HIME_KEY = "hime";
@@ -21,7 +21,7 @@ public class OshiUtils {
   public static final String KAHO_KEY = "kaho";
   public static final String KOZUE_KEY = "kozue";
   public static final String GINKO_KEY = "ginko";
-  public static final ImmutableList<String> ALL_OSHI_KEYS = ImmutableList.of(
+  public static final ImmutableList<String> ALL_CHARA_KEYS = ImmutableList.of(
       RURINO_KEY,
       MEGUMI_KEY,
       HIME_KEY,
@@ -32,7 +32,7 @@ public class OshiUtils {
       KOZUE_KEY,
       GINKO_KEY);
 
-  public static final ImmutableMap<String, Integer> OSHI_COLOR_MAP = ImmutableMap.of(
+  public static final ImmutableMap<String, Integer> CHARA_COLOR_MAP = ImmutableMap.of(
       RURINO_KEY, 0xE7609E,
       MEGUMI_KEY, 0xC8C2C6,
       HIME_KEY, 0x9D8DE2,
@@ -43,14 +43,14 @@ public class OshiUtils {
       KOZUE_KEY, 0x68BE8D,
       GINKO_KEY, 0xA2D7DD);
 
-  public static Text getOshiDisplayName(String oshiKey) {
-    return Text.translatable(String.format("text.%s.%s", Hasugoods.MOD_ID, oshiKey));
+  public static Text getCharaDisplayName(String charaKey) {
+    return Text.translatable(String.format("text.%s.%s", Hasugoods.MOD_ID, charaKey));
   }
 
-  public static final int DEFAULT_OSHI_COLOR = 0xFFFFFF;
+  public static final int DEFAULT_CHARA_COLOR = 0xFFFFFF;
 
-  public static int getOshiColor(String oshiKey) {
-    return OSHI_COLOR_MAP.getOrDefault(oshiKey, DEFAULT_OSHI_COLOR);
+  public static int getCharaColor(String charaKey) {
+    return CHARA_COLOR_MAP.getOrDefault(charaKey, DEFAULT_CHARA_COLOR);
   }
 
   // #region Groups
@@ -62,10 +62,10 @@ public class OshiUtils {
     MIRACRA_PARK
   }
 
-  public static HasuUnit getUnit(String oshiKey) {
-    if (oshiKey == null)
+  public static HasuUnit getUnit(String charaKey) {
+    if (charaKey == null)
       return HasuUnit.NONE;
-    return switch (oshiKey) {
+    return switch (charaKey) {
       case KOZUE_KEY, KAHO_KEY, GINKO_KEY -> HasuUnit.CERISE_BOUQUET;
       case TSUZURI_KEY, SAYAKA_KEY, KOSUZU_KEY -> HasuUnit.DOLLCHESTRA;
       case MEGUMI_KEY, RURINO_KEY, HIME_KEY -> HasuUnit.MIRACRA_PARK;
@@ -73,10 +73,10 @@ public class OshiUtils {
     };
   }
 
-  public static int getGrade(String oshiKey) {
-    if (oshiKey == null)
+  public static int getGrade(String charaKey) {
+    if (charaKey == null)
       return -1;
-    return switch (oshiKey) {
+    return switch (charaKey) {
       case KOZUE_KEY, TSUZURI_KEY, MEGUMI_KEY -> 102;
       case KAHO_KEY, SAYAKA_KEY, RURINO_KEY -> 103;
       case GINKO_KEY, KOSUZU_KEY, HIME_KEY -> 104;
@@ -90,7 +90,7 @@ public class OshiUtils {
   public static BadgeItem getRandomBadge(Random random, boolean isSecret, String... excludes) {
     List<BadgeItem> badgeList = BadgeItem.getAllBadges(isSecret)
         .stream()
-        .filter(badge -> !Stream.of(excludes).anyMatch(e -> badge.getOshiKey().equals(e)))
+        .filter(badge -> !Stream.of(excludes).anyMatch(e -> badge.getCharaKey().equals(e)))
         .toList();
     return CollectionUtils.getRandomElement(badgeList, random);
   }
@@ -103,8 +103,8 @@ public class OshiUtils {
     LARGE
   }
 
-  public static String nesoKey(String oshiKey, NesoSize size) {
-    return oshiKey + "_neso_" + size.name().toLowerCase();
+  public static String nesoKey(String charaKey, NesoSize size) {
+    return charaKey + "_neso_" + size.name().toLowerCase();
   }
   // #endregion Neso
 }

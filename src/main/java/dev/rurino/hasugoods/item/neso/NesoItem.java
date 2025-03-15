@@ -9,9 +9,9 @@ import java.util.Optional;
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.entity.NesoEntity;
 import dev.rurino.hasugoods.item.ModItems;
-import dev.rurino.hasugoods.item.OshiItem;
-import dev.rurino.hasugoods.util.OshiUtils.NesoSize;
-import dev.rurino.hasugoods.util.OshiUtils;
+import dev.rurino.hasugoods.item.CharaItem;
+import dev.rurino.hasugoods.util.CharaUtils.NesoSize;
+import dev.rurino.hasugoods.util.CharaUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
@@ -28,7 +28,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 
-public class NesoItem extends OshiItem {
+public class NesoItem extends CharaItem {
   // #region Static fields
 
   protected static record NesoItemEntry(RegistryKey<Item> key, NesoItem item) {
@@ -36,20 +36,20 @@ public class NesoItem extends OshiItem {
 
   protected static final Map<String, NesoItemEntry> ALL_NESOS = new HashMap<>();
 
-  public static String nesoKey(String oshiKey, NesoSize size) {
-    return oshiKey + "_neso_" + size.name().toLowerCase();
+  public static String nesoKey(String charaKey, NesoSize size) {
+    return charaKey + "_neso_" + size.name().toLowerCase();
   }
 
-  protected static Optional<NesoItemEntry> getNesoItemEntry(String oshiKey, NesoSize size) {
-    return Optional.ofNullable(ALL_NESOS.get(nesoKey(oshiKey, size)));
+  protected static Optional<NesoItemEntry> getNesoItemEntry(String charaKey, NesoSize size) {
+    return Optional.ofNullable(ALL_NESOS.get(nesoKey(charaKey, size)));
   }
 
-  public static Optional<NesoItem> getNesoItem(String oshiKey, NesoSize size) {
-    return getNesoItemEntry(oshiKey, size).map(neso -> neso.item());
+  public static Optional<NesoItem> getNesoItem(String charaKey, NesoSize size) {
+    return getNesoItemEntry(charaKey, size).map(neso -> neso.item());
   }
 
-  public static Optional<RegistryKey<Item>> getNesoItemKey(String oshiKey, NesoSize size) {
-    return getNesoItemEntry(oshiKey, size).map(neso -> neso.key());
+  public static Optional<RegistryKey<Item>> getNesoItemKey(String charaKey, NesoSize size) {
+    return getNesoItemEntry(charaKey, size).map(neso -> neso.key());
   }
 
   public static List<NesoItem> getAllNesos(NesoSize size) {
@@ -62,8 +62,8 @@ public class NesoItem extends OshiItem {
     return ALL_NESOS.values().stream().map(entry -> entry.item()).toList();
   }
 
-  private static NesoItem registerNeso(String oshiKey, NesoSize size) {
-    String itemKey = nesoKey(oshiKey, size);
+  private static NesoItem registerNeso(String charaKey, NesoSize size) {
+    String itemKey = nesoKey(charaKey, size);
     RegistryKey<Item> key = RegistryKey.of(RegistryKeys.ITEM, Hasugoods.id(itemKey));
     Rarity rarity = switch (size) {
       case SMALL -> Rarity.COMMON;
@@ -72,15 +72,15 @@ public class NesoItem extends OshiItem {
     };
     NesoItem item = (NesoItem) ModItems.register(
         key,
-        new NesoItem(new Settings().maxCount(1).rarity(rarity).registryKey(key), oshiKey, size));
+        new NesoItem(new Settings().maxCount(1).rarity(rarity).registryKey(key), charaKey, size));
     ALL_NESOS.put(itemKey, new NesoItemEntry(key, (NesoItem) item));
     return item;
   }
 
   public static void initialize() {
-    for (String oshiKey : OshiUtils.ALL_OSHI_KEYS) {
+    for (String charaKey : CharaUtils.ALL_CHARA_KEYS) {
       for (NesoSize size : NesoSize.values()) {
-        registerNeso(oshiKey, size);
+        registerNeso(charaKey, size);
       }
     }
   }
@@ -89,8 +89,8 @@ public class NesoItem extends OshiItem {
 
   protected final NesoSize nesoSize;
 
-  public NesoItem(Settings settings, String oshiKey, NesoSize size) {
-    super(settings, oshiKey);
+  public NesoItem(Settings settings, String charaKey, NesoSize size) {
+    super(settings, charaKey);
     this.nesoSize = size;
   }
 
@@ -99,9 +99,10 @@ public class NesoItem extends OshiItem {
   }
 
   public EntityType<NesoEntity> getEntityType() {
-    Optional<EntityType<NesoEntity>> type = NesoEntity.getNesoEntityType(oshiKey, nesoSize);
+    String charaKey = getCharaKey();
+    Optional<EntityType<NesoEntity>> type = NesoEntity.getNesoEntityType(charaKey, nesoSize);
     if (type.isEmpty()) {
-      Hasugoods.LOGGER.error("Neso entity type not found: {} {}", oshiKey, nesoSize);
+      Hasugoods.LOGGER.error("Neso entity type not found: {} {}", charaKey, nesoSize);
     }
     return type.get();
   }
