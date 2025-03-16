@@ -27,6 +27,10 @@ public class Timer {
     return tick;
   }
 
+  public int elapsed() {
+    return initTick - tick;
+  }
+
   public boolean finished() {
     return tick == CANCELED;
   }

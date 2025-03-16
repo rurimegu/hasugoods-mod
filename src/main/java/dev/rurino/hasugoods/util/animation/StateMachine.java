@@ -11,9 +11,9 @@ public class StateMachine implements ICopyable<StateMachine> {
   protected static class InnerState {
     public Frame frame;
     public int state;
-    public double tick;
+    public int tick;
 
-    public InnerState(Frame frame, int state, double tick) {
+    public InnerState(Frame frame, int state, int tick) {
       this.frame = frame;
       this.state = state;
       this.tick = tick;
@@ -29,7 +29,7 @@ public class StateMachine implements ICopyable<StateMachine> {
   }
 
   private InnerState curState;
-  private double transitTick;
+  private int transitTick;
   private Frame prevFrame;
   private final Map<Integer, Animation> states = new HashMap<>();
   private final int initialState;
@@ -41,21 +41,21 @@ public class StateMachine implements ICopyable<StateMachine> {
 
   public Frame get() {
     if (curState.frame == null)
-      return update(0);
+      return getFrame(0);
 
     return curState.frame;
   }
 
-  public Frame update(double tick) {
-    curState.tick += tick;
-    Animation currentAnimation = states.get(curState.state);
+  public Frame getFrame(double tickDelta) {
+    double tick = curState.tick + tickDelta;
+    Animation currentAnimation = getCurrentAnimation();
     if (currentAnimation == null) {
       throw new IllegalStateException("No animation for state " + curState.state);
     }
-    curState.frame = currentAnimation.getFrame(curState.tick);
+    curState.frame = currentAnimation.getFrame(tick);
 
-    if (prevFrame != null) {
-      double progress = curState.tick / transitTick;
+    if (prevFrame != null && transitTick > 0) {
+      double progress = tick / transitTick;
       if (progress < 1) {
         curState.frame = prevFrame.interpolate(curState.frame, progress);
       }
@@ -67,7 +67,7 @@ public class StateMachine implements ICopyable<StateMachine> {
     states.put(state, animation);
   }
 
-  public void transit(int state, double tick) {
+  public void transit(int state, int tick) {
     if (!states.containsKey(state)) {
       Hasugoods.LOGGER.warn("No animation found for state {}, skipped" + state);
       return;
@@ -83,6 +83,18 @@ public class StateMachine implements ICopyable<StateMachine> {
 
   public Animation getAnimation(int state) {
     return states.get(state);
+  }
+
+  public Animation getCurrentAnimation() {
+    return states.get(curState.state);
+  }
+
+  public int getTick() {
+    return curState.tick;
+  }
+
+  public void tick() {
+    curState.tick++;
   }
 
   @Override

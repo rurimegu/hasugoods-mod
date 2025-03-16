@@ -128,16 +128,16 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
     var animIdle = new Animation(LoopType.PING_PONG)
         .addTranslation(firstT)
         .addTranslation(
-            new KeyFrame.Translate(80, new Vec3d(0, 0.3, 0)),
+            new KeyFrame.Translate(40, new Vec3d(0, 0.3, 0)),
             new Interpolator.Translate(Easing::easeInOutSine));
     STATE_MACHINE.set(ANIM_STATE_IDLE, animIdle);
     // Build neso base animations
-    KeyFrame.Translate secondT = new KeyFrame.Translate(60, new Vec3d(0, 2, 0));
+    KeyFrame.Translate secondT = new KeyFrame.Translate(40, new Vec3d(0, 2, 0));
     for (int i = 0; i < NESO_BASE_OFFSETS.size(); i++) {
       Vec3d offset = new Vec3d(NESO_BASE_OFFSETS.get(i).multiply(-1));
-      KeyFrame.Translate thirdT = new KeyFrame.Translate(160, secondT.value().add(offset));
-      KeyFrame.Scale secondS = new KeyFrame.Scale(120, new Vec3d(1, 1, 1));
-      KeyFrame.Scale thirdS = new KeyFrame.Scale(160, Vec3d.ZERO);
+      KeyFrame.Translate thirdT = new KeyFrame.Translate(80, secondT.value().add(offset.multiply(0.8)));
+      KeyFrame.Scale secondS = new KeyFrame.Scale(60, new Vec3d(1, 1, 1));
+      KeyFrame.Scale thirdS = new KeyFrame.Scale(80, Vec3d.ZERO);
       Animation anim = new Animation()
           .addTranslation(firstT)
           .addTranslation(secondT, Interpolator.Translate.EASE_OUT_CUBIC)
@@ -150,8 +150,8 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
     STATE_MACHINE.set(ANIM_STATE_MERGE_0, new Animation()
         .addTranslation(firstT)
         .addTranslation(secondT, Interpolator.Translate.EASE_OUT_CUBIC)
-        .addScale(new KeyFrame.Scale(120, new Vec3d(1, 1, 1)))
-        .addScale(new KeyFrame.Scale(180, new Vec3d(2, 2, 2))));
+        .addScale(new KeyFrame.Scale(60, new Vec3d(1, 1, 1)))
+        .addScale(new KeyFrame.Scale(80, new Vec3d(2, 2, 2))));
   }
 
   private final StateMachine stateMachine;
@@ -307,6 +307,7 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
   }
 
   protected void clientTick(World world, BlockPos blockPos, BlockState blockState) {
+    stateMachine.tick();
     maybeCreateNoteParticles(world, blockPos, blockState);
   }
 

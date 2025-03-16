@@ -39,7 +39,7 @@ public class NesoBaseBlockEntityRenderer implements BlockEntityRenderer<Abstract
     matrices.push();
     matrices.translate(0.5, 1, 0.5);
 
-    ClientAnimation.apply(entity.getStateMachine().update(tickDelta), matrices);
+    ClientAnimation.apply(entity.getStateMachine().getFrame(tickDelta), matrices);
 
     Direction direction = blockState.get(AbstractNesoBaseBlock.FACING);
     matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(direction.getPositiveHorizontalDegrees()));
