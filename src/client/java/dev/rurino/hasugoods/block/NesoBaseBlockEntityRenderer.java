@@ -1,6 +1,5 @@
 package dev.rurino.hasugoods.block;
 
-import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.entity.NesoEntityModel;
 import dev.rurino.hasugoods.util.ClientAnimation;
 import net.minecraft.block.BlockState;
@@ -17,7 +16,7 @@ import net.minecraft.util.math.RotationAxis;
 
 public class NesoBaseBlockEntityRenderer implements BlockEntityRenderer<AbstractNesoBaseBlockEntity> {
 
-  protected final ItemRenderer itemRenderer;
+  private final ItemRenderer itemRenderer;
 
   public NesoBaseBlockEntityRenderer(BlockEntityRendererFactory.Context context) {
     itemRenderer = context.getItemRenderer();

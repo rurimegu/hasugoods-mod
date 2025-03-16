@@ -9,11 +9,11 @@ import dev.rurino.hasugoods.util.ICopyable;
 public class StateMachine implements ICopyable<StateMachine> {
 
   protected static class InnerState {
-    public KeyFrame frame;
+    public Frame frame;
     public int state;
     public double tick;
 
-    public InnerState(KeyFrame frame, int state, double tick) {
+    public InnerState(Frame frame, int state, double tick) {
       this.frame = frame;
       this.state = state;
       this.tick = tick;
@@ -30,7 +30,7 @@ public class StateMachine implements ICopyable<StateMachine> {
 
   private InnerState curState;
   private double transitTick;
-  private KeyFrame prevFrame;
+  private Frame prevFrame;
   private final Map<Integer, Animation> states = new HashMap<>();
   private final int initialState;
 
@@ -39,25 +39,25 @@ public class StateMachine implements ICopyable<StateMachine> {
     this.curState = new InnerState(null, initialState, 0);
   }
 
-  public KeyFrame get() {
+  public Frame get() {
     if (curState.frame == null)
       return update(0);
 
     return curState.frame;
   }
 
-  public KeyFrame update(double tick) {
+  public Frame update(double tick) {
     curState.tick += tick;
     Animation currentAnimation = states.get(curState.state);
     if (currentAnimation == null) {
       throw new IllegalStateException("No animation for state " + curState.state);
     }
-    curState.frame = currentAnimation.getKeyFrame(curState.tick);
+    curState.frame = currentAnimation.getFrame(curState.tick);
 
     if (prevFrame != null) {
       double progress = curState.tick / transitTick;
       if (progress < 1) {
-        curState.frame = Interpolator.LINEAR.interpolate(prevFrame, curState.frame, progress);
+        curState.frame = prevFrame.interpolate(curState.frame, progress);
       }
     }
     return curState.frame;

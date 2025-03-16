@@ -3,65 +3,88 @@ package dev.rurino.hasugoods.util.animation;
 import org.joml.Quaternionf;
 import net.minecraft.util.math.Vec3d;
 
-public interface KeyFrame {
+public interface KeyFrame<T> {
   public double tick();
 
-  public Vec3d translation();
+  public T value();
 
-  public Quaternionf rotation();
+  public static abstract class Vector3d implements KeyFrame<Vec3d> {
 
-  public Vec3d scale();
-
-  public static class Regular implements KeyFrame {
     private final double tick;
-    private final Vec3d translation;
-    private final Quaternionf rotation;
-    private final Vec3d scale;
+    private final Vec3d value;
 
-    public static class Builder {
-      private double tick = 0;
-      private Vec3d translation = Vec3d.ZERO;
-      private Quaternionf rotation = new Quaternionf();
-      private Vec3d scale = new Vec3d(1, 1, 1);
-
-      public Builder tick(double tick) {
-        this.tick = tick;
-        return this;
-      }
-
-      public Builder translation(Vec3d translation) {
-        this.translation = translation;
-        return this;
-      }
-
-      public Builder rotation(Quaternionf rotation) {
-        this.rotation = rotation;
-        return this;
-      }
-
-      public Builder scale(Vec3d scale) {
-        this.scale = scale;
-        return this;
-      }
-
-      public Builder scale(double scale) {
-        return scale(new Vec3d(scale, scale, scale));
-      }
-
-      public Regular build() {
-        return new Regular(tick, translation, rotation, scale);
-      }
-    }
-
-    public Regular(double tick, Vec3d translation, Quaternionf rotation, Vec3d scale) {
+    public Vector3d(double tick, Vec3d value) {
       this.tick = tick;
-      this.translation = translation;
-      this.rotation = rotation;
-      this.scale = scale;
+      this.value = value;
     }
 
-    public Builder toBuilder() {
-      return new Builder().tick(tick).translation(translation).rotation(rotation).scale(scale);
+    public Vector3d() {
+      this(0, Vec3d.ZERO);
+    }
+
+    abstract protected String name();
+
+    @Override
+    public double tick() {
+      return tick;
+    }
+
+    @Override
+    public Vec3d value() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.format("KeyFrame(tick=%f, %s=%s)", tick, name(), value);
+    }
+  }
+
+  public static class Translate extends Vector3d {
+    public Translate(double tick, Vec3d value) {
+      super(tick, value);
+    }
+
+    public Translate() {
+      super();
+    }
+
+    @Override
+    protected String name() {
+      return "translate";
+    }
+  }
+
+  public static class Scale extends Vector3d {
+    private static final Vec3d DEFAULT = new Vec3d(1, 1, 1);
+
+    public Scale(double tick, Vec3d value) {
+      super(tick, value);
+    }
+
+    public Scale() {
+      super(0, DEFAULT);
+    }
+
+    @Override
+    protected String name() {
+      return "scale";
+    }
+  }
+
+  public static class Rotate implements KeyFrame<Quaternionf> {
+    private static final Quaternionf DEFAULT = new Quaternionf();
+
+    private final double tick;
+    private final Quaternionf value;
+
+    public Rotate(double tick, Quaternionf value) {
+      this.tick = tick;
+      this.value = value;
+    }
+
+    public Rotate() {
+      this(0, DEFAULT);
     }
 
     @Override
@@ -70,24 +93,13 @@ public interface KeyFrame {
     }
 
     @Override
-    public Vec3d translation() {
-      return translation;
-    }
-
-    @Override
-    public Quaternionf rotation() {
-      return rotation;
-    }
-
-    @Override
-    public Vec3d scale() {
-      return scale;
+    public Quaternionf value() {
+      return value;
     }
 
     @Override
     public String toString() {
-      return String.format("KeyFrame(tick=%f, translation=%s, rotation=%s, scale=%s)", tick, translation, rotation,
-          scale);
+      return String.format("KeyFrame(tick=%f, rotate=%s)", tick, value);
     }
   }
 }

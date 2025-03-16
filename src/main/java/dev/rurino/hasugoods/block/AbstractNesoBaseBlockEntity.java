@@ -13,6 +13,7 @@ import dev.rurino.hasugoods.util.CollectionUtils;
 import dev.rurino.hasugoods.util.Easing;
 import dev.rurino.hasugoods.util.CharaUtils;
 import dev.rurino.hasugoods.util.animation.Animation;
+import dev.rurino.hasugoods.util.animation.Frame;
 import dev.rurino.hasugoods.util.animation.IWithStateMachine;
 import dev.rurino.hasugoods.util.animation.Animation.LoopType;
 import dev.rurino.hasugoods.util.animation.Interpolator;
@@ -123,36 +124,34 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
 
   static {
     // Build idle animationAnimation
-    var animIdle = new Animation(
-        new KeyFrame.Regular.Builder().tick(0).translation(new Vec3d(0, 0.2, 0)).build(),
-        LoopType.PING_PONG)
-        .addKeyFrame(
-            new KeyFrame.Regular.Builder().tick(80).translation(new Vec3d(0, 0.3, 0)).build(),
-            Interpolator.of(Easing::easeInOutSine));
+    KeyFrame.Translate firstT = new KeyFrame.Translate(0, new Vec3d(0, 0.2, 0));
+    var animIdle = new Animation(LoopType.PING_PONG)
+        .addTranslation(firstT)
+        .addTranslation(
+            new KeyFrame.Translate(80, new Vec3d(0, 0.3, 0)),
+            new Interpolator.Translate(Easing::easeInOutSine));
     STATE_MACHINE.set(ANIM_STATE_IDLE, animIdle);
     // Build neso base animations
-    KeyFrame.Regular first = (KeyFrame.Regular) animIdle.first();
-    KeyFrame.Regular second = first.toBuilder()
-        .tick(60)
-        .translation(first.translation().add(0, 2, 0))
-        .build();
+    KeyFrame.Translate secondT = new KeyFrame.Translate(60, new Vec3d(0, 2, 0));
     for (int i = 0; i < NESO_BASE_OFFSETS.size(); i++) {
       Vec3d offset = new Vec3d(NESO_BASE_OFFSETS.get(i).multiply(-1));
-      KeyFrame.Regular third = second.toBuilder()
-          .tick(160)
-          .translation(second.translation().add(offset))
-          .scale(0.5)
-          .build();
-      Animation anim = new Animation(first)
-          .addKeyFrame(second, Interpolator.of(Easing::easeOutCubic))
-          .addKeyFrame(third, Interpolator.of(Easing::easeOutCubic));
+      KeyFrame.Translate thirdT = new KeyFrame.Translate(160, secondT.value().add(offset));
+      KeyFrame.Scale secondS = new KeyFrame.Scale(120, new Vec3d(1, 1, 1));
+      KeyFrame.Scale thirdS = new KeyFrame.Scale(160, Vec3d.ZERO);
+      Animation anim = new Animation()
+          .addTranslation(firstT)
+          .addTranslation(secondT, Interpolator.Translate.EASE_OUT_CUBIC)
+          .addTranslation(thirdT, Interpolator.Translate.EASE_OUT_CUBIC)
+          .addScale(secondS)
+          .addScale(thirdS);
       STATE_MACHINE.set(i, anim);
     }
     // Build merge animation for position 0
-    STATE_MACHINE.set(ANIM_STATE_MERGE_0, new Animation(first)
-        .addKeyFrame(second, Interpolator.of(Easing::easeOutCubic))
-        .addKeyFrame(second.toBuilder().tick(120).build())
-        .addKeyFrame(second.toBuilder().tick(180).scale(2).build()));
+    STATE_MACHINE.set(ANIM_STATE_MERGE_0, new Animation()
+        .addTranslation(firstT)
+        .addTranslation(secondT, Interpolator.Translate.EASE_OUT_CUBIC)
+        .addScale(new KeyFrame.Scale(120, new Vec3d(1, 1, 1)))
+        .addScale(new KeyFrame.Scale(180, new Vec3d(2, 2, 2))));
   }
 
   private final StateMachine stateMachine;
@@ -162,8 +161,8 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
   }
 
   public Vec3d getAnimatedEntityPos() {
-    KeyFrame frame = stateMachine.get();
-    Vec3d translation = frame.translation();
+    Frame frame = stateMachine.get();
+    Vec3d translation = frame.translate();
     Vec3d scale = frame.scale();
     return getPos().toBottomCenterPos().add(new Vec3d(0, 1.0 + scale.y * 0.3, 0)).add(translation);
   }
