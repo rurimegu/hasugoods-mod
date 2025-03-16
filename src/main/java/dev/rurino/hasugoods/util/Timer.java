@@ -1,32 +1,59 @@
 package dev.rurino.hasugoods.util;
 
 public class Timer {
-  private int tick;
+  private static int CANCELED = -1;
 
+  private int tick;
+  private int repeat;
+  private final int initTick;
   private final Runnable action;
 
-  public Timer(int tick, Runnable action) {
+  public Timer(int tick, Runnable action, int repeat) {
+    this.initTick = tick;
     this.tick = tick;
     this.action = action;
+    this.repeat = repeat;
+  }
+
+  public Timer(int tick, Runnable action) {
+    this(tick, action, 1);
+  }
+
+  public static Timer Loop(int tick, Runnable action) {
+    return new Timer(tick, action, Integer.MAX_VALUE);
   }
 
   public int remaining() {
     return tick;
   }
 
-  public void run() {
-    if (tick == -1)
-      return;
-    tick = -1;
+  public boolean finished() {
+    return tick == CANCELED;
+  }
+
+  public void cancel() {
+    tick = CANCELED;
+  }
+
+  public boolean run() {
+    if (finished())
+      return true;
     action.run();
+    repeat--;
+    if (repeat <= 0) {
+      tick = CANCELED;
+      return true;
+    }
+    tick = initTick;
+    return false;
   }
 
   public boolean tick(int delta) {
-    tick -= delta;
-    if (tick <= 0) {
-      run();
+    if (finished())
       return true;
-    }
+    tick -= delta;
+    if (tick <= 0)
+      return run();
     return false;
   }
 

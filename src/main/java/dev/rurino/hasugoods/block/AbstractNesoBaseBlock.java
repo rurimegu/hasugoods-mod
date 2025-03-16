@@ -99,8 +99,12 @@ public abstract class AbstractNesoBaseBlock extends BlockWithEntity {
     if (!world.isClient && world.getBlockEntity(pos) instanceof AbstractNesoBaseBlockEntity blockEntity) {
       ItemStack itemStack = blockEntity.getItemStack();
       if (!itemStack.isEmpty()) {
-        Block.dropStack(world, pos, itemStack);
-        blockEntity.setItemStack(ItemStack.EMPTY);
+        blockEntity.unlockItemStack();
+        if (blockEntity.setItemStack(ItemStack.EMPTY)) {
+          Block.dropStack(world, pos, itemStack);
+        } else {
+          Hasugoods.LOGGER.warn("Failed to empty neso base block item stack at {}", pos);
+        }
       }
     }
     return super.onBreak(world, pos, state, player);

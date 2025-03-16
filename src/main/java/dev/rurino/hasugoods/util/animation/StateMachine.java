@@ -3,7 +3,10 @@ package dev.rurino.hasugoods.util.animation;
 import java.util.HashMap;
 import java.util.Map;
 
-public class StateMachine {
+import dev.rurino.hasugoods.Hasugoods;
+import dev.rurino.hasugoods.util.ICopyable;
+
+public class StateMachine implements ICopyable<StateMachine> {
 
   protected static class InnerState {
     public KeyFrame frame;
@@ -29,8 +32,10 @@ public class StateMachine {
   private double transitTick;
   private KeyFrame prevFrame;
   private final Map<Integer, Animation> states = new HashMap<>();
+  private final int initialState;
 
   public StateMachine(int initialState) {
+    this.initialState = initialState;
     this.curState = new InnerState(null, initialState, 0);
   }
 
@@ -64,7 +69,8 @@ public class StateMachine {
 
   public void transit(int state, double tick) {
     if (!states.containsKey(state)) {
-      throw new IllegalStateException("No animation for state " + state);
+      Hasugoods.LOGGER.warn("No animation found for state {}, skipped" + state);
+      return;
     }
     if (state == curState.state) {
       return;
@@ -73,5 +79,18 @@ public class StateMachine {
     curState.state = state;
     transitTick = tick;
     prevFrame = curState.frame;
+  }
+
+  public Animation getAnimation(int state) {
+    return states.get(state);
+  }
+
+  @Override
+  public StateMachine copy() {
+    StateMachine copy = new StateMachine(initialState);
+    for (Map.Entry<Integer, Animation> entry : states.entrySet()) {
+      copy.set(entry.getKey(), entry.getValue());
+    }
+    return copy;
   }
 }

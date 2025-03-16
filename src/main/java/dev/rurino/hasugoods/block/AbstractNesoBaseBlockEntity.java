@@ -3,6 +3,8 @@ package dev.rurino.hasugoods.block;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.google.common.collect.ImmutableList;
+
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.item.CharaItem;
 import dev.rurino.hasugoods.particle.NoteParticleEffect;
@@ -11,6 +13,7 @@ import dev.rurino.hasugoods.util.CollectionUtils;
 import dev.rurino.hasugoods.util.Easing;
 import dev.rurino.hasugoods.util.CharaUtils;
 import dev.rurino.hasugoods.util.animation.Animation;
+import dev.rurino.hasugoods.util.animation.IWithStateMachine;
 import dev.rurino.hasugoods.util.animation.Animation.LoopType;
 import dev.rurino.hasugoods.util.animation.Interpolator;
 import dev.rurino.hasugoods.util.animation.KeyFrame;
@@ -32,7 +35,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 
-public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
+public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements IWithStateMachine {
   // #region Static members
   protected static final String NBT_NESO_ITEM_STACK = "nesoItemStack";
   protected static final String NBT_LOCK_ITEM_STACK = "lockItemStack";
@@ -104,15 +107,55 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
   protected int curTick = 0;
 
   // #region Animation
-  public static int ANIM_STATE_IDLE = 0;
-  protected static final Animation ANIM_IDLE = new Animation(
-      new KeyFrame.Regular.Builder().tick(0).translation(new Vec3d(0, 0.2, 0)).build(),
-      LoopType.PING_PONG)
-      .addKeyFrame(
-          new KeyFrame.Regular.Builder().tick(80).translation(new Vec3d(0, 0.3, 0)).build(),
-          Interpolator.of(Easing::easeInOutSine));
+  protected static final ImmutableList<BlockPos> NESO_BASE_OFFSETS = ImmutableList.of(
+      new BlockPos(3, 0, 0),
+      new BlockPos(2, 0, -2),
+      new BlockPos(0, 0, -3),
+      new BlockPos(-2, 0, -2),
+      new BlockPos(-3, 0, 0),
+      new BlockPos(-2, 0, 2),
+      new BlockPos(0, 0, 3),
+      new BlockPos(2, 0, 2));
 
-  private final StateMachine stateMachine = new StateMachine(ANIM_STATE_IDLE);
+  public static final int ANIM_STATE_IDLE = 217;
+  public static final int ANIM_STATE_MERGE_0 = 201;
+  protected static final StateMachine STATE_MACHINE = new StateMachine(ANIM_STATE_IDLE);
+
+  static {
+    // Build idle animationAnimation
+    var animIdle = new Animation(
+        new KeyFrame.Regular.Builder().tick(0).translation(new Vec3d(0, 0.2, 0)).build(),
+        LoopType.PING_PONG)
+        .addKeyFrame(
+            new KeyFrame.Regular.Builder().tick(80).translation(new Vec3d(0, 0.3, 0)).build(),
+            Interpolator.of(Easing::easeInOutSine));
+    STATE_MACHINE.set(ANIM_STATE_IDLE, animIdle);
+    // Build neso base animations
+    KeyFrame.Regular first = (KeyFrame.Regular) animIdle.first();
+    KeyFrame.Regular second = first.toBuilder()
+        .tick(60)
+        .translation(first.translation().add(0, 2, 0))
+        .build();
+    for (int i = 0; i < NESO_BASE_OFFSETS.size(); i++) {
+      Vec3d offset = new Vec3d(NESO_BASE_OFFSETS.get(i).multiply(-1));
+      KeyFrame.Regular third = second.toBuilder()
+          .tick(160)
+          .translation(second.translation().add(offset))
+          .scale(0.5)
+          .build();
+      Animation anim = new Animation(first)
+          .addKeyFrame(second, Interpolator.of(Easing::easeOutCubic))
+          .addKeyFrame(third, Interpolator.of(Easing::easeOutCubic));
+      STATE_MACHINE.set(i, anim);
+    }
+    // Build merge animation for position 0
+    STATE_MACHINE.set(ANIM_STATE_MERGE_0, new Animation(first)
+        .addKeyFrame(second, Interpolator.of(Easing::easeOutCubic))
+        .addKeyFrame(second.toBuilder().tick(120).build())
+        .addKeyFrame(second.toBuilder().tick(180).scale(2).build()));
+  }
+
+  private final StateMachine stateMachine;
 
   public StateMachine getStateMachine() {
     return stateMachine;
@@ -128,9 +171,7 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity {
 
   public AbstractNesoBaseBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
     super(type, pos, state);
-
-    // Build idle animation
-    stateMachine.set(ANIM_STATE_IDLE, ANIM_IDLE);
+    stateMachine = STATE_MACHINE.copy();
   }
 
   // #region Item stack
