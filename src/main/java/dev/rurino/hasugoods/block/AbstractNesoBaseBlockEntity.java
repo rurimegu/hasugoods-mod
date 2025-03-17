@@ -1,16 +1,18 @@
 package dev.rurino.hasugoods.block;
 
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableList;
 
 import dev.rurino.hasugoods.Hasugoods;
+import dev.rurino.hasugoods.entity.NesoEntity;
 import dev.rurino.hasugoods.item.CharaItem;
-import dev.rurino.hasugoods.particle.NoteParticleEffect;
-import dev.rurino.hasugoods.particle.QuestionMarkParticleEffect;
-import dev.rurino.hasugoods.util.CollectionUtils;
+import dev.rurino.hasugoods.item.neso.NesoItem;
+import dev.rurino.hasugoods.particle.HasuParticleEffect;
 import dev.rurino.hasugoods.util.Easing;
+import dev.rurino.hasugoods.util.ParticleUtils.Emitter;
 import dev.rurino.hasugoods.util.CharaUtils;
 import dev.rurino.hasugoods.util.animation.Animation;
 import dev.rurino.hasugoods.util.animation.Frame;
@@ -31,7 +33,6 @@ import net.minecraft.particle.ParticleEffect;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.RegistryWrapper.WrapperLookup;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
@@ -40,57 +41,20 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
   // #region Static members
   protected static final String NBT_NESO_ITEM_STACK = "nesoItemStack";
   protected static final String NBT_LOCK_ITEM_STACK = "lockItemStack";
-  protected static final int PARTICLE_PER_SIDE = 4;
-  protected static final int TICK_PER_PARTICLE = 2;
-  protected static final int PARTICLE_PER_WAVE = PARTICLE_PER_SIDE << 2;
-  protected static final Vec3d SPIRAL_VELOCITY = new Vec3d(0, 0.02, 0);
-  protected static final Vec3d WAVE_VELOCITY = new Vec3d(0, 0.04, 0);
-  protected static final float RANDOM_PARTICLE_PROB = 0.1f;
 
-  protected static final Map<String, NoteParticleEffect> CHARA_KEY_TO_NOTE_PARTICLE_EFFECT = CharaUtils.CHARA_COLOR_MAP
+  protected static final Map<String, HasuParticleEffect> CHARA_KEY_TO_NOTE_PARTICLE_EFFECT = CharaUtils.CHARA_COLOR_MAP
       .entrySet().stream()
-      .collect(Collectors.toMap(Map.Entry::getKey, e -> new NoteParticleEffect(e.getValue())));
-  protected static final NoteParticleEffect DEFAULT_NOTE_PARTICLE_EFFECT = new NoteParticleEffect(
+      .collect(Collectors.toMap(Map.Entry::getKey, e -> HasuParticleEffect.note(e.getValue())));
+  protected static final HasuParticleEffect DEFAULT_NOTE_PARTICLE_EFFECT = HasuParticleEffect.note(
       CharaUtils.DEFAULT_CHARA_COLOR);
 
-  protected static final QuestionMarkParticleEffect QUESTION_MARK_PARTICLE_EFFECT = new QuestionMarkParticleEffect(
+  protected static final HasuParticleEffect QUESTION_MARK_PARTICLE_EFFECT = HasuParticleEffect.questionMark(
       0xFF0000);
 
   protected static enum ParticleState {
     RANDOM,
     SPIRAL,
     WAVE
-  }
-
-  protected static Vec3d getSidePos(int particleNo, BlockPos blockPos) {
-    int side = particleNo / PARTICLE_PER_SIDE;
-    double sideProgress = (particleNo % PARTICLE_PER_SIDE) / (double) PARTICLE_PER_SIDE;
-    double x;
-    double z;
-    switch (side) {
-      case 0:
-        x = sideProgress;
-        z = 0;
-        break;
-      case 1:
-        x = 1;
-        z = sideProgress;
-        break;
-      case 2:
-        x = 1 - sideProgress;
-        z = 1;
-        break;
-      case 3:
-        x = 0;
-        z = 1 - sideProgress;
-        break;
-      default:
-        throw new IllegalStateException("Unexpected side value: " + side);
-    }
-    x += blockPos.getX();
-    double y = blockPos.getY() + 0.9;
-    z += blockPos.getZ();
-    return new Vec3d(x, y, z);
   }
 
   public static <T extends AbstractNesoBaseBlockEntity> void tick(
@@ -104,8 +68,6 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
   // #endregion Static members
 
   private ItemStack nesoItemStack = ItemStack.EMPTY;
-  protected NoteParticleEffect noteParticleEffect = DEFAULT_NOTE_PARTICLE_EFFECT;
-  protected int curTick = 0;
 
   // #region Animation
   protected static final ImmutableList<BlockPos> NESO_BASE_OFFSETS = ImmutableList.of(
@@ -118,8 +80,8 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
       new BlockPos(0, 0, 3),
       new BlockPos(2, 0, 2));
 
-  public static final int ANIM_STATE_IDLE = 217;
-  public static final int ANIM_STATE_MERGE_0 = 201;
+  protected static final int ANIM_STATE_IDLE = 217;
+  protected static final int ANIM_STATE_MERGE_0 = 201;
   protected static final StateMachine STATE_MACHINE = new StateMachine(ANIM_STATE_IDLE);
 
   static {
@@ -151,7 +113,7 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
         .addTranslation(firstT)
         .addTranslation(secondT, Interpolator.Translate.EASE_OUT_CUBIC)
         .addScale(new KeyFrame.Scale(60, new Vec3d(1, 1, 1)))
-        .addScale(new KeyFrame.Scale(80, new Vec3d(2, 2, 2))));
+        .addScale(new KeyFrame.Scale(80, new Vec3d(2, 2, 2)), Interpolator.Scale.OUT_BOUNCE));
   }
 
   private final StateMachine stateMachine;
@@ -164,7 +126,17 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
     Frame frame = stateMachine.get();
     Vec3d translation = frame.translate();
     Vec3d scale = frame.scale();
-    return getPos().toBottomCenterPos().add(new Vec3d(0, 1.0 + scale.y * 0.3, 0)).add(translation);
+    Vec3d ret = getPos().toBottomCenterPos().add(0, 1.0, 0).add(translation);
+    if (this.getItemStack().isEmpty() || !(this.getItemStack().getItem() instanceof NesoItem nesoItem))
+      return ret;
+    var entityTypeOptional = NesoEntity.getNesoEntityType(nesoItem.getCharaKey(), nesoItem.getNesoSize());
+    if (!entityTypeOptional.isPresent()) {
+      Hasugoods.LOGGER.warn("Neso entity type not found for chara key: {}, size {}", nesoItem.getCharaKey(),
+          nesoItem.getNesoSize());
+      return ret;
+    }
+    float eyeHeight = entityTypeOptional.get().getDimensions().eyeHeight();
+    return ret.add(0, scale.y * eyeHeight, 0);
   }
   // #endregion Animation
 
@@ -243,84 +215,42 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
   }
 
   // #region Particles
+  protected static final int PARTICLE_PER_SIDE = 4;
+  protected static final int TICK_PER_PARTICLE = 2;
+  protected static final int PARTICLE_PER_WAVE = PARTICLE_PER_SIDE << 2;
+  protected static final Vec3d SPIRAL_VELOCITY = new Vec3d(0, 0.02, 0);
+  protected static final Vec3d WAVE_VELOCITY = new Vec3d(0, 0.04, 0);
+  protected static final float RANDOM_PARTICLE_PROB = 0.1f;
 
-  protected int getParticleTick() {
-    return curTick % (PARTICLE_PER_WAVE * TICK_PER_PARTICLE);
-  }
+  protected HasuParticleEffect noteParticleEffect = DEFAULT_NOTE_PARTICLE_EFFECT;
 
-  protected static void createParticle(ParticleEffect effect, World world, Vec3d pos, Vec3d velocity) {
-    world.addParticle(effect, pos.x, pos.y, pos.z, velocity.x, velocity.y, velocity.z);
-  }
+  private final Function<Random, ParticleEffect> noteParticleEffectSupplier = (random) -> noteParticleEffect;
+  private final Emitter waveEmitter = new Emitter.Wave(noteParticleEffectSupplier,
+      PARTICLE_PER_WAVE * TICK_PER_PARTICLE, PARTICLE_PER_SIDE,
+      WAVE_VELOCITY);
+  private final Emitter randomEmitter = new Emitter.RandomUp(
+      CHARA_KEY_TO_NOTE_PARTICLE_EFFECT.values(), TICK_PER_PARTICLE, RANDOM_PARTICLE_PROB);
+  private final Emitter spiralEmitter = new Emitter.Spiral(noteParticleEffectSupplier, TICK_PER_PARTICLE,
+      PARTICLE_PER_SIDE, SPIRAL_VELOCITY);
 
-  protected void createNoteParticle(World world, Vec3d pos, Vec3d velocity) {
-    createParticle(noteParticleEffect, world, pos, velocity);
-  }
-
-  protected void createSpiralNoteParticles(World world, BlockPos blockPos, BlockState blockState) {
-    int particleTick = getParticleTick();
-    if (particleTick % TICK_PER_PARTICLE != 0)
-      return;
-    Vec3d pos = getSidePos(particleTick / TICK_PER_PARTICLE, blockPos);
-    createNoteParticle(world, pos, SPIRAL_VELOCITY);
-  }
-
-  protected void createWaveNoteParticles(World world, BlockPos blockPos, BlockState blockState) {
-    if (getParticleTick() != 0)
-      return;
-    for (int i = 0; i < PARTICLE_PER_WAVE; i++) {
-      Vec3d pos = getSidePos(i, blockPos);
-      createNoteParticle(world, pos, WAVE_VELOCITY);
-    }
-  }
-
-  protected void createRandomNoteParticles(World world, BlockPos blockPos, BlockState blockState) {
-    if (getParticleTick() % TICK_PER_PARTICLE != 0)
-      return;
-    Random random = world.getRandom();
-    if (random.nextFloat() >= RANDOM_PARTICLE_PROB)
-      return;
-    double x = blockPos.getX() + random.nextDouble();
-    double y = blockPos.getY() + 0.9;
-    double z = blockPos.getZ() + random.nextDouble();
-    Vec3d pos = new Vec3d(x, y, z);
-    NoteParticleEffect effect = CollectionUtils.getRandomElement(
-        CHARA_KEY_TO_NOTE_PARTICLE_EFFECT.values().stream().toList(),
-        random);
-    Vec3d velocity = new Vec3d(0, MathHelper.nextDouble(random, 0.015, 0.025), 0);
-    createParticle(effect, world, pos, velocity);
+  protected Emitter getParticleEmitter() {
+    return switch (getParticleState()) {
+      case SPIRAL -> spiralEmitter;
+      case WAVE -> waveEmitter;
+      case RANDOM -> randomEmitter;
+    };
   }
 
   abstract protected ParticleState getParticleState();
 
-  protected void maybeCreateNoteParticles(World world, BlockPos blockPos, BlockState blockState) {
-    switch (getParticleState()) {
-      case SPIRAL:
-        createSpiralNoteParticles(world, blockPos, blockState);
-        break;
-      case WAVE:
-        createWaveNoteParticles(world, blockPos, blockState);
-        break;
-      case RANDOM:
-        createRandomNoteParticles(world, blockPos, blockState);
-        break;
-      default:
-        throw new IllegalStateException("Unexpected particle state: " + getParticleState());
-    }
-  }
-
   // #endregion Particles
-
-  public int getCurTick() {
-    return curTick;
-  }
 
   protected void clientTick(World world, BlockPos blockPos, BlockState blockState) {
     stateMachine.tick();
-    maybeCreateNoteParticles(world, blockPos, blockState);
+    getParticleEmitter().tick(world, blockPos);
   }
 
   protected void tick(World world, BlockPos blockPos, BlockState blockState) {
-    curTick++;
   }
 
   // #region Serialization

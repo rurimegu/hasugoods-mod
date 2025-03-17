@@ -19,7 +19,7 @@ public class Timer {
     this(tick, action, 1);
   }
 
-  public static Timer Loop(int tick, Runnable action) {
+  public static Timer loop(int tick, Runnable action) {
     return new Timer(tick, action, Integer.MAX_VALUE);
   }
 

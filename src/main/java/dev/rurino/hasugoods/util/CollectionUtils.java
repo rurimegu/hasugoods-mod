@@ -8,4 +8,8 @@ public class CollectionUtils {
   public static <T> T getRandomElement(List<T> array, Random random) {
     return array.get(random.nextInt(array.size()));
   }
+
+  public static <T> T getRandomElement(T[] array, Random random) {
+    return array[random.nextInt(array.length)];
+  }
 }

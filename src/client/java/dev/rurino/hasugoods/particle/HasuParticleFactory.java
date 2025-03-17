@@ -5,17 +5,17 @@ import net.minecraft.client.particle.ParticleFactory;
 import net.minecraft.client.particle.SpriteProvider;
 import net.minecraft.client.world.ClientWorld;
 
-public class NoteParticleFactory implements ParticleFactory<NoteParticleEffect> {
+public class HasuParticleFactory<T extends HasuParticleEffect> implements ParticleFactory<T> {
   protected final SpriteProvider spriteProvider;
 
-  public NoteParticleFactory(SpriteProvider spriteProvider) {
+  public HasuParticleFactory(SpriteProvider spriteProvider) {
     this.spriteProvider = spriteProvider;
   }
 
   @Override
-  public Particle createParticle(NoteParticleEffect type, ClientWorld world, double x, double y, double z, double dx,
+  public Particle createParticle(T type, ClientWorld world, double x, double y, double z, double dx,
       double dy, double dz) {
-    return new NoteParticle(world, x, y, z, dx, dy, dz, type.getColorVec(), spriteProvider);
+    return new HasuParticle(world, x, y, z, dx, dy, dz, type.getColorVec(), spriteProvider);
   }
 
 }

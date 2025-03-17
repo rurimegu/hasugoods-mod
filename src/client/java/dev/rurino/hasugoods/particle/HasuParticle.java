@@ -8,13 +8,13 @@ import net.minecraft.client.particle.SpriteProvider;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.MathHelper;
 
-public class NoteParticle extends SpriteBillboardParticle {
+public class HasuParticle extends SpriteBillboardParticle {
   private static final int MAX_AGE = 40;
   private static final float SCALE = 0.1F;
 
   protected final SpriteProvider spriteProvider;
 
-  public NoteParticle(ClientWorld world,
+  public HasuParticle(ClientWorld world,
       double x, double y, double z,
       double velocityX, double velocityY, double velocityZ,
       Vector3f color,

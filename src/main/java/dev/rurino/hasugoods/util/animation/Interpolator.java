@@ -69,6 +69,7 @@ public abstract class Interpolator<T extends KeyFrame<?>> {
 
     public static Scale LINEAR = new Scale(Easing::linear);
     public static Scale CONSTANT = new Scale(Easing::constant);
+    public static Scale OUT_BOUNCE = new Scale(Easing::easeOutBounce);
   }
 
   public static class Rotate extends Interpolator<KeyFrame.Rotate> {

@@ -1,6 +1,7 @@
 package dev.rurino.hasugoods.block;
 
 import dev.rurino.hasugoods.Hasugoods;
+import dev.rurino.hasugoods.util.Timer;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper.WrapperLookup;
@@ -8,10 +9,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class NesoBaseBlockEntity extends AbstractNesoBaseBlockEntity {
-  protected static final int CHECK_POS_0_INTERVAL = 8;
-  protected static final String NBT_POS_0 = "pos0";
+  private static final int CHECK_POS_0_INTERVAL = 8;
+  private static final String NBT_POS_0 = "pos0";
 
-  protected BlockPos pos0 = null;
+  private BlockPos pos0 = null;
+  private final Timer timer = Timer.loop(CHECK_POS_0_INTERVAL, this::syncPos0);
 
   public NesoBaseBlockEntity(BlockPos pos, BlockState state) {
     super(ModBlockEntities.NESO_BASE_BLOCK_ENTITY_TYPE, pos, state);
@@ -42,7 +44,7 @@ public class NesoBaseBlockEntity extends AbstractNesoBaseBlockEntity {
     return ParticleState.SPIRAL;
   }
 
-  protected void syncPos0() {
+  private void syncPos0() {
     if (getPos0() != null) {
       PositionZeroBlockEntity pos0BlockEntity = getPos0BlockEntity();
       if (pos0BlockEntity == null) {
@@ -56,8 +58,8 @@ public class NesoBaseBlockEntity extends AbstractNesoBaseBlockEntity {
   @Override
   protected void tick(World world, BlockPos blockPos, BlockState blockState) {
     super.tick(world, blockPos, blockState);
-    if (!world.isClient && curTick % CHECK_POS_0_INTERVAL == 0) {
-      syncPos0();
+    if (!world.isClient) {
+      timer.tick();
     }
   }
 
