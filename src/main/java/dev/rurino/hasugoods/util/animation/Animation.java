@@ -18,6 +18,7 @@ public class Animation {
   private final ArrayList<FrameData<KeyFrame.Rotate>> rotations = new ArrayList<>();
 
   private final LoopType loop;
+  private int exitState = -1;
   private double lastTick = 0;
 
   public Animation(LoopType loop) {
@@ -72,6 +73,19 @@ public class Animation {
   public Animation finish(double finalTick) {
     this.lastTick = finalTick;
     return this;
+  }
+
+  public Animation exitAt(int exitState) {
+    this.exitState = exitState;
+    return this;
+  }
+
+  public boolean isFinished(double tick) {
+    return loop == LoopType.NONE && tick >= lastTick;
+  }
+
+  public int exitState() {
+    return exitState;
   }
 
   public double duration() {

@@ -12,7 +12,7 @@ import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class PlayAnimPayload implements CustomPayload {
+abstract class AbstractPlayAnimPayload implements CustomPayload {
   public record Transit(BlockPos blockPos, int state, int transitTick) {
     public static final PacketCodec<RegistryByteBuf, Transit> CODEC = PacketCodec.tuple(
         BlockPos.PACKET_CODEC,
@@ -24,35 +24,19 @@ public class PlayAnimPayload implements CustomPayload {
         Transit::new);
   }
 
-  public static final CustomPayload.Id<PlayAnimPayload> ID = new CustomPayload.Id<>(
-      Hasugoods.id("play_anim"));
-  public static final PacketCodec<RegistryByteBuf, PlayAnimPayload> CODEC = PacketCodec.tuple(
-      PacketCodecs.collection(ArrayList::new, Transit.CODEC),
-      PlayAnimPayload::anims,
-      PlayAnimPayload::new);
-
   private final Collection<Transit> anims;
 
-  public PlayAnimPayload(Collection<Transit> anims) {
+  public AbstractPlayAnimPayload(Collection<Transit> anims) {
     this.anims = anims;
   }
 
-  public PlayAnimPayload() {
+  public AbstractPlayAnimPayload() {
     this(new ArrayList<>());
   }
 
-  public PlayAnimPayload add(Transit anim) {
+  protected AbstractPlayAnimPayload add(Transit anim) {
     anims.add(anim);
     return this;
-  }
-
-  public PlayAnimPayload add(BlockPos blockPos, int state, int transitTick) {
-    return add(new Transit(blockPos, state, transitTick));
-  }
-
-  @Override
-  public Id<PlayAnimPayload> getId() {
-    return ID;
   }
 
   public Collection<Transit> anims() {
@@ -75,5 +59,37 @@ public class PlayAnimPayload implements CustomPayload {
     for (Transit anim : anims) {
       apply(world, anim);
     }
+  }
+}
+
+public class PlayAnimPayload extends AbstractPlayAnimPayload {
+  public static final CustomPayload.Id<PlayAnimPayload> ID = new CustomPayload.Id<>(
+      Hasugoods.id("play_anim"));
+  public static final PacketCodec<RegistryByteBuf, PlayAnimPayload> CODEC = PacketCodec.tuple(
+      PacketCodecs.collection(ArrayList::new, Transit.CODEC),
+      PlayAnimPayload::anims,
+      PlayAnimPayload::new);
+
+  public PlayAnimPayload(Collection<Transit> anims) {
+    super(anims);
+  }
+
+  public PlayAnimPayload() {
+    super();
+  }
+
+  @Override
+  public Id<PlayAnimPayload> getId() {
+    return ID;
+  }
+
+  @Override
+  public PlayAnimPayload add(Transit anim) {
+    super.add(anim);
+    return this;
+  }
+
+  public PlayAnimPayload add(BlockPos blockPos, int state, int transitTick) {
+    return this.add(new Transit(blockPos, state, transitTick));
   }
 }

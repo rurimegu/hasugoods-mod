@@ -135,7 +135,7 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
     KeyFrame.Translate secondT = new KeyFrame.Translate(40, new Vec3d(0, 2, 0));
     for (int i = 0; i < NESO_BASE_OFFSETS.size(); i++) {
       Vec3d offset = new Vec3d(NESO_BASE_OFFSETS.get(i).multiply(-1));
-      KeyFrame.Translate thirdT = new KeyFrame.Translate(80, secondT.value().add(offset.multiply(0.8)));
+      KeyFrame.Translate thirdT = new KeyFrame.Translate(80, secondT.value().add(offset.multiply(0.9)));
       KeyFrame.Scale secondS = new KeyFrame.Scale(60, new Vec3d(1, 1, 1));
       KeyFrame.Scale thirdS = new KeyFrame.Scale(80, Vec3d.ZERO);
       Animation anim = new Animation()
@@ -187,9 +187,13 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
     sync();
   }
 
-  public void unlockItemStack() {
+  protected void unlockItemStackNoSync() {
     itemStackLocked = false;
     markDirty();
+  }
+
+  public void unlockItemStack() {
+    unlockItemStackNoSync();
     sync();
   }
 
@@ -200,6 +204,10 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
   protected boolean setItemStackNoSync(ItemStack itemStack) {
     if (isItemStackLocked())
       return false;
+    if (itemStack == null) {
+      Hasugoods.LOGGER.warn("Unexpected null item stack inserted into NesoBaseBlock at {}", pos);
+      itemStack = ItemStack.EMPTY;
+    }
     nesoItemStack = itemStack;
     if (itemStack.getItem() instanceof CharaItem charaItem) {
       noteParticleEffect = CHARA_KEY_TO_NOTE_PARTICLE_EFFECT.getOrDefault(charaItem.getCharaKey(),
@@ -210,6 +218,7 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
       }
       noteParticleEffect = DEFAULT_NOTE_PARTICLE_EFFECT;
     }
+    markDirty();
     return true;
   }
 
@@ -217,7 +226,6 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
     if (!setItemStackNoSync(itemStack)) {
       return false;
     }
-    markDirty();
     sync();
     return true;
   }

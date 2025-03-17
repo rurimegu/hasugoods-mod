@@ -95,6 +95,12 @@ public class StateMachine implements ICopyable<StateMachine> {
 
   public void tick() {
     curState.tick++;
+    Animation animation = getCurrentAnimation();
+    if (animation == null)
+      return;
+    if (animation.isFinished(curState.tick) && animation.exitState() >= 0) {
+      transit(animation.exitState(), 0);
+    }
   }
 
   @Override
