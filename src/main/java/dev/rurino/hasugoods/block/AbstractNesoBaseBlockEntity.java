@@ -43,8 +43,8 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
   protected static final String NBT_LOCK_ITEM_STACK = "lockItemStack";
 
   protected static final Map<String, HasuParticleEffect> CHARA_KEY_TO_NOTE_PARTICLE_EFFECT = CharaUtils.CHARA_COLOR_MAP
-      .entrySet().stream()
-      .collect(Collectors.toMap(Map.Entry::getKey, e -> HasuParticleEffect.note(e.getValue())));
+      .keySet().stream()
+      .collect(Collectors.toMap(key -> key, key -> HasuParticleEffect.charaIcon(key)));
   protected static final HasuParticleEffect DEFAULT_NOTE_PARTICLE_EFFECT = HasuParticleEffect.note(
       CharaUtils.DEFAULT_CHARA_COLOR);
 

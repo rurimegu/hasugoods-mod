@@ -3,6 +3,7 @@ package dev.rurino.hasugoods.datagen;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -101,6 +102,22 @@ public class HasugoodsModelProvider extends FabricModelProvider {
       jsonObject.addProperty("parent", PARENT.toString());
       jsonObject.addProperty("model", modelId.toString());
       jsonObject.add("display", Hasugoods.GSON.toJsonTree(display(item.getNesoSize())));
+      return jsonObject;
+    }
+  }
+
+  private static class ParticleModelSupplier implements ModelSupplier {
+    private final String charaKey;
+
+    public ParticleModelSupplier(String charaKey) {
+      this.charaKey = charaKey;
+    }
+
+    public JsonElement get() {
+      JsonObject jsonObject = new JsonObject();
+      JsonArray textures = new JsonArray();
+      textures.add(Hasugoods.id(charaKey + "_icon").toString());
+      jsonObject.add("textures", textures);
       return jsonObject;
     }
   }

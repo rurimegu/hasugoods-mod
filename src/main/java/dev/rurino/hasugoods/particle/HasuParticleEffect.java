@@ -38,6 +38,11 @@ public class HasuParticleEffect implements ParticleEffect {
     return new HasuParticleEffect(ModParticles.NAME_QUESTION_MARK_PARTICLE, color);
   }
 
+  public static HasuParticleEffect charaIcon(String charaKey) {
+    return new HasuParticleEffect(
+        ModParticles.getCharaIconName(charaKey), 0xFFFFFF);
+  }
+
   private final int color;
   private final String name;
   private final ParticleType<?> type;
