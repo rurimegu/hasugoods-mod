@@ -67,5 +67,69 @@ public class HasuConfigModel {
   public int unopenedPacketMaxUses = 9;
   public float unopenedBoxDiscount = 0.1f;
   public int unopenedBoxMaxUses = 2;
-  // b#endregion Trade
+  // #endregion Trade
+
+  // #region Nesos
+  public static class NesoSmall {
+    public long maxEnergy = 128 * 1024;
+  }
+
+  public static class NesoMedium {
+    public long maxEnergy = 1024 * 1024;
+  }
+
+  public static class NesoLarge {
+    public long maxEnergy = 16 * 1024 * 1024;
+  }
+
+  public static class KahoNesoSmall {
+    public long energyPerAction = 500;
+    public long energyPerReplace = -1;
+    public int intervalTicks = 10;
+    public int radius = 5;
+    public float flowerRatio = 0.2f;
+    public int cooldownTicks = 5 * 20;
+  }
+
+  public static class KahoNesoMedium {
+    public long energyPerAction = 800;
+    public long energyPerReplace = -1;
+    public int intervalTicks = 5;
+    public int radius = 8;
+    public float flowerRatio = 0.3f;
+    public int cooldownTicks = 5 * 20;
+  }
+
+  public static class KahoNesoLarge {
+    public long energyPerAction = 1000;
+    public long energyPerReplace = 5000;
+    public int intervalTicks = 3;
+    public int radius = 12;
+    public float flowerRatio = 0.5f;
+    public int cooldownTicks = 10 * 20;
+  }
+
+  public static class KahoNeso {
+    @Nest
+    public KahoNesoSmall small = new KahoNesoSmall();
+    @Nest
+    public KahoNesoMedium medium = new KahoNesoMedium();
+    @Nest
+    public KahoNesoLarge large = new KahoNesoLarge();
+  }
+
+  public static class Neso {
+    @Nest
+    public NesoSmall small = new NesoSmall();
+    @Nest
+    public NesoMedium medium = new NesoMedium();
+    @Nest
+    public NesoLarge large = new NesoLarge();
+    @Nest
+    public KahoNeso kaho = new KahoNeso();
+  }
+
+  @Nest
+  public Neso neso = new Neso();
+  // #endregion Nesos
 }
