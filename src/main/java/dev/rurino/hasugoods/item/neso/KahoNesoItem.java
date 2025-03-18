@@ -3,46 +3,80 @@ package dev.rurino.hasugoods.item.neso;
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.util.CharaUtils;
 import dev.rurino.hasugoods.util.CharaUtils.NesoSize;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.world.World;
 
 public class KahoNesoItem extends NesoItem {
 
   // #region Config
-  private static record Config(
-      long energyPerAction,
-      long energyPerReplace,
-      int intervalTicks,
-      int radius,
-      float flowerRatio,
-      int cooldownTicks) {
-  }
+  public static class Config extends NesoItem.Config {
+    private final long energyPerAction;
+    private final long energyPerReplace;
+    private final int intervalTicks;
+    private final int radius;
+    private final float flowerRatio;
+    private final float useCooldown;
 
-  private static final Config SMALL_CONFIG;
-  private static final Config MEDIUM_CONFIG;
-  private static final Config LARGE_CONFIG;
+    public Config(NesoSize size) {
+      super(size);
+      var kaho = Hasugoods.CONFIG.neso.kaho;
+      switch (size) {
+        case SMALL:
+          this.energyPerAction = kaho.small.energyPerAction();
+          this.energyPerReplace = kaho.small.energyPerReplace();
+          this.intervalTicks = kaho.small.intervalTicks();
+          this.radius = kaho.small.radius();
+          this.flowerRatio = kaho.small.flowerRatio();
+          this.useCooldown = kaho.small.useCooldown();
+          break;
+        case MEDIUM:
+          this.energyPerAction = kaho.medium.energyPerAction();
+          this.energyPerReplace = kaho.medium.energyPerReplace();
+          this.intervalTicks = kaho.medium.intervalTicks();
+          this.radius = kaho.medium.radius();
+          this.flowerRatio = kaho.medium.flowerRatio();
+          this.useCooldown = kaho.medium.useCooldown();
+          break;
+        case LARGE:
+          this.energyPerAction = kaho.large.energyPerAction();
+          this.energyPerReplace = kaho.large.energyPerReplace();
+          this.intervalTicks = kaho.large.intervalTicks();
+          this.radius = kaho.large.radius();
+          this.flowerRatio = kaho.large.flowerRatio();
+          this.useCooldown = kaho.large.useCooldown();
+          break;
+        default:
+          throw new IllegalArgumentException("Invalid neso size when initializing config: " + size);
+      }
+    }
 
-  static {
-    var kahoConfig = Hasugoods.CONFIG.neso.kaho;
-    SMALL_CONFIG = new Config(
-        kahoConfig.small.energyPerAction(),
-        kahoConfig.small.energyPerReplace(),
-        kahoConfig.small.intervalTicks(),
-        kahoConfig.small.radius(),
-        kahoConfig.small.flowerRatio(),
-        kahoConfig.small.cooldownTicks());
-    MEDIUM_CONFIG = new Config(
-        kahoConfig.medium.energyPerAction(),
-        kahoConfig.medium.energyPerReplace(),
-        kahoConfig.medium.intervalTicks(),
-        kahoConfig.medium.radius(),
-        kahoConfig.medium.flowerRatio(),
-        kahoConfig.medium.cooldownTicks());
-    LARGE_CONFIG = new Config(
-        kahoConfig.large.energyPerAction(),
-        kahoConfig.large.energyPerReplace(),
-        kahoConfig.large.intervalTicks(),
-        kahoConfig.large.radius(),
-        kahoConfig.large.flowerRatio(),
-        kahoConfig.large.cooldownTicks());
+    @Override
+    public long energyPerAction() {
+      return energyPerAction;
+    }
+
+    @Override
+    public float useCooldown() {
+      return useCooldown;
+    }
+
+    public long energyPerReplace() {
+      return energyPerReplace;
+    }
+
+    public int intervalTicks() {
+      return intervalTicks;
+    }
+
+    public int radius() {
+      return radius;
+    }
+
+    public float flowerRatio() {
+      return flowerRatio;
+    }
   }
   // #endregion
 
@@ -50,12 +84,12 @@ public class KahoNesoItem extends NesoItem {
 
   public KahoNesoItem(Settings settings, NesoSize size) {
     super(settings, CharaUtils.KAHO_KEY, size);
-    switch (size) {
-      case SMALL -> config = SMALL_CONFIG;
-      case MEDIUM -> config = MEDIUM_CONFIG;
-      case LARGE -> config = LARGE_CONFIG;
-      default -> throw new IllegalArgumentException("Invalid size: " + size);
-    }
+    config = (Config) NesoItem.getConfig(this.getCharaKey(), size);
+  }
+
+  @Override
+  public ActionResult use(World world, PlayerEntity user, Hand hand) {
+    return ActionResult.SUCCESS;
   }
 
 }

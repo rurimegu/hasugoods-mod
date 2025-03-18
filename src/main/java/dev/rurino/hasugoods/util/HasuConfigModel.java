@@ -88,7 +88,7 @@ public class HasuConfigModel {
     public int intervalTicks = 10;
     public int radius = 5;
     public float flowerRatio = 0.2f;
-    public int cooldownTicks = 5 * 20;
+    public float useCooldown = 5;
   }
 
   public static class KahoNesoMedium {
@@ -97,7 +97,7 @@ public class HasuConfigModel {
     public int intervalTicks = 5;
     public int radius = 8;
     public float flowerRatio = 0.3f;
-    public int cooldownTicks = 5 * 20;
+    public float useCooldown = 5;
   }
 
   public static class KahoNesoLarge {
@@ -106,7 +106,7 @@ public class HasuConfigModel {
     public int intervalTicks = 3;
     public int radius = 12;
     public float flowerRatio = 0.5f;
-    public int cooldownTicks = 10 * 20;
+    public float useCooldown = 10;
   }
 
   public static class KahoNeso {
