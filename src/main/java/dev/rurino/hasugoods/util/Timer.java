@@ -23,26 +23,51 @@ public class Timer {
     });
   }
 
-  private int tick;
+  private int tick = 0;
   private int repeat;
-  private final int initTick;
-  private final Runnable action;
+  private int totTick;
+  private Runnable action;
 
+  /**
+   * Creates a timer.
+   * 
+   * @param tick   the amount of ticks before running.
+   * @param action the action to run.
+   * @param repeat the amount of times to repeat.
+   */
   public Timer(int tick, Runnable action, int repeat) {
-    this.initTick = tick;
-    this.tick = tick;
+    this.totTick = tick;
     this.action = action;
     this.repeat = repeat;
   }
 
+  /**
+   * Creates a one-off timer.
+   * 
+   * @param tick   the amount of ticks before running.
+   * @param action the action to run.
+   */
   public Timer(int tick, Runnable action) {
     this(tick, action, 1);
   }
 
+  /**
+   * Creates a timer that runs once every a certain amount of ticks.
+   * 
+   * @param tick   the amount of ticks between each run.
+   * @param action the action to run.
+   * @return the timer.
+   */
   public static Timer loop(int tick, Runnable action) {
     return new Timer(tick, action, Integer.MAX_VALUE);
   }
 
+  /**
+   * Attach the timer to the server tick.
+   * 
+   * @param world the world tick to attach to.
+   * @return <code>this</code> for chaining.
+   */
   public Timer attachToServerTick(World world) {
     if (world.isClient) {
       Hasugoods.LOGGER.warn("Timer cannot attach to server tick in client world, ignored.");
@@ -52,22 +77,58 @@ public class Timer {
     return this;
   }
 
+  /**
+   * Reset the timer with a new tick and repeated action.
+   * 
+   * @param tick   the amount of ticks before running.
+   * @param action the action to run.
+   * @param repeat the amount of times to repeat.
+   * @return <code>this</code> for chaining.
+   */
+  public Timer reset(int tick, Runnable action, int repeat) {
+    this.totTick = tick;
+    this.action = action;
+    this.repeat = repeat;
+    this.tick = 0;
+    return this;
+  }
+
+  /**
+   * Reset the timer with a new tick and one-off action.
+   * 
+   * @param tick   the amount of ticks before running.
+   * @param action the action to run.
+   * @return <code>this</code> for chaining.
+   */
+  public Timer reset(int tick, Runnable action) {
+    return reset(tick, action, 1);
+  }
+
   public int remaining() {
-    return tick;
+    return totTick - tick;
   }
 
   public int elapsed() {
-    return initTick - tick;
+    return tick;
   }
 
   public boolean finished() {
     return tick == CANCELED;
   }
 
+  /**
+   * Cancel the timer. If attached to server tick, it will be removed at the next
+   * tick.
+   */
   public void cancel() {
     tick = CANCELED;
   }
 
+  /**
+   * Run the next action immediately.
+   * 
+   * @return true if the timer is finished.
+   */
   public boolean run() {
     if (finished())
       return true;
@@ -77,19 +138,30 @@ public class Timer {
       tick = CANCELED;
       return true;
     }
-    tick = initTick;
+    tick = 0;
     return false;
   }
 
+  /**
+   * Tick the timer with delta time.
+   * 
+   * @param delta the delta time in ticks.
+   * @return true if the timer is finished.
+   */
   public boolean tick(int delta) {
     if (finished())
       return true;
-    tick -= delta;
-    if (tick <= 0)
+    tick += delta;
+    if (tick >= totTick)
       return run();
     return false;
   }
 
+  /**
+   * Tick the timer.
+   * 
+   * @return true if the timer is finished.
+   */
   public boolean tick() {
     return tick(1);
   }
