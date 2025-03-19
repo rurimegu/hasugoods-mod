@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 
 public class ParticleUtils {
 
-  public static Vec3d getSidePos(int particleNo, BlockPos blockPos, int particlePerSide) {
+  public static Vec3d getSidePos(int particleNo, Vec3d pos, int particlePerSide) {
     int side = (particleNo / particlePerSide) % 4;
     double sideProgress = (particleNo % particlePerSide) / (double) particlePerSide;
     double x;
@@ -38,10 +38,7 @@ public class ParticleUtils {
       default:
         throw new IllegalStateException("Unexpected side value: " + side);
     }
-    x += blockPos.getX();
-    double y = blockPos.getY() + 0.9;
-    z += blockPos.getZ();
-    return new Vec3d(x, y, z);
+    return pos.add(x - 0.5, 0, z - 0.5);
   }
 
   public static void createParticle(ParticleEffect effect, World world, Vec3d pos, Vec3d velocity) {
@@ -49,61 +46,104 @@ public class ParticleUtils {
   }
 
   public static abstract class Emitter {
-    private int particleTick = 0;
-    private final int triggerInterval;
+    private int triggerCount = 0;
 
-    protected Emitter(int triggerInterval) {
-      this.triggerInterval = triggerInterval;
-    }
-
-    protected Emitter() {
-      this(1);
-    }
-
-    abstract protected void clientTick(World world, BlockPos pos);
-
-    protected int getTick() {
-      return particleTick;
-    }
-
-    protected int getTickInterval() {
-      return triggerInterval;
-    }
+    abstract protected void clientEmit(World world, Vec3d pos);
 
     protected int getTriggerCount() {
-      return particleTick / triggerInterval;
+      return triggerCount;
     }
 
-    public void tick(World world, BlockPos pos) {
+    public void emit(World world, Vec3d pos) {
       if (!world.isClient) {
         Hasugoods.LOGGER.warn("Emitter ticked on server side, skipped");
         return;
       }
-      particleTick++;
-      if (particleTick % triggerInterval == 0) {
-        clientTick(world, pos);
+      this.triggerCount++;
+      clientEmit(world, pos);
+    }
+
+    public void emit(World world, BlockPos pos) {
+      emit(world, pos.toCenterPos());
+    }
+
+    public Timed repeat(int triggerInterval, int repeat) {
+      return new Timed(this, triggerInterval, repeat);
+    }
+
+    public Timed repeat(int triggerInterval) {
+      return new Timed(this, triggerInterval);
+    }
+
+    public Timed repeat() {
+      return new Timed(this, 1);
+    }
+
+    public static class Timed {
+      public final Timer timer;
+      public final Emitter emitter;
+
+      private boolean shouldTrigger = false;
+
+      private void enableTrigger() {
+        this.shouldTrigger = true;
       }
+
+      private Timed(Emitter emitter, int triggerInterval, int repeat) {
+        this.timer = new Timer(triggerInterval, this::enableTrigger, repeat);
+        this.emitter = emitter;
+      }
+
+      private Timed(Emitter emitter, int triggerInterval) {
+        this.timer = Timer.loop(triggerInterval, this::enableTrigger);
+        this.emitter = emitter;
+      }
+
+      public int getTriggerCount() {
+        return emitter.getTriggerCount();
+      }
+
+      public void tick(World world, BlockPos blockPos, int tick) {
+        this.timer.tick(tick);
+        if (this.shouldTrigger) {
+          this.shouldTrigger = false;
+          emitter.emit(world, blockPos);
+        }
+      }
+
+      public void tick(World world, BlockPos blockPos) {
+        tick(world, blockPos, 1);
+      }
+
+      public void tick(World world, Vec3d pos, int tick) {
+        this.timer.tick(tick);
+        if (this.shouldTrigger) {
+          this.shouldTrigger = false;
+          emitter.emit(world, pos);
+        }
+      }
+
+      public void tick(World world, Vec3d pos) {
+        tick(world, pos, 1);
+      }
+
     }
 
     public static class RandomUp extends Emitter {
       private final float randomParticleProb;
       private final ParticleEffect[] effects;
 
-      public RandomUp(Collection<? extends ParticleEffect> effects, int triggerInterval, float randomParticleProb) {
-        super(triggerInterval);
+      public RandomUp(Collection<? extends ParticleEffect> effects, float randomParticleProb) {
         this.effects = effects.toArray(new ParticleEffect[0]);
         this.randomParticleProb = randomParticleProb;
       }
 
       @Override
-      protected void clientTick(World world, BlockPos blockPos) {
+      protected void clientEmit(World world, Vec3d pos) {
         Random random = world.getRandom();
         if (random.nextFloat() >= randomParticleProb)
           return;
-        double x = blockPos.getX() + random.nextDouble();
-        double y = blockPos.getY() + 0.9;
-        double z = blockPos.getZ() + random.nextDouble();
-        Vec3d pos = new Vec3d(x, y, z);
+        pos = pos.add(random.nextDouble() - 0.5, random.nextDouble() - 0.1, random.nextDouble() - 0.5);
         Vec3d velocity = new Vec3d(0, MathHelper.nextDouble(random, 0.015, 0.025), 0);
         ParticleEffect effect = CollectionUtils.getRandomElement(effects, random);
         createParticle(effect, world, pos, velocity);
@@ -115,17 +155,16 @@ public class ParticleUtils {
       private final Vec3d velocity;
       private final Function<Random, ParticleEffect> effectSupplier;
 
-      public Spiral(Function<Random, ParticleEffect> effectSupplier, int triggerInterval, int particlePerSide,
+      public Spiral(Function<Random, ParticleEffect> effectSupplier, int particlePerSide,
           Vec3d velocity) {
-        super(triggerInterval);
         this.effectSupplier = effectSupplier;
         this.particlePerSide = particlePerSide;
         this.velocity = velocity;
       }
 
       @Override
-      protected void clientTick(World world, BlockPos blockPos) {
-        Vec3d pos = ParticleUtils.getSidePos(getTriggerCount(), blockPos, particlePerSide);
+      protected void clientEmit(World world, Vec3d pos) {
+        pos = ParticleUtils.getSidePos(getTriggerCount(), pos.add(0, 0.4, 0), particlePerSide);
         ParticleEffect effect = effectSupplier.apply(world.getRandom());
         createParticle(effect, world, pos, velocity);
       }
@@ -136,20 +175,19 @@ public class ParticleUtils {
       private final Vec3d velocity;
       private final Function<Random, ParticleEffect> effectSupplier;
 
-      public Wave(Function<Random, ParticleEffect> effectSupplier, int triggerInterval, int particlePerSide,
-          Vec3d velocity) {
-        super(triggerInterval);
+      public Wave(Function<Random, ParticleEffect> effectSupplier, int particlePerSide, Vec3d velocity) {
         this.effectSupplier = effectSupplier;
         this.particlePerSide = particlePerSide;
         this.velocity = velocity;
       }
 
       @Override
-      protected void clientTick(World world, BlockPos blockPos) {
+      protected void clientEmit(World world, Vec3d pos) {
+        pos = pos.add(0, 0.9, 0);
         for (int i = 0; i < particlePerSide * 4; i++) {
-          Vec3d pos = ParticleUtils.getSidePos(i, blockPos, particlePerSide);
+          Vec3d emitPos = ParticleUtils.getSidePos(i, pos, particlePerSide);
           ParticleEffect effect = effectSupplier.apply(world.getRandom());
-          createParticle(effect, world, pos, velocity);
+          createParticle(effect, world, emitPos, velocity);
         }
       }
     }

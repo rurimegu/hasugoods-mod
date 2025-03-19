@@ -225,15 +225,16 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
   protected HasuParticleEffect noteParticleEffect = DEFAULT_NOTE_PARTICLE_EFFECT;
 
   private final Function<Random, ParticleEffect> noteParticleEffectSupplier = (random) -> noteParticleEffect;
-  private final Emitter waveEmitter = new Emitter.Wave(noteParticleEffectSupplier,
-      PARTICLE_PER_WAVE * TICK_PER_PARTICLE, PARTICLE_PER_SIDE,
-      WAVE_VELOCITY);
-  private final Emitter randomEmitter = new Emitter.RandomUp(
-      CHARA_KEY_TO_NOTE_PARTICLE_EFFECT.values(), TICK_PER_PARTICLE, RANDOM_PARTICLE_PROB);
-  private final Emitter spiralEmitter = new Emitter.Spiral(noteParticleEffectSupplier, TICK_PER_PARTICLE,
-      PARTICLE_PER_SIDE, SPIRAL_VELOCITY);
+  private final Emitter.Timed waveEmitter = new Emitter.Wave(noteParticleEffectSupplier, PARTICLE_PER_SIDE,
+      WAVE_VELOCITY).repeat(PARTICLE_PER_WAVE * TICK_PER_PARTICLE);
+  private final Emitter.Timed randomEmitter = new Emitter.RandomUp(
+      CHARA_KEY_TO_NOTE_PARTICLE_EFFECT.values(),
+      RANDOM_PARTICLE_PROB)
+      .repeat(TICK_PER_PARTICLE);
+  private final Emitter.Timed spiralEmitter = new Emitter.Spiral(noteParticleEffectSupplier,
+      PARTICLE_PER_SIDE, SPIRAL_VELOCITY).repeat(TICK_PER_PARTICLE);
 
-  protected Emitter getParticleEmitter() {
+  protected Emitter.Timed getParticleEmitter() {
     return switch (getParticleState()) {
       case SPIRAL -> spiralEmitter;
       case WAVE -> waveEmitter;

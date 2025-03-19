@@ -339,19 +339,19 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
 
   // #region Particles
 
-  private final Emitter lineParticleEmitter = new Emitter(CHECK_STRUCTURE_INTERVAL) {
+  private final Emitter.Timed lineParticleEmitter = (new Emitter() {
     @Override
-    protected void clientTick(World world, BlockPos pos) {
-      maybeCreateLinkParticles(world, pos);
+    protected void clientEmit(World world, Vec3d pos) {
+      maybeCreateLinkParticles(world);
     }
-  };
+  }).repeat(CHECK_STRUCTURE_INTERVAL);
 
   private static void createLineParticle(ParticleEffect effect, World world, Vec3d from, Vec3d to) {
     Vec3d velocity = to.subtract(from).normalize().multiply(LINK_PARTICLE_VELOCITY);
     ParticleUtils.createParticle(effect, world, from, velocity);
   }
 
-  private void maybeCreateLinkParticles(World world, BlockPos blockPos) {
+  private void maybeCreateLinkParticles(World world) {
     if (!this.hasLinkedNesoBases())
       return;
     NesoBaseBlockEntity[] nesobases = getLinkedNesoBases();

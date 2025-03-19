@@ -108,6 +108,10 @@ public class Timer {
     return totTick - tick;
   }
 
+  public int remainingRepeats() {
+    return repeat;
+  }
+
   public int elapsed() {
     return tick;
   }
@@ -164,5 +168,10 @@ public class Timer {
    */
   public boolean tick() {
     return tick(1);
+  }
+
+  @Override
+  public String toString() {
+    return String.format("Timer{tick=%d, repeat=%d, totTick=%d}", tick, repeat, totTick);
   }
 }
