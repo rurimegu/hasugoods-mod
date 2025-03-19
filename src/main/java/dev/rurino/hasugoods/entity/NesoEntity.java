@@ -115,8 +115,8 @@ public class NesoEntity extends LivingEntity {
   }
   // #endregion Static fields
 
-  protected final String charaKey;
-  protected final NesoSize nesoSize;
+  private final String charaKey;
+  private final NesoSize nesoSize;
 
   public NesoEntity(EntityType<? extends LivingEntity> type, World world, String charaKey, NesoSize size) {
     super(type, world);
