@@ -4,6 +4,7 @@ import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.util.CharaUtils;
 import dev.rurino.hasugoods.util.CharaUtils.NesoSize;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
@@ -84,11 +85,15 @@ public class KahoNesoItem extends NesoItem {
 
   public KahoNesoItem(Settings settings, NesoSize size) {
     super(settings, CharaUtils.KAHO_KEY, size);
-    config = (Config) NesoItem.getConfig(this.getCharaKey(), size);
+    config = (Config) super.config;
   }
 
   @Override
   public ActionResult use(World world, PlayerEntity user, Hand hand) {
+    ItemStack stack = user.getStackInHand(hand);
+    if (!tryUseEnergy(stack, config.energyPerAction())) {
+      return ActionResult.PASS;
+    }
     return ActionResult.SUCCESS;
   }
 

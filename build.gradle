@@ -84,6 +84,9 @@ dependencies {
 
   // Patchouli
   // modImplementation "vazkii.patchouli:Patchouli:1.21-88-FABRIC"
+
+  // Energy API
+  include modApi('teamreborn:energy:4.1.0')
 }
 
 processResources {

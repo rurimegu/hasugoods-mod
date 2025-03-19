@@ -12,23 +12,30 @@ import dev.rurino.hasugoods.item.ModItems;
 import dev.rurino.hasugoods.item.CharaItem;
 import dev.rurino.hasugoods.util.CharaUtils.NesoSize;
 import dev.rurino.hasugoods.util.CharaUtils;
+import dev.rurino.hasugoods.util.ItemStackUtils;
+import dev.rurino.hasugoods.util.HasuString;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
+import team.reborn.energy.api.base.SimpleEnergyItem;
 
-public class NesoItem extends CharaItem {
+public class NesoItem extends CharaItem implements SimpleEnergyItem {
   // #region Static fields
 
   protected static record NesoItemEntry(RegistryKey<Item> key, NesoItem item) {
@@ -148,10 +155,12 @@ public class NesoItem extends CharaItem {
   // #endregion Config
 
   protected final NesoSize nesoSize;
+  protected final Config config;
 
   public NesoItem(Settings settings, String charaKey, NesoSize size) {
     super(settings, charaKey);
     this.nesoSize = size;
+    this.config = getConfig(this.getCharaKey(), size);
   }
 
   public NesoSize getNesoSize() {
@@ -165,6 +174,55 @@ public class NesoItem extends CharaItem {
       Hasugoods.LOGGER.error("Neso entity type not found: {} {}", charaKey, nesoSize);
     }
     return type.get();
+  }
+
+  // #region GUI
+
+  @Override
+  public int getItemBarColor(ItemStack stack) {
+    if (!(stack.getItem() instanceof NesoItem item)) {
+      Hasugoods.LOGGER.warn("getItemBarColor called on non-neso ItemStack {}", stack);
+      return 0xFFFFFF;
+    }
+    return CharaUtils.getCharaColor(item.getCharaKey());
+  }
+
+  @Override
+  public boolean isItemBarVisible(ItemStack stack) {
+    return getStoredEnergy(stack) < getEnergyCapacity(stack);
+  }
+
+  @Override
+  public int getItemBarStep(ItemStack stack) {
+    long capacity = getEnergyCapacity(stack);
+    if (capacity <= 0) {
+      return ItemStackUtils.MAX_ITEM_BAR_STEPS;
+    }
+    return ItemStackUtils.getItemBarStep((float) getStoredEnergy(stack) / capacity);
+  }
+
+  @Override
+  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+    super.appendTooltip(stack, context, tooltip, type);
+    long stored = getStoredEnergy(stack);
+    long capacity = getEnergyCapacity(stack);
+    if (capacity > 0) {
+      MutableText text = Text.literal("")
+          .append(Text.literal("OP:").formatted(Formatting.GOLD))
+          .append(" ")
+          .append(HasuString.formatEnergy(stored))
+          .append(Text.literal("/").formatted(Formatting.AQUA))
+          .append(HasuString.formatEnergy(capacity));
+      tooltip.add(text);
+    }
+  }
+
+  // #endregion GUI
+
+  @Override
+  public void onCraft(ItemStack stack, World world) {
+    super.onCraft(stack, world);
+    setFullEnergy(stack);
   }
 
   @Override
@@ -208,5 +266,41 @@ public class NesoItem extends CharaItem {
 
     return ActionResult.SUCCESS;
   }
+
+  // #region Energy
+
+  @Override
+  public long getEnergyCapacity(ItemStack stack) {
+    return config == null ? 0 : config.maxEnergy();
+  }
+
+  @Override
+  public long getEnergyMaxInput(ItemStack stack) {
+    return config == null ? 0 : config.maxEnergy();
+  }
+
+  @Override
+  public long getEnergyMaxOutput(ItemStack stack) {
+    return config == null ? 0 : config.maxEnergy();
+  }
+
+  public void chargeEnergy(ItemStack stack, long amount) {
+    if (amount > 0) {
+      long stored = getStoredEnergy(stack);
+      long capacity = getEnergyCapacity(stack);
+      if (stored < capacity) {
+        setStoredEnergy(stack, Math.min(stored + amount, capacity));
+      }
+    }
+  }
+
+  public void setFullEnergy(ItemStack stack) {
+    long capacity = getEnergyCapacity(stack);
+    if (capacity > 0) {
+      setStoredEnergy(stack, capacity);
+    }
+  }
+
+  // #endregion Energy
 
 }

@@ -127,6 +127,8 @@ public class HasuConfigModel {
     public NesoLarge large = new NesoLarge();
     @Nest
     public KahoNeso kaho = new KahoNeso();
+
+    public long pos0ChargeAmountPerTick = 16;
   }
 
   @Nest

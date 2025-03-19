@@ -137,6 +137,7 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
     }
     NesoItem upgradedNesoItem = NesoItem.getNesoItem(nesoItem.getCharaKey(), NesoSize.LARGE).get();
     ItemStack newStack = stack.copyComponentsToNewStack(upgradedNesoItem, 1);
+    upgradedNesoItem.setFullEnergy(newStack);
     return newStack;
   }
   // #endregion Server Animation
@@ -373,6 +374,9 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
   protected void tick(World world, BlockPos blockPos, BlockState blockState) {
     super.tick(world, blockPos, blockState);
     if (!world.isClient) {
+      if (getItemStack().getItem() instanceof NesoItem item) {
+        item.chargeEnergy(getItemStack(), Hasugoods.CONFIG.neso.pos0ChargeAmountPerTick());
+      }
       if (isPlayingMergeAnim()) {
         mergeAnimTimer.tick();
       }
