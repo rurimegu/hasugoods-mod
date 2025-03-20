@@ -207,7 +207,7 @@ public class NesoItem extends CharaItem implements SimpleEnergyItem {
     long stored = getStoredEnergy(stack);
     long capacity = getEnergyCapacity(stack);
     if (capacity > 0) {
-      MutableText text = Text.literal("")
+      MutableText text = Text.empty()
           .append(Text.literal("OP:").formatted(Formatting.GOLD))
           .append(" ")
           .append(HasuString.formatEnergy(stored))
