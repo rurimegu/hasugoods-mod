@@ -3,6 +3,7 @@ package dev.rurino.hasugoods.block;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -245,6 +246,26 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
     return isolated;
   }
 
+  private static boolean[] checkConsecutiveValues(Integer[] valueByIdx, Predicate<Integer> isEmpty) {
+    HashSet<Integer> appeared = Arrays.stream(valueByIdx)
+        .filter(v -> !isEmpty.test(v))
+        .collect(HashSet::new, HashSet::add, HashSet::addAll);
+    int center = valueByIdx[valueByIdx.length - 1];
+    for (int i = center + 1; appeared.contains(i); i++) {
+      appeared.remove(i);
+    }
+    for (int i = center; appeared.contains(i); i--) {
+      appeared.remove(i);
+    }
+    boolean[] ret = new boolean[valueByIdx.length];
+    for (int i = 0; i < valueByIdx.length; i++) {
+      if (!isEmpty.test(valueByIdx[i]) && appeared.contains(valueByIdx[i])) {
+        ret[i] = true;
+      }
+    }
+    return ret;
+  }
+
   private NesoBaseState[] checkNesoBaseState(NesoBaseBlockEntity[] nesobases) {
     int n = nesobases.length;
     NesoBaseState[] ret = new NesoBaseState[n];
@@ -295,9 +316,9 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
     HasuUnit[] units = Arrays.stream(nodes)
         .map(CharaUtils::getUnit)
         .toArray(HasuUnit[]::new);
-    boolean[] isolated = checkIsolatedComponents(units, u -> u == HasuUnit.NONE);
+    boolean[] failed = checkIsolatedComponents(units, u -> u == HasuUnit.NONE);
     for (int i = 0; i < n; i++) {
-      if (isolated[i]) {
+      if (failed[i]) {
         ret[i] = NesoBaseState.ERROR;
       }
     }
@@ -305,12 +326,20 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
     Integer[] grades = Arrays.stream(nodes)
         .map(CharaUtils::getGrade)
         .toArray(Integer[]::new);
-    isolated = checkIsolatedComponents(grades, g -> g < 0);
+    failed = checkIsolatedComponents(grades, g -> g < 0);
     for (int i = 0; i < n; i++) {
-      if (isolated[i]) {
+      if (failed[i]) {
         ret[i] = NesoBaseState.ERROR;
       }
     }
+    // Grade values must be consecutive
+    failed = checkConsecutiveValues(grades, g -> g < 0);
+    for (int i = 0; i < n; i++) {
+      if (failed[i]) {
+        ret[i] = NesoBaseState.ERROR;
+      }
+    }
+
     return ret;
   }
 
