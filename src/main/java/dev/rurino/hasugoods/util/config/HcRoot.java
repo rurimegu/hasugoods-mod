@@ -9,16 +9,28 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import dev.rurino.hasugoods.Hasugoods;
-import dev.rurino.hasugoods.util.config.HasuConfigValue.Bool;
+import dev.rurino.hasugoods.util.config.HcVal.Bool;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
+import net.fabricmc.loader.api.FabricLoader;
 
-public class HasuConfigRoot extends HasuConfigObject {
+public class HcRoot extends HcObj {
   private final File configFile;
   private boolean createConfig = false;
   private boolean overwriteConfig = false;
   private boolean initialized = false;
 
-  protected HasuConfigRoot(File configFile, JsonObject obj) {
+  public static HcRoot createAndLoad(String configName) {
+    File configFile = FabricLoader.getInstance().getConfigDir()
+        .resolve(configName + ".json")
+        .toFile();
+    JsonObject json = null;
+    if (configFile.exists()) {
+      json = HcRoot.readConfig(configFile);
+    }
+    return new HcRoot(configFile, json);
+  }
+
+  protected HcRoot(File configFile, JsonObject obj) {
     super("", obj);
     this.isDirty = true;
     this.configFile = configFile;
@@ -37,7 +49,7 @@ public class HasuConfigRoot extends HasuConfigObject {
   }
 
   @Override
-  public HasuConfigObject child(String childPath) {
+  public HcObj child(String childPath) {
     var ret = super.child(childPath);
     validateInitialized(childPath);
     return ret;
@@ -51,35 +63,35 @@ public class HasuConfigRoot extends HasuConfigObject {
   }
 
   @Override
-  public HasuConfigValue.Int getInt(String childPath, int defaultValue) {
+  public HcVal.Int getInt(String childPath, int defaultValue) {
     var ret = super.getInt(childPath, defaultValue);
     validateInitialized(childPath);
     return ret;
   }
 
   @Override
-  public HasuConfigValue.Long getLong(String childPath, long defaultValue) {
+  public HcVal.Long getLong(String childPath, long defaultValue) {
     var ret = super.getLong(childPath, defaultValue);
     validateInitialized(childPath);
     return ret;
   }
 
   @Override
-  public HasuConfigValue.Float getFloat(String childPath, float defaultValue) {
+  public HcVal.Float getFloat(String childPath, float defaultValue) {
     var ret = super.getFloat(childPath, defaultValue);
     validateInitialized(childPath);
     return ret;
   }
 
   @Override
-  public HasuConfigValue.Double getDouble(String childPath, double defaultValue) {
+  public HcVal.Double getDouble(String childPath, double defaultValue) {
     var ret = super.getDouble(childPath, defaultValue);
     validateInitialized(childPath);
     return ret;
   }
 
   @Override
-  public HasuConfigValue.Str getString(String childPath, String defaultValue) {
+  public HcVal.Str getString(String childPath, String defaultValue) {
     var ret = super.getString(childPath, defaultValue);
     validateInitialized(childPath);
     return ret;
@@ -93,7 +105,7 @@ public class HasuConfigRoot extends HasuConfigObject {
     isDirty = false;
     Hasugoods.LOGGER.info("Writing Config file: {}", configFile.getAbsolutePath());
     try (FileWriter writer = new FileWriter(configFile)) {
-      writer.write(HasuConfig.GSON.toJson(obj));
+      writer.write(HcBase.GSON.toJson(obj));
     } catch (IOException e) {
       Hasugoods.LOGGER.error("Failed to write config file: {}\n{}", configFile.getAbsolutePath(), e);
     }
@@ -140,17 +152,17 @@ public class HasuConfigRoot extends HasuConfigObject {
     return true;
   }
 
-  public HasuConfigRoot autoCreateConfig() {
+  public HcRoot autoCreateConfig() {
     this.createConfig = true;
     return this;
   }
 
-  public HasuConfigRoot autoOverwriteConfig() {
+  public HcRoot autoOverwriteConfig() {
     this.overwriteConfig = true;
     return this;
   }
 
-  public HasuConfigRoot onInitializateComplete() {
+  public HcRoot onInitializateComplete() {
     maybeWriteConfig();
     initialized = true;
     return this;

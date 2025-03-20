@@ -19,7 +19,7 @@ import dev.rurino.hasugoods.util.ParticleUtils.Emitter;
 import dev.rurino.hasugoods.util.animation.Animation;
 import dev.rurino.hasugoods.util.animation.Interpolator;
 import dev.rurino.hasugoods.util.animation.KeyFrame;
-import dev.rurino.hasugoods.util.config.HasuConfigValue;
+import dev.rurino.hasugoods.util.config.HcVal;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
@@ -37,7 +37,7 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
   private static final int CHECK_STRUCTURE_INTERVAL = 8;
   private static final float LINK_PARTICLE_VELOCITY = 0.1f;
   private static final String NBT_NESOBASES = "nesobases";
-  private static final HasuConfigValue.Long CHARGE_AMOUNT_PER_TICK = Hasugoods.CONFIG2
+  private static final HcVal.Long CHARGE_AMOUNT_PER_TICK = Hasugoods.CONFIG2
       .getLong("neso.pos0ChargeAmountPerTick", 16);
 
   static void initialize() {

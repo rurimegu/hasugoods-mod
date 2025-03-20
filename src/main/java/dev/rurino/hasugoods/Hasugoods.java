@@ -17,7 +17,7 @@ import dev.rurino.hasugoods.item.ModItems;
 import dev.rurino.hasugoods.network.ModNetwork;
 import dev.rurino.hasugoods.particle.ModParticles;
 import dev.rurino.hasugoods.util.HasuConfig;
-import dev.rurino.hasugoods.util.config.HasuConfigRoot;
+import dev.rurino.hasugoods.util.config.HcRoot;
 
 public class Hasugoods implements ModInitializer {
   public static final String MOD_ID = "hasugoods";
@@ -30,7 +30,7 @@ public class Hasugoods implements ModInitializer {
   public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
   public static final HasuConfig CONFIG = HasuConfig.createAndLoad();
-  public static final HasuConfigRoot CONFIG2 = dev.rurino.hasugoods.util.config.HasuConfig
+  public static final HcRoot CONFIG2 = HcRoot
       .createAndLoad(MOD_ID + "-config")
       .autoCreateConfig()
       .autoOverwriteConfig();

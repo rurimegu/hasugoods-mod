@@ -10,7 +10,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
 public class KahoNesoItem extends NesoItem {
-
   // #region Config
   public static class Config extends NesoItem.Config {
     private final long energyPerAction;

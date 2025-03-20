@@ -3,18 +3,18 @@ package dev.rurino.hasugoods.util.config;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 
-public abstract class HasuConfigValue<T> extends HasuConfig {
-  public static interface Factory<T extends HasuConfigValue<?>> {
+public abstract class HcVal<T> extends HcBase {
+  public static interface Factory<T extends HcVal<?>> {
     T create(String path, JsonElement obj);
   }
 
-  protected HasuConfigValue(String path, JsonElement obj) {
+  protected HcVal(String path, JsonElement obj) {
     super(path, obj);
   }
 
   public abstract T value();
 
-  public static class Int extends HasuConfigValue<Integer> {
+  public static class Int extends HcVal<Integer> {
 
     protected Int(String path, JsonElement obj, int defaultValue) {
       super(path, obj == null ? new JsonPrimitive(defaultValue) : obj);
@@ -27,7 +27,7 @@ public abstract class HasuConfigValue<T> extends HasuConfig {
 
   }
 
-  public static class Long extends HasuConfigValue<java.lang.Long> {
+  public static class Long extends HcVal<java.lang.Long> {
 
     protected Long(String path, JsonElement obj, long defaultValue) {
       super(path, obj == null ? new JsonPrimitive(defaultValue) : obj);
@@ -40,7 +40,7 @@ public abstract class HasuConfigValue<T> extends HasuConfig {
 
   }
 
-  public static class Float extends HasuConfigValue<java.lang.Float> {
+  public static class Float extends HcVal<java.lang.Float> {
 
     protected Float(String path, JsonElement obj, float defaultValue) {
       super(path, obj == null ? new JsonPrimitive(defaultValue) : obj);
@@ -53,7 +53,7 @@ public abstract class HasuConfigValue<T> extends HasuConfig {
 
   }
 
-  public static class Double extends HasuConfigValue<java.lang.Double> {
+  public static class Double extends HcVal<java.lang.Double> {
 
     protected Double(String path, JsonElement obj, double defaultValue) {
       super(path, obj == null ? new JsonPrimitive(defaultValue) : obj);
@@ -66,7 +66,7 @@ public abstract class HasuConfigValue<T> extends HasuConfig {
 
   }
 
-  public static class Str extends HasuConfigValue<String> {
+  public static class Str extends HcVal<String> {
 
     protected Str(String path, JsonElement obj, String defaultValue) {
       super(path, obj == null ? new JsonPrimitive(defaultValue) : obj);
@@ -79,7 +79,7 @@ public abstract class HasuConfigValue<T> extends HasuConfig {
 
   }
 
-  public static class Bool extends HasuConfigValue<Boolean> {
+  public static class Bool extends HcVal<Boolean> {
 
     protected Bool(String path, JsonElement obj, boolean defaultValue) {
       super(path, obj == null ? new JsonPrimitive(defaultValue) : obj);
