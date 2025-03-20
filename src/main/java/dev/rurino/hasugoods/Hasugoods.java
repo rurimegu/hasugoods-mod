@@ -16,7 +16,6 @@ import dev.rurino.hasugoods.entity.ModEntities;
 import dev.rurino.hasugoods.item.ModItems;
 import dev.rurino.hasugoods.network.ModNetwork;
 import dev.rurino.hasugoods.particle.ModParticles;
-import dev.rurino.hasugoods.util.HasuConfig;
 import dev.rurino.hasugoods.util.config.HcRoot;
 
 public class Hasugoods implements ModInitializer {
@@ -29,8 +28,7 @@ public class Hasugoods implements ModInitializer {
   // That way, it's clear which mod wrote info, warnings, and errors.
   public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-  public static final HasuConfig CONFIG = HasuConfig.createAndLoad();
-  public static final HcRoot CONFIG2 = HcRoot
+  public static final HcRoot CONFIG = HcRoot
       .createAndLoad(MOD_ID + "-config")
       .autoCreateConfig()
       .autoOverwriteConfig();
@@ -56,6 +54,6 @@ public class Hasugoods implements ModInitializer {
     ModEntities.initialize();
     ModNetwork.initialize();
 
-    CONFIG2.onInitializateComplete();
+    CONFIG.onInitializateComplete();
   }
 }

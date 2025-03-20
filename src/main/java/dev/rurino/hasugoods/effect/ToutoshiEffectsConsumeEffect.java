@@ -8,6 +8,7 @@ import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.component.IToutoshiComponent;
 import dev.rurino.hasugoods.component.ModComponents;
 import dev.rurino.hasugoods.item.badge.BadgeItem;
+import dev.rurino.hasugoods.util.config.HcVal;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.Item;
@@ -21,6 +22,9 @@ public record ToutoshiEffectsConsumeEffect() implements ConsumeEffect {
   public static final MapCodec<ToutoshiEffectsConsumeEffect> CODEC = MapCodec.unit(ToutoshiEffectsConsumeEffect::new);
   public static final PacketCodec<RegistryByteBuf, ToutoshiEffectsConsumeEffect> PACKET_CODEC = PacketCodec.unit(
       new ToutoshiEffectsConsumeEffect());
+  private static final HcVal.Int OSHI_PROTECTION_DURATION = Hasugoods.CONFIG.getInt("oshiProtectionDuration", 2 * 20);
+  private static final HcVal.Int OSHI_SECRET_PROTECTION_DURATION = Hasugoods.CONFIG
+      .getInt("oshiSecretProtectionDuration", 10 * 20);
 
   @Override
   public ConsumeEffect.Type<ToutoshiEffectsConsumeEffect> getType() {
@@ -36,9 +40,9 @@ public record ToutoshiEffectsConsumeEffect() implements ConsumeEffect {
     }
     Item item = stack.getItem();
     toutoshiComponent.get().setToutoshiSourceItem(item);
-    int duration = Hasugoods.CONFIG.oshiProtectionDuration();
+    int duration = OSHI_PROTECTION_DURATION.val();
     if (item instanceof BadgeItem badgeItem && badgeItem.isSecret()) {
-      duration = Hasugoods.CONFIG.oshiSecretProtectionDuration();
+      duration = OSHI_SECRET_PROTECTION_DURATION.val();
     }
     if (duration <= 0)
       return false;

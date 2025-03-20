@@ -3,6 +3,13 @@ package dev.rurino.hasugoods.util.config;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 
+/**
+ * HasuConfig value object.
+ * <p>
+ * This class represents a configuration value in the HasuConfig system.
+ * It corresponds to a JSON primitive value and is the leaf node in the
+ * configuration tree.
+ */
 public abstract class HcVal<T> extends HcBase {
   public static interface Factory<T extends HcVal<?>> {
     T create(String path, JsonElement obj);
@@ -12,7 +19,7 @@ public abstract class HcVal<T> extends HcBase {
     super(path, obj);
   }
 
-  public abstract T value();
+  public abstract T val();
 
   public static class Int extends HcVal<Integer> {
 
@@ -21,7 +28,7 @@ public abstract class HcVal<T> extends HcBase {
     }
 
     @Override
-    public Integer value() {
+    public Integer val() {
       return obj.getAsInt();
     }
 
@@ -34,7 +41,7 @@ public abstract class HcVal<T> extends HcBase {
     }
 
     @Override
-    public java.lang.Long value() {
+    public java.lang.Long val() {
       return obj.getAsLong();
     }
 
@@ -47,7 +54,7 @@ public abstract class HcVal<T> extends HcBase {
     }
 
     @Override
-    public java.lang.Float value() {
+    public java.lang.Float val() {
       return obj.getAsFloat();
     }
 
@@ -60,7 +67,7 @@ public abstract class HcVal<T> extends HcBase {
     }
 
     @Override
-    public java.lang.Double value() {
+    public java.lang.Double val() {
       return obj.getAsDouble();
     }
 
@@ -73,7 +80,7 @@ public abstract class HcVal<T> extends HcBase {
     }
 
     @Override
-    public String value() {
+    public String val() {
       return obj.getAsString();
     }
 
@@ -86,7 +93,7 @@ public abstract class HcVal<T> extends HcBase {
     }
 
     @Override
-    public Boolean value() {
+    public Boolean val() {
       return obj.getAsBoolean();
     }
 

@@ -8,12 +8,27 @@ import org.apache.commons.lang3.StringUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+/**
+ * HasuConfig object.
+ * <p>
+ * This class represents a configuration object in the HasuConfig system.
+ * It corresponds to a JSON object and allows for nested configuration
+ * structures.
+ */
 public class HcObj extends HcBase {
 
   private final Map<String, HcBase> children = new HashMap<>();
 
   protected HcObj(String path, JsonElement obj) {
     super(path, obj == null ? new JsonObject() : obj);
+  }
+
+  @Override
+  protected void clearDirty() {
+    super.clearDirty();
+    for (HcBase child : children.values()) {
+      child.clearDirty();
+    }
   }
 
   private void putChild(String key, HcBase child) {
@@ -55,6 +70,18 @@ public class HcObj extends HcBase {
     return childConfig;
   }
 
+  private <T extends HcVal<?>> T readValue(Class<T> type, String child) {
+    String childPath = path + "." + child;
+    if (!children.containsKey(child)) {
+      return null;
+    }
+    var ret = children.get(child);
+    if (!type.isInstance(ret)) {
+      throw new IllegalStateException(String.format("Duplicate config path: %s of different types", childPath));
+    }
+    return type.cast(ret);
+  }
+
   private HcObj child(String[] parts, boolean excludeLast) {
     HcObj config = this;
     int lastIndex = parts.length - (excludeLast ? 1 : 0);
@@ -64,51 +91,98 @@ public class HcObj extends HcBase {
     return config;
   }
 
-  public HcObj child(String childPath) {
-    String[] parts = StringUtils.split(childPath, ".");
+  private HcObj readChild(String[] parts, boolean excludeLast) {
+    HcObj config = this;
+    int lastIndex = parts.length - (excludeLast ? 1 : 0);
+    for (int i = 0; i < lastIndex; i++) {
+      if (!config.children.containsKey(parts[i])) {
+        return null;
+      }
+    }
+    return config;
+  }
+
+  public HcObj child(String path) {
+    String[] parts = StringUtils.split(path, ".");
     return child(parts, false);
   }
 
-  public HcVal.Int getInt(String childPath, int defaultValue) {
-    String[] parts = StringUtils.split(childPath, ".");
+  public HcVal.Int getInt(String path, int defaultVal) {
+    String[] parts = StringUtils.split(path, ".");
     HcObj config = child(parts, true);
     return config.getValue(HcVal.Int.class, parts[parts.length - 1],
-        (path, el) -> new HcVal.Int(path, el, defaultValue));
+        (p, el) -> new HcVal.Int(p, el, defaultVal));
   }
 
-  public HcVal.Long getLong(String childPath, long defaultValue) {
-    String[] parts = StringUtils.split(childPath, ".");
+  public HcVal.Int readInt(String path) {
+    String[] parts = StringUtils.split(path, ".");
+    HcObj config = readChild(parts, true);
+    return config.readValue(HcVal.Int.class, parts[parts.length - 1]);
+  }
+
+  public HcVal.Long getLong(String path, long defaultVal) {
+    String[] parts = StringUtils.split(path, ".");
     HcObj config = child(parts, true);
     return config.getValue(HcVal.Long.class, parts[parts.length - 1],
-        (path, el) -> new HcVal.Long(path, el, defaultValue));
+        (p, el) -> new HcVal.Long(p, el, defaultVal));
   }
 
-  public HcVal.Bool getBoolean(String childPath, boolean defaultValue) {
-    String[] parts = StringUtils.split(childPath, ".");
+  public HcVal.Long readLong(String path) {
+    String[] parts = StringUtils.split(path, ".");
+    HcObj config = readChild(parts, true);
+    return config.readValue(HcVal.Long.class, parts[parts.length - 1]);
+  }
+
+  public HcVal.Bool getBoolean(String path, boolean defaultVal) {
+    String[] parts = StringUtils.split(path, ".");
     HcObj config = child(parts, true);
     return config.getValue(HcVal.Bool.class, parts[parts.length - 1],
-        (path, el) -> new HcVal.Bool(path, el, defaultValue));
+        (p, el) -> new HcVal.Bool(p, el, defaultVal));
   }
 
-  public HcVal.Float getFloat(String childPath, float defaultValue) {
-    String[] parts = StringUtils.split(childPath, ".");
+  public HcVal.Bool readBoolean(String path) {
+    String[] parts = StringUtils.split(path, ".");
+    HcObj config = readChild(parts, true);
+    return config.readValue(HcVal.Bool.class, parts[parts.length - 1]);
+  }
+
+  public HcVal.Float getFloat(String path, float defaultVal) {
+    String[] parts = StringUtils.split(path, ".");
     HcObj config = child(parts, true);
     return config.getValue(HcVal.Float.class, parts[parts.length - 1],
-        (path, el) -> new HcVal.Float(path, el, defaultValue));
+        (p, el) -> new HcVal.Float(p, el, defaultVal));
   }
 
-  public HcVal.Double getDouble(String childPath, double defaultValue) {
-    String[] parts = StringUtils.split(childPath, ".");
+  public HcVal.Float readFloat(String path) {
+    String[] parts = StringUtils.split(path, ".");
+    HcObj config = readChild(parts, true);
+    return config.readValue(HcVal.Float.class, parts[parts.length - 1]);
+  }
+
+  public HcVal.Double getDouble(String path, double defaultVal) {
+    String[] parts = StringUtils.split(path, ".");
     HcObj config = child(parts, true);
     return config.getValue(HcVal.Double.class, parts[parts.length - 1],
-        (path, el) -> new HcVal.Double(path, el, defaultValue));
+        (p, el) -> new HcVal.Double(p, el, defaultVal));
   }
 
-  public HcVal.Str getString(String childPath, String defaultValue) {
-    String[] parts = StringUtils.split(childPath, ".");
+  public HcVal.Double readDouble(String path) {
+    String[] parts = StringUtils.split(path, ".");
+    HcObj config = readChild(parts, true);
+    return config.readValue(HcVal.Double.class, parts[parts.length - 1]);
+  }
+
+  public HcVal.Str getString(String path, String defaultVal) {
+    String[] parts = StringUtils.split(path, ".");
     HcObj config = child(parts, true);
     return config.getValue(HcVal.Str.class, parts[parts.length - 1],
-        (path, el) -> new HcVal.Str(path, el, defaultValue));
+        (p, el) -> new HcVal.Str(p, el, defaultVal));
+  }
+
+  public HcVal.Str readString(String path) {
+    String[] parts = StringUtils.split(path, ".");
+    HcObj config = readChild(parts, true);
+    return config.readValue(HcVal.Str.class, parts[parts.length - 1]);
   }
 
 }

@@ -6,6 +6,7 @@ import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.component.IOshiComponent;
 import dev.rurino.hasugoods.component.ModComponents;
 import dev.rurino.hasugoods.util.CharaUtils;
+import dev.rurino.hasugoods.util.config.HcVal;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -16,6 +17,37 @@ import net.minecraft.village.TradeOffers;
 import net.minecraft.village.TradedItem;
 
 public class BadgeTradeOffers {
+  // #region Config
+  private static final HcVal.Int TRADE_EXP = Hasugoods.CONFIG.getInt("trade.exp", 1);
+  private static final HcVal.Float TRADE_PROB = Hasugoods.CONFIG.getFloat("trade.prob", 0.5f);
+  private static final HcVal.Float TRADE_SECRET_PROB = Hasugoods.CONFIG.getFloat("trade.secretProb", 0.1f);
+  private static final HcVal.Int TRADE_MAX_USES = Hasugoods.CONFIG.getInt("trade.maxUses", 12);
+  private static final HcVal.Int TRADE_SECRET_MAX_USES = Hasugoods.CONFIG.getInt("trade.secretMaxUses", 3);
+
+  private static final HcVal.Int BUY_EXP = Hasugoods.CONFIG.getInt("buy.exp", 3);
+  private static final HcVal.Float BUY_PROB = Hasugoods.CONFIG.getFloat("buy.prob", 0.5f);
+  private static final HcVal.Float BUY_SECRET_PROB = Hasugoods.CONFIG.getFloat("buy.secretProb", 0.1f);
+  private static final HcVal.Int BUY_MAX_USES = Hasugoods.CONFIG.getInt("buy.maxUses", 12);
+  private static final HcVal.Int BUY_SECRET_MAX_USES = Hasugoods.CONFIG.getInt("buy.secretMaxUses",
+      3);
+  private static final HcVal.Int BUY_REGULAR_PRICE = Hasugoods.CONFIG.getInt("buy.regularPrice", 1);
+  private static final HcVal.Int BUY_SECRET_PRICE = Hasugoods.CONFIG.getInt("buy.secretPrice", 5);
+
+  private static final HcVal.Int SELL_EXP = Hasugoods.CONFIG.getInt("sell.exp", 3);
+  private static final HcVal.Float SELL_PROB = Hasugoods.CONFIG.getFloat("sell.prob", 0.5f);
+  private static final HcVal.Float SELL_SECRET_PROB = Hasugoods.CONFIG.getFloat("sell.secretProb", 0.1f);
+  private static final HcVal.Int SELL_MAX_USES = Hasugoods.CONFIG.getInt("sell.maxUses", 12);
+  private static final HcVal.Int SELL_SECRET_MAX_USES = Hasugoods.CONFIG.getInt("sell.secretMaxUses",
+      3);
+  private static final HcVal.Int SELL_REGULAR_PRICE = Hasugoods.CONFIG.getInt("sell.regularPrice", 4);
+  private static final HcVal.Int SELL_SECRET_PRICE = Hasugoods.CONFIG.getInt("sell.secretPrice", 30);
+
+  private static final HcVal.Int UNOPENED_PACKET_PRICE = Hasugoods.CONFIG.getInt("unopenedPacketPrice", 3);
+  private static final HcVal.Int UNOPENED_PACKET_MAX_USES = Hasugoods.CONFIG.getInt("unopenedPacketMaxUses", 9);
+  private static final HcVal.Float UNOPENED_BOX_DISCOUNT = Hasugoods.CONFIG.getFloat("unopenedBoxDiscount", 0.1f);
+  private static final HcVal.Int UNOPENED_BOX_MAX_USES = Hasugoods.CONFIG.getInt("unopenedBoxMaxUses", 2);
+  // #endregion Config
+
   public static class Trade implements TradeOffers.Factory {
     @Override
     public TradeOffer create(Entity entity, Random random) {
@@ -24,10 +56,10 @@ public class BadgeTradeOffers {
         Hasugoods.LOGGER.warn("Cannot trade: oshiComponent is not found");
         return null;
       }
-      if (random.nextFloat() >= Hasugoods.CONFIG.trade.prob())
+      if (random.nextFloat() >= TRADE_PROB.val())
         return null;
       String oshiKey = oshiComponentOptional.get().getOshiKey();
-      boolean isSecret = random.nextFloat() < Hasugoods.CONFIG.trade.secretProb();
+      boolean isSecret = random.nextFloat() < TRADE_SECRET_PROB.val();
       Optional<BadgeItem> toBuy = BadgeItem.getBadgeItem(oshiKey, isSecret);
       if (!toBuy.isPresent()) {
         Hasugoods.LOGGER.warn("Cannot trade: {} oshiKey is not found", oshiKey);
@@ -39,11 +71,11 @@ public class BadgeTradeOffers {
         return null;
       }
       int maxUses = random.nextBetween(1,
-          isSecret ? Hasugoods.CONFIG.trade.secretMaxUses() : Hasugoods.CONFIG.trade.maxUses());
+          isSecret ? TRADE_SECRET_MAX_USES.val() : TRADE_MAX_USES.val());
       return new TradeOffer(
           new TradedItem(toBuy.get(), 1),
           new ItemStack(toSell, 1),
-          maxUses, Hasugoods.CONFIG.trade.exp(), 1f);
+          maxUses, TRADE_EXP.val(), 1f);
     }
   }
 
@@ -55,9 +87,9 @@ public class BadgeTradeOffers {
         Hasugoods.LOGGER.warn("Cannot trade: oshiComponent is not found");
         return null;
       }
-      if (random.nextFloat() >= Hasugoods.CONFIG.buy.prob())
+      if (random.nextFloat() >= BUY_PROB.val())
         return null;
-      boolean isSecret = random.nextFloat() < Hasugoods.CONFIG.buy.secretProb();
+      boolean isSecret = random.nextFloat() < BUY_SECRET_PROB.val();
       String oshiKey = oshiComponentOptional.get().getOshiKey();
       Optional<BadgeItem> toBuy = BadgeItem.getBadgeItem(oshiKey, isSecret);
       if (!toBuy.isPresent()) {
@@ -65,12 +97,12 @@ public class BadgeTradeOffers {
         return null;
       }
       int maxUses = random.nextBetween(1,
-          isSecret ? Hasugoods.CONFIG.buy.secretMaxUses() : Hasugoods.CONFIG.buy.maxUses());
-      int price = isSecret ? Hasugoods.CONFIG.buy.secretPrice() : Hasugoods.CONFIG.buy.regularPrice();
+          isSecret ? BUY_SECRET_MAX_USES.val() : BUY_MAX_USES.val());
+      int price = isSecret ? BUY_SECRET_PRICE.val() : BUY_REGULAR_PRICE.val();
       return new TradeOffer(
           new TradedItem(toBuy.get(), 1),
           new ItemStack(Items.EMERALD, price),
-          maxUses, Hasugoods.CONFIG.buy.exp(), 1f);
+          maxUses, BUY_EXP.val(), 1f);
     }
   }
 
@@ -82,9 +114,9 @@ public class BadgeTradeOffers {
         Hasugoods.LOGGER.warn("Cannot trade: oshiComponent is not found");
         return null;
       }
-      if (random.nextFloat() >= Hasugoods.CONFIG.sell.prob())
+      if (random.nextFloat() >= SELL_PROB.val())
         return null;
-      boolean isSecret = random.nextFloat() < Hasugoods.CONFIG.sell.secretProb();
+      boolean isSecret = random.nextFloat() < SELL_SECRET_PROB.val();
       String oshiKey = oshiComponentOptional.get().getOshiKey();
       Item toSell = CharaUtils.getRandomBadge(random, isSecret, oshiKey);
       if (toSell == null) {
@@ -92,12 +124,12 @@ public class BadgeTradeOffers {
         return null;
       }
       int maxUses = random.nextBetween(1,
-          isSecret ? Hasugoods.CONFIG.sell.secretMaxUses() : Hasugoods.CONFIG.sell.maxUses());
-      int price = isSecret ? Hasugoods.CONFIG.sell.secretPrice() : Hasugoods.CONFIG.sell.regularPrice();
+          isSecret ? SELL_SECRET_MAX_USES.val() : SELL_MAX_USES.val());
+      int price = isSecret ? SELL_SECRET_PRICE.val() : SELL_REGULAR_PRICE.val();
       return new TradeOffer(
           new TradedItem(Items.EMERALD, price),
           new ItemStack(toSell, 1),
-          maxUses, Hasugoods.CONFIG.sell.exp(), 1f);
+          maxUses, SELL_EXP.val(), 1f);
     }
   }
 
@@ -106,9 +138,9 @@ public class BadgeTradeOffers {
     public TradeOffer create(Entity entity, Random random) {
       Item toSell = BadgeItem.UNOPENED_BADGE;
       return new TradeOffer(
-          new TradedItem(Items.EMERALD, Hasugoods.CONFIG.unopenedPacketPrice()),
+          new TradedItem(Items.EMERALD, UNOPENED_PACKET_PRICE.val()),
           new ItemStack(toSell, 1),
-          Hasugoods.CONFIG.unopenedPacketMaxUses(),
+          UNOPENED_PACKET_MAX_USES.val(),
           1, 1f);
     }
   }
@@ -118,14 +150,17 @@ public class BadgeTradeOffers {
     public TradeOffer create(Entity entity, Random random) {
       Item toSell = BadgeItem.BOX_OF_BADGE;
       int price = (int) Math.ceil(
-          Hasugoods.CONFIG.unopenedPacketPrice()
-              * Hasugoods.CONFIG.numBadgeInBox()
-              * (1 - Hasugoods.CONFIG.unopenedBoxDiscount()));
+          UNOPENED_PACKET_PRICE.val() *
+              BoxOfBadgeItem.NUM_BADGE_IN_BOX.val() *
+              (1 - UNOPENED_BOX_DISCOUNT.val()));
       return new TradeOffer(
           new TradedItem(Items.EMERALD, price),
           new ItemStack(toSell, 1),
-          Hasugoods.CONFIG.unopenedBoxMaxUses(),
+          UNOPENED_BOX_MAX_USES.val(),
           1, 1f);
     }
+  }
+
+  static void initialize() {
   }
 }

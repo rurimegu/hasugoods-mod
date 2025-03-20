@@ -5,6 +5,7 @@ import java.util.List;
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.item.ModItems;
 import dev.rurino.hasugoods.util.ItemStackUtils;
+import dev.rurino.hasugoods.util.config.HcVal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -19,11 +20,13 @@ import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
 public class UnopenedBadge extends Item {
+  private static final HcVal.Int REGULAR_BADGE_DROP_WEIGHT = Hasugoods.CONFIG.getInt("regularBadgeDropWeight", 95);
+  private static final HcVal.Int SECRET_BADGE_DROP_WEIGHT = Hasugoods.CONFIG.getInt("secretBadgeDropWeight", 5);
 
-  protected static final LootTable BADGE_LOOT_TABLE = LootTable.builder().type(LootContextTypes.EMPTY).pool(
+  private static final LootTable BADGE_LOOT_TABLE = LootTable.builder().type(LootContextTypes.EMPTY).pool(
       LootPool.builder()
-          .with(TagEntry.expandBuilder(ModItems.REGULAR_BADGE_TAG).weight(Hasugoods.CONFIG.regularBadgeDropWeight()))
-          .with(TagEntry.expandBuilder(ModItems.SECRET_BADGE_TAG).weight(Hasugoods.CONFIG.secretBadgeDropWeight()))
+          .with(TagEntry.expandBuilder(ModItems.REGULAR_BADGE_TAG).weight(REGULAR_BADGE_DROP_WEIGHT.val()))
+          .with(TagEntry.expandBuilder(ModItems.SECRET_BADGE_TAG).weight(SECRET_BADGE_DROP_WEIGHT.val()))
           .build())
       .build();
 

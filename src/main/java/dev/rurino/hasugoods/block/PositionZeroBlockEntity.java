@@ -38,7 +38,7 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
   private static final int CHECK_STRUCTURE_INTERVAL = 8;
   private static final float LINK_PARTICLE_VELOCITY = 0.1f;
   private static final String NBT_NESOBASES = "nesobases";
-  private static final HcVal.Long CHARGE_AMOUNT_PER_TICK = Hasugoods.CONFIG2
+  private static final HcVal.Long CHARGE_AMOUNT_PER_TICK = Hasugoods.CONFIG
       .getLong("neso.pos0ChargeAmountPerTick", 16);
 
   static void initialize() {
@@ -411,7 +411,7 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
     super.tick(world, blockPos, blockState);
     if (!world.isClient) {
       if (getItemStack().getItem() instanceof NesoItem item) {
-        item.chargeEnergy(getItemStack(), CHARGE_AMOUNT_PER_TICK.value());
+        item.chargeEnergy(getItemStack(), CHARGE_AMOUNT_PER_TICK.val());
       }
       if (isPlayingMergeAnim()) {
         mergeAnimTimer.tick();

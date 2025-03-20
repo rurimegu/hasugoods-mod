@@ -13,6 +13,12 @@ import dev.rurino.hasugoods.util.config.HcVal.Bool;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.loader.api.FabricLoader;
 
+/**
+ * HasuConfig root object.
+ * <p>
+ * This class represents the root configuration object in the HasuConfig
+ * system. It allows for loading and saving configuration data to a file.
+ */
 public class HcRoot extends HcObj {
   private final File configFile;
   private boolean createConfig = false;
@@ -102,7 +108,7 @@ public class HcRoot extends HcObj {
   private void writeConfig() {
     if (!isDirty)
       return;
-    isDirty = false;
+    clearDirty();
     Hasugoods.LOGGER.info("Writing Config file: {}", configFile.getAbsolutePath());
     try (FileWriter writer = new FileWriter(configFile)) {
       writer.write(HcBase.GSON.toJson(obj));

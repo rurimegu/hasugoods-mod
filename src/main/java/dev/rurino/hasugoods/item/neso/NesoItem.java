@@ -11,6 +11,7 @@ import dev.rurino.hasugoods.entity.NesoEntity;
 import dev.rurino.hasugoods.item.ModItems;
 import dev.rurino.hasugoods.item.CharaItem;
 import dev.rurino.hasugoods.util.CharaUtils.NesoSize;
+import dev.rurino.hasugoods.util.config.HcObj;
 import dev.rurino.hasugoods.util.CharaUtils;
 import dev.rurino.hasugoods.util.ItemStackUtils;
 import dev.rurino.hasugoods.util.HasuString;
@@ -112,15 +113,19 @@ public class NesoItem extends CharaItem implements SimpleEnergyItem {
   // #endregion Static fields
 
   // #region Config
+  protected static final HcObj HC_NESO = Hasugoods.CONFIG.child("neso");
+  protected static final HcObj HC_SMALL = HC_NESO.child("small");
+  protected static final HcObj HC_MEDIUM = HC_NESO.child("medium");
+  protected static final HcObj HC_LARGE = HC_NESO.child("large");
 
   public static abstract class Config {
     private final long maxEnergy;
 
     protected Config(NesoSize size) {
       this.maxEnergy = switch (size) {
-        case SMALL -> Hasugoods.CONFIG.neso.small.maxEnergy();
-        case MEDIUM -> Hasugoods.CONFIG.neso.medium.maxEnergy();
-        case LARGE -> Hasugoods.CONFIG.neso.large.maxEnergy();
+        case SMALL -> HC_SMALL.getLong("maxEnergy", 128 * 1000).val();
+        case MEDIUM -> HC_MEDIUM.getLong("maxEnergy", 1000 * 1000).val();
+        case LARGE -> HC_LARGE.getLong("maxEnergy", 16 * 1000 * 1000).val();
       };
     }
 

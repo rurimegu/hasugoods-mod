@@ -14,6 +14,7 @@ import dev.rurino.hasugoods.effect.ToutoshiEffectsConsumeEffect;
 import dev.rurino.hasugoods.item.ModItems;
 import dev.rurino.hasugoods.item.CharaItem;
 import dev.rurino.hasugoods.util.CharaUtils;
+import dev.rurino.hasugoods.util.config.HcVal;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
@@ -37,6 +38,12 @@ public class BadgeItem extends CharaItem {
   // #region Static fields
   public static final DeathProtectionComponent HASU_BADGE_DEATH_PROTECTION = new DeathProtectionComponent(
       List.<ConsumeEffect>of(new ClearAllEffectsConsumeEffect(), new ToutoshiEffectsConsumeEffect()));
+
+  private static final HcVal.Int CHEST_BADGE_DROP_MIN_COUNT = Hasugoods.CONFIG.getInt("checkBadgeDropMinCount", 1);
+  private static final HcVal.Int CHEST_BADGE_DROP_MAX_COUNT = Hasugoods.CONFIG.getInt("checkBadgeDropMaxCount", 3);
+  private static final HcVal.Int CHEST_EMPTY_DROP_WEIGHT = Hasugoods.CONFIG.getInt("chestEmptyDropWeight", 20);
+  private static final HcVal.Int CHEST_BADGE_DROP_WEIGHT = Hasugoods.CONFIG.getInt("chestBadgeDropWeight", 70);
+  private static final HcVal.Int CHEST_BOX_DROP_WEIGHT = Hasugoods.CONFIG.getInt("chestBoxDropWeight", 10);
 
   public static final ImmutableSet<VillagerProfession> BADGE_TRADE_VILLAGER_PROFESSIONS = ImmutableSet
       .of(VillagerProfession.ARMORER,
@@ -122,6 +129,8 @@ public class BadgeItem extends CharaItem {
   }
 
   public static void initialize() {
+    BadgeTradeOffers.initialize();
+
     // Register badges
     List<Item> badgeItems = new ArrayList<Item>();
     for (String charaKey : CharaUtils.ALL_CHARA_KEYS) {
@@ -144,12 +153,12 @@ public class BadgeItem extends CharaItem {
       if (source.isBuiltin() && key.getValue().getPath().startsWith("chests/")) {
         // Give 0~3 badges, or 20 badges if really lucky.
         LootPool.Builder poolBuilder = LootPool.builder()
-            .with(EmptyEntry.builder().weight(Hasugoods.CONFIG.chestEmptyDropWeight()))
-            .with(ItemEntry.builder(UNOPENED_BADGE).weight(Hasugoods.CONFIG.chestBadgeDropWeight())
+            .with(EmptyEntry.builder().weight(CHEST_EMPTY_DROP_WEIGHT.val()))
+            .with(ItemEntry.builder(UNOPENED_BADGE).weight(CHEST_BADGE_DROP_WEIGHT.val())
                 .apply(SetCountLootFunction
-                    .builder(UniformLootNumberProvider.create(Hasugoods.CONFIG.chestBadgeDropMinCount(),
-                        Hasugoods.CONFIG.chestBadgeDropMaxCount()))))
-            .with(ItemEntry.builder(BOX_OF_BADGE).weight(Hasugoods.CONFIG.chestBoxDropWeight()));
+                    .builder(UniformLootNumberProvider.create(CHEST_BADGE_DROP_MIN_COUNT.val(),
+                        CHEST_BADGE_DROP_MAX_COUNT.val()))))
+            .with(ItemEntry.builder(BOX_OF_BADGE).weight(CHEST_BOX_DROP_WEIGHT.val()));
         tableBuilder.pool(poolBuilder);
       }
     });
