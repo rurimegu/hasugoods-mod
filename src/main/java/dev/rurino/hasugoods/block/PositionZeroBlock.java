@@ -2,6 +2,7 @@ package dev.rurino.hasugoods.block;
 
 import com.mojang.serialization.MapCodec;
 
+import dev.rurino.hasugoods.Hasugoods;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.BlockEntity;
@@ -12,6 +13,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class PositionZeroBlock extends AbstractNesoBaseBlock {
+
+  static void initialize() {
+    Hasugoods.LOGGER.debug("Position zero block initialized");
+  }
+
   public PositionZeroBlock(Settings settings) {
     super(settings);
   }

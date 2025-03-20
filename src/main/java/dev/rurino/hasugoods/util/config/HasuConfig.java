@@ -14,13 +14,15 @@ public abstract class HasuConfig {
 
   protected final JsonElement obj;
   protected final String path;
+  protected boolean isDirty = false;
 
   protected HasuConfig(String path, JsonElement obj) {
+    if (obj == null) {
+      throw new IllegalArgumentException("obj cannot be null in HasuConfig constructor");
+    }
     this.path = path;
     this.obj = obj;
   }
-
-  abstract protected JsonElement serialize();
 
   public static HasuConfigRoot createAndLoad(String configName) {
     File configFile = FabricLoader.getInstance().getConfigDir()

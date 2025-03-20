@@ -54,6 +54,9 @@ public class ModBlocks {
       true);
 
   public static void initialize() {
+    NesoBaseBlock.initialize();
+    PositionZeroBlock.initialize();
+
     ItemGroupEvents.modifyEntriesEvent(ModItems.BADGE_ITEM_GROUP_KEY).register((itemGroup) -> {
       itemGroup.add(NESO_BASE_BLOCK.asItem());
       itemGroup.add(POSITION_ZERO_BLOCK.asItem());

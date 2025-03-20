@@ -13,21 +13,28 @@ public class HasuConfigObject extends HasuConfig {
   private final Map<String, HasuConfig> children = new HashMap<>();
 
   protected HasuConfigObject(String path, JsonElement obj) {
-    super(path, obj);
+    super(path, obj == null ? new JsonObject() : obj);
+  }
+
+  private void putChild(String key, HasuConfig child) {
+    children.put(key, child);
+    obj.getAsJsonObject().add(key, child.obj);
+    this.isDirty = true;
   }
 
   private HasuConfigObject get(String child) {
     if (children.containsKey(child)) {
       var ret = children.get(child);
+      isDirty |= ret.isDirty;
       if (!(ret instanceof HasuConfigObject retConfig)) {
         throw new IllegalStateException(
             String.format("Duplicate config path: %s of different types", path + "." + child));
       }
       return retConfig;
     }
-    JsonElement element = this.obj == null ? null : this.obj.getAsJsonObject().get(child);
+    JsonElement element = this.obj.getAsJsonObject().get(child);
     HasuConfigObject childConfig = new HasuConfigObject(path + "." + child, element);
-    children.put(child, childConfig);
+    putChild(child, childConfig);
     return childConfig;
   }
 
@@ -36,14 +43,15 @@ public class HasuConfigObject extends HasuConfig {
     String childPath = path + "." + child;
     if (children.containsKey(child)) {
       var ret = children.get(child);
+      isDirty |= ret.isDirty;
       if (!type.isInstance(ret)) {
         throw new IllegalStateException(String.format("Duplicate config path: %s of different types", childPath));
       }
       return type.cast(ret);
     }
-    JsonElement element = this.obj == null ? null : this.obj.getAsJsonObject().get(child);
+    JsonElement element = this.obj.getAsJsonObject().get(child);
     T childConfig = defaultFactory.create(childPath, element);
-    children.put(child, childConfig);
+    putChild(child, childConfig);
     return childConfig;
   }
 
@@ -101,15 +109,6 @@ public class HasuConfigObject extends HasuConfig {
     HasuConfigObject config = child(parts, true);
     return config.getValue(HasuConfigValue.Str.class, parts[parts.length - 1],
         (path, el) -> new HasuConfigValue.Str(path, el, defaultValue));
-  }
-
-  @Override
-  protected JsonElement serialize() {
-    JsonObject obj = new JsonObject();
-    for (Map.Entry<String, HasuConfig> entry : children.entrySet()) {
-      obj.add(entry.getKey(), entry.getValue().serialize());
-    }
-    return obj;
   }
 
 }

@@ -47,13 +47,15 @@ public class Hasugoods implements ModInitializer {
 
     LOGGER.info("Initializing Hasugoods");
 
+    ModParticles.initialize();
     ModItems.initialize();
     ModBlocks.initialize();
     ModBlockEntities.initialize();
     ModDamageTypes.initialize();
     ModEffects.initialize();
     ModEntities.initialize();
-    ModParticles.initialize();
     ModNetwork.initialize();
+
+    CONFIG2.onInitializateComplete();
   }
 }

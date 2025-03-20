@@ -40,6 +40,10 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
   private static final HasuConfigValue.Long CHARGE_AMOUNT_PER_TICK = Hasugoods.CONFIG2
       .getLong("neso.pos0ChargeAmountPerTick", 16);
 
+  static void initialize() {
+    Hasugoods.LOGGER.debug("Position zero block entity initialized");
+  }
+
   private boolean linkedNesoBases = false;
 
   public PositionZeroBlockEntity(BlockPos pos, BlockState state) {

@@ -9,24 +9,91 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import dev.rurino.hasugoods.Hasugoods;
+import dev.rurino.hasugoods.util.config.HasuConfigValue.Bool;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 
 public class HasuConfigRoot extends HasuConfigObject {
   private final File configFile;
   private boolean createConfig = false;
   private boolean overwriteConfig = false;
+  private boolean initialized = false;
 
   protected HasuConfigRoot(File configFile, JsonObject obj) {
     super("", obj);
+    this.isDirty = true;
     this.configFile = configFile;
     ServerWorldEvents.LOAD.register((server, world) -> maybeWriteConfig());
     ServerWorldEvents.UNLOAD.register((server, world) -> maybeWriteConfig());
   }
 
+  // #region Validate initialization
+
+  private void validateInitialized(String childPath) {
+    if (initialized && isDirty) {
+      Hasugoods.LOGGER.warn(
+          "Config path {} registered after initialization. Consider initializing it earlier.",
+          childPath);
+    }
+  }
+
+  @Override
+  public HasuConfigObject child(String childPath) {
+    var ret = super.child(childPath);
+    validateInitialized(childPath);
+    return ret;
+  }
+
+  @Override
+  public Bool getBoolean(String childPath, boolean defaultValue) {
+    var ret = super.getBoolean(childPath, defaultValue);
+    validateInitialized(childPath);
+    return ret;
+  }
+
+  @Override
+  public HasuConfigValue.Int getInt(String childPath, int defaultValue) {
+    var ret = super.getInt(childPath, defaultValue);
+    validateInitialized(childPath);
+    return ret;
+  }
+
+  @Override
+  public HasuConfigValue.Long getLong(String childPath, long defaultValue) {
+    var ret = super.getLong(childPath, defaultValue);
+    validateInitialized(childPath);
+    return ret;
+  }
+
+  @Override
+  public HasuConfigValue.Float getFloat(String childPath, float defaultValue) {
+    var ret = super.getFloat(childPath, defaultValue);
+    validateInitialized(childPath);
+    return ret;
+  }
+
+  @Override
+  public HasuConfigValue.Double getDouble(String childPath, double defaultValue) {
+    var ret = super.getDouble(childPath, defaultValue);
+    validateInitialized(childPath);
+    return ret;
+  }
+
+  @Override
+  public HasuConfigValue.Str getString(String childPath, String defaultValue) {
+    var ret = super.getString(childPath, defaultValue);
+    validateInitialized(childPath);
+    return ret;
+  }
+
+  // #endregion Validate initialization
+
   private void writeConfig() {
+    if (!isDirty)
+      return;
+    isDirty = false;
     Hasugoods.LOGGER.info("Writing Config file: {}", configFile.getAbsolutePath());
     try (FileWriter writer = new FileWriter(configFile)) {
-      writer.write(HasuConfig.GSON.toJson(serialize()));
+      writer.write(HasuConfig.GSON.toJson(obj));
     } catch (IOException e) {
       Hasugoods.LOGGER.error("Failed to write config file: {}\n{}", configFile.getAbsolutePath(), e);
     }
@@ -80,6 +147,12 @@ public class HasuConfigRoot extends HasuConfigObject {
 
   public HasuConfigRoot autoOverwriteConfig() {
     this.overwriteConfig = true;
+    return this;
+  }
+
+  public HasuConfigRoot onInitializateComplete() {
+    maybeWriteConfig();
+    initialized = true;
     return this;
   }
 }

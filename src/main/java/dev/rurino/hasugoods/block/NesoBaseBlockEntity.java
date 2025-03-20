@@ -12,6 +12,10 @@ public class NesoBaseBlockEntity extends AbstractNesoBaseBlockEntity {
   private static final int CHECK_POS_0_INTERVAL = 8;
   private static final String NBT_POS_0 = "pos0";
 
+  static void initialize() {
+    Hasugoods.LOGGER.debug("Neso base block entity initialized");
+  }
+
   private BlockPos pos0 = null;
   private final Timer timer = Timer.loop(CHECK_POS_0_INTERVAL, this::syncPos0);
 

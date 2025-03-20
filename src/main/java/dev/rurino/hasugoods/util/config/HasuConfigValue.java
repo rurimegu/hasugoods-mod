@@ -1,47 +1,27 @@
 package dev.rurino.hasugoods.util.config;
 
 import com.google.gson.JsonElement;
-
-import dev.rurino.hasugoods.Hasugoods;
+import com.google.gson.JsonPrimitive;
 
 public abstract class HasuConfigValue<T> extends HasuConfig {
   public static interface Factory<T extends HasuConfigValue<?>> {
     T create(String path, JsonElement obj);
   }
 
-  private final T defaultValue;
-
-  protected HasuConfigValue(String path, JsonElement obj, T defaultValue) {
+  protected HasuConfigValue(String path, JsonElement obj) {
     super(path, obj);
-    this.defaultValue = defaultValue;
   }
 
-  protected abstract T getNotNull();
-
-  public final T value() {
-    if (obj == null)
-      return defaultValue;
-    try {
-      return getNotNull();
-    } catch (Exception e) {
-      Hasugoods.LOGGER.error("Failed to get config value for {}, {}: {}", path, obj, e);
-      return defaultValue;
-    }
-  }
-
-  @Override
-  protected JsonElement serialize() {
-    return HasuConfig.GSON.toJsonTree(value());
-  }
+  public abstract T value();
 
   public static class Int extends HasuConfigValue<Integer> {
 
     protected Int(String path, JsonElement obj, int defaultValue) {
-      super(path, obj, defaultValue);
+      super(path, obj == null ? new JsonPrimitive(defaultValue) : obj);
     }
 
     @Override
-    public Integer getNotNull() {
+    public Integer value() {
       return obj.getAsInt();
     }
 
@@ -50,11 +30,11 @@ public abstract class HasuConfigValue<T> extends HasuConfig {
   public static class Long extends HasuConfigValue<java.lang.Long> {
 
     protected Long(String path, JsonElement obj, long defaultValue) {
-      super(path, obj, defaultValue);
+      super(path, obj == null ? new JsonPrimitive(defaultValue) : obj);
     }
 
     @Override
-    public java.lang.Long getNotNull() {
+    public java.lang.Long value() {
       return obj.getAsLong();
     }
 
@@ -63,11 +43,11 @@ public abstract class HasuConfigValue<T> extends HasuConfig {
   public static class Float extends HasuConfigValue<java.lang.Float> {
 
     protected Float(String path, JsonElement obj, float defaultValue) {
-      super(path, obj, defaultValue);
+      super(path, obj == null ? new JsonPrimitive(defaultValue) : obj);
     }
 
     @Override
-    public java.lang.Float getNotNull() {
+    public java.lang.Float value() {
       return obj.getAsFloat();
     }
 
@@ -76,11 +56,11 @@ public abstract class HasuConfigValue<T> extends HasuConfig {
   public static class Double extends HasuConfigValue<java.lang.Double> {
 
     protected Double(String path, JsonElement obj, double defaultValue) {
-      super(path, obj, defaultValue);
+      super(path, obj == null ? new JsonPrimitive(defaultValue) : obj);
     }
 
     @Override
-    public java.lang.Double getNotNull() {
+    public java.lang.Double value() {
       return obj.getAsDouble();
     }
 
@@ -89,11 +69,11 @@ public abstract class HasuConfigValue<T> extends HasuConfig {
   public static class Str extends HasuConfigValue<String> {
 
     protected Str(String path, JsonElement obj, String defaultValue) {
-      super(path, obj, defaultValue);
+      super(path, obj == null ? new JsonPrimitive(defaultValue) : obj);
     }
 
     @Override
-    public String getNotNull() {
+    public String value() {
       return obj.getAsString();
     }
 
@@ -102,11 +82,11 @@ public abstract class HasuConfigValue<T> extends HasuConfig {
   public static class Bool extends HasuConfigValue<Boolean> {
 
     protected Bool(String path, JsonElement obj, boolean defaultValue) {
-      super(path, obj, defaultValue);
+      super(path, obj == null ? new JsonPrimitive(defaultValue) : obj);
     }
 
     @Override
-    public Boolean getNotNull() {
+    public Boolean value() {
       return obj.getAsBoolean();
     }
 
