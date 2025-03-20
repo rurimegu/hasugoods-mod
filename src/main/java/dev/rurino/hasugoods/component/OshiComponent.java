@@ -10,11 +10,9 @@ import net.minecraft.registry.RegistryWrapper.WrapperLookup;
 
 public class OshiComponent implements IOshiComponent {
   private static final String NBT_OSHI = "oshiKey";
-  private final LivingEntity provider;
   private String oshiKey;
 
   public OshiComponent(LivingEntity provider) {
-    this.provider = provider;
     this.oshiKey = CollectionUtils.getRandomElement(CharaUtils.ALL_CHARA_KEYS, provider.getRandom());
   }
 

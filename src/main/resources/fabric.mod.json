@@ -47,7 +47,8 @@
   "custom": {
     "cardinal-components": [
       "hasugoods:toutoshi",
-      "hasugoods:oshi"
+      "hasugoods:oshi",
+      "hasugoods:neso"
     ]
   }
 }

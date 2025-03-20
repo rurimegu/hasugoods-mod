@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import dev.rurino.hasugoods.Hasugoods;
+import dev.rurino.hasugoods.component.ModComponents;
 import dev.rurino.hasugoods.item.neso.NesoItem;
 import dev.rurino.hasugoods.util.CharaUtils;
 import dev.rurino.hasugoods.util.CharaUtils.NesoSize;
@@ -101,6 +102,13 @@ public class NesoEntity extends LivingEntity {
     }
     NesoEntity entity = entityType.create(world, consumer, pos, spawnReason, alignPosition, invertY);
     if (entity != null) {
+      // Set energy
+      var nesoComponentOptional = ModComponents.NESO.maybeGet(entity);
+      if (nesoComponentOptional.isPresent()) {
+        nesoComponentOptional.get().readFrom(stack);
+      } else {
+        Hasugoods.LOGGER.warn("NesoComponent not found for NesoEntity: {}", entity);
+      }
       entity.rotate(initYaw, 0);
       world.spawnEntityAndPassengers(entity);
     }
@@ -196,6 +204,12 @@ public class NesoEntity extends LivingEntity {
     Text text = this.getCustomName();
     if (text != null) {
       stack.set(DataComponentTypes.CUSTOM_NAME, text);
+    }
+    var nesoComponentOptional = ModComponents.NESO.maybeGet(this);
+    if (nesoComponentOptional.isPresent()) {
+      nesoComponentOptional.get().apply(stack);
+    } else {
+      Hasugoods.LOGGER.warn("NesoComponent not found for NesoEntity: {}", this);
     }
     return stack;
   }
