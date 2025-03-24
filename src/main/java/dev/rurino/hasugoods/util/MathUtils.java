@@ -4,6 +4,7 @@ import net.minecraft.util.math.Vec3d;
 
 public class MathUtils {
   public static double EPS = 1e-6;
+  public static int VERY_LARGE = 0x3f3f3f3f;
 
   public static boolean approx(double a, double b, double epsilon) {
     return approx0(b - a, epsilon);

@@ -16,12 +16,15 @@ import dev.rurino.hasugoods.util.CharaUtils;
 import dev.rurino.hasugoods.util.ItemStackUtils;
 import dev.rurino.hasugoods.util.HasuString;
 import net.minecraft.block.BlockState;
+import net.minecraft.component.ComponentType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ServerWorld;
@@ -159,6 +162,13 @@ public class NesoItem extends CharaItem implements SimpleEnergyItem {
 
   // #endregion Config
 
+  // #region Data component
+  public static final ComponentType<KahoNesoComponent> KAHO_NESO_COMPONENT = Registry.register(
+      Registries.DATA_COMPONENT_TYPE,
+      Hasugoods.id("kaho_neso"),
+      ComponentType.<KahoNesoComponent>builder().codec(KahoNesoComponent.CODEC).build());
+
+  // #endregion Data component
   protected final NesoSize nesoSize;
   protected final Config config;
 

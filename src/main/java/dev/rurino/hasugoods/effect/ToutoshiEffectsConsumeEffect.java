@@ -22,9 +22,12 @@ public record ToutoshiEffectsConsumeEffect() implements ConsumeEffect {
   public static final MapCodec<ToutoshiEffectsConsumeEffect> CODEC = MapCodec.unit(ToutoshiEffectsConsumeEffect::new);
   public static final PacketCodec<RegistryByteBuf, ToutoshiEffectsConsumeEffect> PACKET_CODEC = PacketCodec.unit(
       new ToutoshiEffectsConsumeEffect());
-  private static final HcVal.Int OSHI_PROTECTION_DURATION = Hasugoods.CONFIG.getInt("oshiProtectionDuration", 2 * 20);
-  private static final HcVal.Int OSHI_SECRET_PROTECTION_DURATION = Hasugoods.CONFIG
-      .getInt("oshiSecretProtectionDuration", 10 * 20);
+
+  private static final HcVal.Int OSHI_PROTECTION_DURATION = OshiProtectionEffect.HC_OSHI_PROTECTION
+      .getInt("duration", 2 * 20).nonnegative();
+  private static final HcVal.Int OSHI_SECRET_PROTECTION_DURATION = OshiProtectionEffect.HC_OSHI_PROTECTION
+      .getInt("secretDuration", 10 * 20)
+      .nonnegative();
 
   @Override
   public ConsumeEffect.Type<ToutoshiEffectsConsumeEffect> getType() {

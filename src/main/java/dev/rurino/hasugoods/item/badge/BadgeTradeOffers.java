@@ -42,10 +42,10 @@ public class BadgeTradeOffers {
   private static final HcVal.Int SELL_REGULAR_PRICE = Hasugoods.CONFIG.getInt("sell.regularPrice", 4);
   private static final HcVal.Int SELL_SECRET_PRICE = Hasugoods.CONFIG.getInt("sell.secretPrice", 30);
 
-  private static final HcVal.Int UNOPENED_PACKET_PRICE = Hasugoods.CONFIG.getInt("unopenedPacketPrice", 3);
-  private static final HcVal.Int UNOPENED_PACKET_MAX_USES = Hasugoods.CONFIG.getInt("unopenedPacketMaxUses", 9);
-  private static final HcVal.Float UNOPENED_BOX_DISCOUNT = Hasugoods.CONFIG.getFloat("unopenedBoxDiscount", 0.1f);
-  private static final HcVal.Int UNOPENED_BOX_MAX_USES = Hasugoods.CONFIG.getInt("unopenedBoxMaxUses", 2);
+  private static final HcVal.Int UNOPENED_PACKET_PRICE = Hasugoods.CONFIG.getInt("sell.unopenedPacketPrice", 3);
+  private static final HcVal.Int UNOPENED_PACKET_MAX_USES = Hasugoods.CONFIG.getInt("sell.unopenedPacketMaxUses", 9);
+  private static final HcVal.Float UNOPENED_BOX_DISCOUNT = Hasugoods.CONFIG.getFloat("sell.unopenedBoxDiscount", 0.1f);
+  private static final HcVal.Int UNOPENED_BOX_MAX_USES = Hasugoods.CONFIG.getInt("sell.unopenedBoxMaxUses", 2);
   // #endregion Config
 
   public static class Trade implements TradeOffers.Factory {
