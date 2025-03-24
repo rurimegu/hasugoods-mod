@@ -12,6 +12,7 @@ import dev.rurino.hasugoods.network.EmitParticlesPayload;
 import dev.rurino.hasugoods.particle.HasuParticleEffect;
 import dev.rurino.hasugoods.util.CharaUtils;
 import dev.rurino.hasugoods.util.CollectionUtils;
+import dev.rurino.hasugoods.util.MathUtils;
 import dev.rurino.hasugoods.util.config.HcVal;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -39,8 +40,6 @@ public class KahoNesoComponent {
       .nonnegative()
       .max(128);
 
-  private static final int[] SPREAD_DX = { -1, 0, 1, 0 };
-  private static final int[] SPREAD_DZ = { 0, -1, 0, 1 };
   private static final List<Block> FLOWER_BLOCKS = List.of(
       Blocks.DANDELION,
       Blocks.POPPY,
@@ -201,10 +200,8 @@ public class KahoNesoComponent {
   }
 
   private void spreadNeighbors(TickContext context, BlockPos pos) {
-    for (int i = 0; i < SPREAD_DX.length; i++) {
-      int dx = SPREAD_DX[i];
-      int dz = SPREAD_DZ[i];
-      BlockPos newPos = pos.add(dx, 0, dz);
+    for (BlockPos delta : MathUtils.HORIZONTAL_NEIGHBORS) {
+      BlockPos newPos = pos.add(delta);
       trySpread(context, newPos);
     }
   }

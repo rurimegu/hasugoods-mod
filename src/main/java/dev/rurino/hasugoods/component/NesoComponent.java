@@ -11,9 +11,12 @@ public class NesoComponent implements INesoComponent {
 
   private static final String NBT_ENERGY = "energyStored";
 
+  private final NesoEntity provider;
   private long storedEnergy;
 
   public NesoComponent(NesoEntity provider) {
+    this.provider = provider;
+    this.storedEnergy = 0;
   }
 
   @Override
@@ -24,6 +27,7 @@ public class NesoComponent implements INesoComponent {
   @Override
   public void setStoredEnergy(long energyStored) {
     this.storedEnergy = energyStored;
+    ModComponents.NESO.sync(provider);
   }
 
   @Override

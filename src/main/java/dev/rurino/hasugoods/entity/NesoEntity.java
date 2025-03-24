@@ -56,6 +56,14 @@ public class NesoEntity extends LivingEntity {
     return ALL_NESOS.values().stream().map(entry -> entry.entity()).toList();
   }
 
+  private static NesoEntity createNesoEntity(EntityType<NesoEntity> entityType, World world,
+      String charaKey, NesoSize size) {
+    return switch (charaKey) {
+      case CharaUtils.RURINO_KEY -> new RurinoNesoEntity(entityType, world, size);
+      default -> new NesoEntity(entityType, world, charaKey, size);
+    };
+  }
+
   public static EntityType<NesoEntity> registerNeso(String charaKey, NesoSize size) {
     String itemKey = CharaUtils.nesoKey(charaKey, size);
     RegistryKey<EntityType<?>> key = RegistryKey.of(RegistryKeys.ENTITY_TYPE, Hasugoods.id(itemKey));
@@ -70,7 +78,7 @@ public class NesoEntity extends LivingEntity {
       case LARGE -> 0.96f;
     };
     EntityType<NesoEntity> entityType = EntityType.Builder.<NesoEntity>create(
-        (type, world) -> new NesoEntity(type, world, charaKey, size), SpawnGroup.MISC).dimensions(width, height)
+        (type, world) -> createNesoEntity(type, world, charaKey, size), SpawnGroup.MISC).dimensions(width, height)
         .eyeHeight(height * 0.4f)
         .dropsNothing()
         .build(key);

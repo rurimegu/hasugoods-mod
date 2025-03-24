@@ -74,12 +74,11 @@ public class NesoItem extends CharaItem implements SimpleEnergyItem {
   }
 
   private static NesoItem create(Settings setting, String charaKey, NesoSize size) {
-    switch (charaKey) {
-      case CharaUtils.KAHO_KEY:
-        return new KahoNesoItem(setting, size);
-      default:
-        return new NesoItem(setting, charaKey, size);
-    }
+    return switch (charaKey) {
+      case CharaUtils.KAHO_KEY -> new KahoNesoItem(setting, size);
+      case CharaUtils.RURINO_KEY -> new RurinoNesoItem(setting, size);
+      default -> new NesoItem(setting, charaKey, size);
+    };
   }
 
   private static NesoItem registerNeso(String charaKey, NesoSize size) {
@@ -105,6 +104,7 @@ public class NesoItem extends CharaItem implements SimpleEnergyItem {
   public static void initialize() {
     for (NesoSize size : NesoSize.values()) {
       registerConfig(CharaUtils.KAHO_KEY, size, new KahoNesoItem.Config(size));
+      registerConfig(CharaUtils.RURINO_KEY, size, new RurinoNesoItem.Config(size));
     }
     for (String charaKey : CharaUtils.ALL_CHARA_KEYS) {
       for (NesoSize size : NesoSize.values()) {
@@ -116,7 +116,7 @@ public class NesoItem extends CharaItem implements SimpleEnergyItem {
   // #endregion Static fields
 
   // #region Config
-  protected static final HcObj HC_NESO = Hasugoods.CONFIG.child("neso");
+  public static final HcObj HC_NESO = Hasugoods.CONFIG.child("neso");
   protected static final HcObj HC_SMALL = HC_NESO.child("small");
   protected static final HcObj HC_MEDIUM = HC_NESO.child("medium");
   protected static final HcObj HC_LARGE = HC_NESO.child("large");
@@ -291,12 +291,12 @@ public class NesoItem extends CharaItem implements SimpleEnergyItem {
 
   @Override
   public long getEnergyMaxInput(ItemStack stack) {
-    return config == null ? 0 : config.maxEnergy();
+    return 0;
   }
 
   @Override
   public long getEnergyMaxOutput(ItemStack stack) {
-    return config == null ? 0 : config.maxEnergy();
+    return 0;
   }
 
   public void chargeEnergy(ItemStack stack, long amount) {

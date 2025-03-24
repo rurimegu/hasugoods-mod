@@ -1,10 +1,25 @@
 package dev.rurino.hasugoods.util;
 
+import com.google.common.collect.ImmutableList;
+
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 public class MathUtils {
-  public static double EPS = 1e-6;
-  public static int VERY_LARGE = 0x3f3f3f3f;
+  public static final double EPS = 1e-6;
+  public static final int VERY_LARGE = 0x3f3f3f3f;
+  public static final ImmutableList<BlockPos> HORIZONTAL_NEIGHBORS = ImmutableList.of(
+      new BlockPos(1, 0, 0),
+      new BlockPos(-1, 0, 0),
+      new BlockPos(0, 0, 1),
+      new BlockPos(0, 0, -1));
+  public static final ImmutableList<BlockPos> NEIGHBORS = ImmutableList.of(
+      new BlockPos(1, 0, 0),
+      new BlockPos(-1, 0, 0),
+      new BlockPos(0, 0, 1),
+      new BlockPos(0, 0, -1),
+      new BlockPos(0, 1, 0),
+      new BlockPos(0, -1, 0));
 
   public static boolean approx(double a, double b, double epsilon) {
     return approx0(b - a, epsilon);
