@@ -3,18 +3,17 @@ package dev.rurino.hasugoods.network;
 import dev.rurino.hasugoods.block.AbstractNesoBaseBlockEntity;
 import dev.rurino.hasugoods.block.PositionZeroBlockEntity;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.ItemStack;
 
 public class ClientNetwork {
   private static void playAnimHandler(AbstractPlayAnimPayload payload, ClientPlayNetworking.Context context) {
-    ClientWorld world = MinecraftClient.getInstance().world;
+    ClientWorld world = context.client().world;
     payload.apply(world);
   }
 
   private static void finishNesoMergeHandler(FinishNesoMergePayload payload, ClientPlayNetworking.Context context) {
-    ClientWorld world = MinecraftClient.getInstance().world;
+    ClientWorld world = context.client().world;
     playAnimHandler(payload, context);
     for (var anim : payload.anims()) {
       if (!(world.getBlockEntity(anim.blockPos()) instanceof AbstractNesoBaseBlockEntity nesoBaseBlockEntity)) {
@@ -34,5 +33,6 @@ public class ClientNetwork {
   public static void initialize() {
     ClientPlayNetworking.registerGlobalReceiver(PlayAnimPayload.ID, ClientNetwork::playAnimHandler);
     ClientPlayNetworking.registerGlobalReceiver(FinishNesoMergePayload.ID, ClientNetwork::finishNesoMergeHandler);
+    ClientPlayNetworking.registerGlobalReceiver(EmitParticlesPayload.ID, EmitParticlesHandler::handle);
   }
 }

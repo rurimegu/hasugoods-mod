@@ -10,6 +10,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 
 public class ParticleUtils {
 
@@ -41,7 +42,7 @@ public class ParticleUtils {
     return pos.add(x - 0.5, 0, z - 0.5);
   }
 
-  public static void createParticle(ParticleEffect effect, World world, Vec3d pos, Vec3d velocity) {
+  public static void createParticle(ParticleEffect effect, WorldAccess world, Vec3d pos, Vec3d velocity) {
     world.addParticle(effect, pos.x, pos.y, pos.z, velocity.x, velocity.y, velocity.z);
   }
 

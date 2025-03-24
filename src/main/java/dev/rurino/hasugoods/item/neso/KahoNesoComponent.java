@@ -8,11 +8,13 @@ import java.util.Set;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
+import dev.rurino.hasugoods.network.EmitParticlesPayload;
 import dev.rurino.hasugoods.particle.HasuParticleEffect;
 import dev.rurino.hasugoods.util.CharaUtils;
 import dev.rurino.hasugoods.util.CollectionUtils;
-import dev.rurino.hasugoods.util.ParticleUtils.Emitter;
 import dev.rurino.hasugoods.util.config.HcVal;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -33,7 +35,7 @@ public class KahoNesoComponent {
       .nonnegative()
       .max(128);
   private static final HcVal.Int NUM_PARTICLES = KahoNesoItem.HC_KAHO
-      .getInt("numParticles", 8)
+      .getInt("numParticles", 4)
       .nonnegative()
       .max(128);
 
@@ -104,14 +106,16 @@ public class KahoNesoComponent {
     }
   }
 
-  private static final Emitter EMITTER = new Emitter.RandomUp(
-      List.of(HasuParticleEffect.charaIcon(CharaUtils.KAHO_KEY)), 1f);
-
   private static void emitParticles(ServerWorld world, BlockPos pos) {
     int count = NUM_PARTICLES.val();
-    // for (int i = 0; i < count; i++) {
-    // EMITTER.emit(world, pos);
-    // }
+    var effect = HasuParticleEffect.charaIcon(CharaUtils.KAHO_KEY);
+    EmitParticlesPayload payload = new EmitParticlesPayload(
+        EmitParticlesPayload.TYPE_RANDOM_UP,
+        effect,
+        pos.toCenterPos(),
+        count);
+    PlayerLookup.tracking(world, pos)
+        .forEach(player -> ServerPlayNetworking.send(player, payload));
   }
 
   private static boolean validForReplace(World world, BlockState state, BlockPos pos) {
@@ -151,6 +155,7 @@ public class KahoNesoComponent {
       canSpread = context.tryAction();
     } else if (context.config().canReplace() && validForReplace(context.world(), state, pos)) {
       canSpread = context.tryReplace();
+      context.world().setBlockState(pos, Blocks.DIRT.getDefaultState());
     }
     if (!canSpread)
       return false;
