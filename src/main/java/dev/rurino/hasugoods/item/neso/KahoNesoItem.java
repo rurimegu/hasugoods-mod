@@ -9,7 +9,6 @@ import dev.rurino.hasugoods.util.config.HcObj;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.consume.UseAction;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
@@ -155,14 +154,6 @@ public class KahoNesoItem extends NesoItem {
       // Finished
       user.stopUsingItem();
     }
-  }
-
-  @Override
-  public ActionResult useOnBlock(ItemUsageContext context) {
-    if (!context.getPlayer().isSneaking()) {
-      return ActionResult.PASS;
-    }
-    return super.useOnBlock(context);
   }
 
   @Override

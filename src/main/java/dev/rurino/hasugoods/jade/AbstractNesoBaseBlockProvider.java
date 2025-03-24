@@ -3,7 +3,6 @@ package dev.rurino.hasugoods.jade;
 import dev.rurino.hasugoods.block.AbstractNesoBaseBlockEntity;
 import dev.rurino.hasugoods.item.neso.NesoItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
@@ -17,10 +16,7 @@ class AbstractNesoBaseBlockProvider implements IBlockComponentProvider {
     if (blockAccessor.getBlockEntity() instanceof AbstractNesoBaseBlockEntity blockEntity) {
       ItemStack itemStack = blockEntity.getItemStack();
       if (itemStack.getItem() instanceof NesoItem nesoItem) {
-        Text text = nesoItem.getTooltip(itemStack);
-        if (text != null) {
-          tooltip.add(text);
-        }
+        tooltip.add(nesoItem.getTooltip(itemStack));
       }
     }
   }

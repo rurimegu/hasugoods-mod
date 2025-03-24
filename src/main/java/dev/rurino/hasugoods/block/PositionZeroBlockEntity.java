@@ -412,6 +412,8 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
     if (!world.isClient) {
       if (getItemStack().getItem() instanceof NesoItem item) {
         item.chargeEnergy(getItemStack(), CHARGE_AMOUNT_PER_TICK.val());
+        markDirty();
+        sync();
       }
       if (isPlayingMergeAnim()) {
         mergeAnimTimer.tick();

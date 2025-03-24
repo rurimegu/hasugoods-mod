@@ -2,6 +2,7 @@
   "block.hasugoods.neso_base_block": "Neso Base Block",
   "block.hasugoods.position_zero_block": "Position Zero Block",
   "config.jade.plugin_hasugoods.neso_base_block": "Neso Base Block",
+  "config.jade.plugin_hasugoods.neso_entity": "Neso Entity",
   "death.attack.toutoshi": "%1$s died of the preciousness of %2$s",
   "death.attack.toutoshi.player": "%1$s died of the preciousness of %2$s while trying to escape %3$s",
   "effect.hasugoods.oshi_protection": "Oshi Protection",

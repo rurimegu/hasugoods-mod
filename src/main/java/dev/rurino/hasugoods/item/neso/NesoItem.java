@@ -30,7 +30,6 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -218,24 +217,13 @@ public class NesoItem extends CharaItem implements SimpleEnergyItem {
   public Text getTooltip(ItemStack stack) {
     long stored = getStoredEnergy(stack);
     long capacity = getEnergyCapacity(stack);
-    if (capacity > 0) {
-      return Text.empty()
-          .append(Text.literal("OP:").formatted(Formatting.GOLD))
-          .append(" ")
-          .append(HasuString.formatEnergy(stored))
-          .append(Text.literal("/").formatted(Formatting.AQUA))
-          .append(HasuString.formatEnergy(capacity));
-    }
-    return null;
+    return HasuString.formatEnergyTooltip(stored, capacity);
   }
 
   @Override
   public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
     super.appendTooltip(stack, context, tooltip, type);
-    Text text = getTooltip(stack);
-    if (text != null) {
-      tooltip.add(text);
-    }
+    tooltip.add(getTooltip(stack));
   }
 
   // #endregion GUI
@@ -248,6 +236,9 @@ public class NesoItem extends CharaItem implements SimpleEnergyItem {
 
   @Override
   public ActionResult useOnBlock(ItemUsageContext context) {
+    if (!context.getPlayer().isSneaking()) {
+      return ActionResult.PASS;
+    }
     // Place the neso entity on the block if the top block is not solid
     World world = context.getWorld();
     if (world.isClient)

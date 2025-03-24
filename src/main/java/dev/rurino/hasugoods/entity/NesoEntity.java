@@ -198,6 +198,16 @@ public class NesoEntity extends LivingEntity {
     return nesoSize;
   }
 
+  public long getStoredEnergy() {
+    var nesoComponentOptional = ModComponents.NESO.maybeGet(this);
+    if (nesoComponentOptional.isPresent()) {
+      return nesoComponentOptional.get().getStoredEnergy();
+    } else {
+      Hasugoods.LOGGER.warn("NesoComponent not found for NesoEntity: {}", this);
+      return 0;
+    }
+  }
+
   public NesoItem getNesoItem() {
     Optional<NesoItem> item = NesoItem.getNesoItem(charaKey, nesoSize);
     if (item.isEmpty()) {
