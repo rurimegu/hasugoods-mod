@@ -26,6 +26,9 @@
     ],
     "cardinal-components": [
       "dev.rurino.hasugoods.component.ModComponents"
+    ],
+    "jade": [
+      "dev.rurino.hasugoods.jade.HasuJadePlugin"
     ]
   },
   "mixins": [

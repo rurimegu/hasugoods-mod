@@ -28,7 +28,6 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
@@ -216,18 +215,25 @@ public class NesoItem extends CharaItem implements SimpleEnergyItem {
     return ItemStackUtils.getItemBarStep((float) getStoredEnergy(stack) / capacity);
   }
 
-  @Override
-  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-    super.appendTooltip(stack, context, tooltip, type);
+  public Text getTooltip(ItemStack stack) {
     long stored = getStoredEnergy(stack);
     long capacity = getEnergyCapacity(stack);
     if (capacity > 0) {
-      MutableText text = Text.empty()
+      return Text.empty()
           .append(Text.literal("OP:").formatted(Formatting.GOLD))
           .append(" ")
           .append(HasuString.formatEnergy(stored))
           .append(Text.literal("/").formatted(Formatting.AQUA))
           .append(HasuString.formatEnergy(capacity));
+    }
+    return null;
+  }
+
+  @Override
+  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+    super.appendTooltip(stack, context, tooltip, type);
+    Text text = getTooltip(stack);
+    if (text != null) {
       tooltip.add(text);
     }
   }

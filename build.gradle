@@ -30,6 +30,13 @@ repositories {
       name = "Jared"
       url = "https://maven.blamejared.com/" // for Patchouli
   }
+
+  maven {
+      url "https://www.cursemaven.com"
+      content {
+        includeGroup "curse.maven"
+      }
+  }
 }
 
 loom {
@@ -77,6 +84,9 @@ dependencies {
 
   // Energy API
   include modApi('teamreborn:energy:4.1.0')
+  
+  // Jade
+  modImplementation "curse.maven:jade-324717:${jade_version}"
 }
 
 processResources {
