@@ -31,10 +31,10 @@ public class RurinoNesoEntity extends NesoEntity {
   public RurinoNesoEntity(EntityType<? extends LivingEntity> type, World world, NesoSize size) {
     super(type, world, CharaUtils.RURINO_KEY, size);
     config = (RurinoNesoItem.Config) NesoItem.getConfig(CharaUtils.RURINO_KEY, size);
-    checkBoxTimer = Timer.loop(CHECK_BOX_INTERVAL, this::checkIsInBox);
+    checkBoxTimer = Timer.loop(CHECK_BOX_INTERVAL, this::checkIfInBox);
   }
 
-  private void checkIsInBox() {
+  private void checkIfInBox() {
     BlockPos pos = getBlockPos();
     Queue<BlockPos> queue = new LinkedList<>();
     HashSet<BlockPos> visited = new HashSet<>();

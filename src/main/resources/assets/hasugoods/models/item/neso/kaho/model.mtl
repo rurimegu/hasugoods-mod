@@ -1,7 +1,18 @@
-# Blender 4.3.2 MTL File: 'None'
+# Blender 3.6.1 Goo Engine MTL File: ''
 # www.blender.org
 
-newmtl Body
+newmtl 发.001
+Ns 360.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd hasugoods:item/neso/kaho_hair
+
+newmtl 服.001
 Ns 360.000000
 Ka 1.000000 1.000000 1.000000
 Kd 0.800000 0.800000 0.800000
@@ -12,7 +23,7 @@ d 1.000000
 illum 2
 map_Kd hasugoods:item/neso/rurino_body
 
-newmtl Face
+newmtl 脸
 Ns 360.000000
 Ka 1.000000 1.000000 1.000000
 Kd 0.800000 0.800000 0.800000
@@ -21,5 +32,4 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd hasugoods:item/neso/rurino_face
-
+map_Kd hasugoods:item/neso/kaho_face
