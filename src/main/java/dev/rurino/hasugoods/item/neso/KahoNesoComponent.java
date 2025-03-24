@@ -16,7 +16,6 @@ import dev.rurino.hasugoods.util.config.HcVal;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.FlowerBlock;
 import net.minecraft.block.TallFlowerBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.RegistryByteBuf;
@@ -166,11 +165,11 @@ public class KahoNesoComponent {
     World world = context.world();
     BlockState state = world.getBlockState(pos);
     int maxDy = MAX_SPREAD_DELTA_Y.val();
-    if (state.isReplaceable()) {
+    if (state.isReplaceable() || FLOWER_BLOCKS.stream().anyMatch(b -> state.isOf(b))) {
       for (int dy = -1; dy >= -maxDy; dy--) {
         BlockPos newPos = pos.add(0, dy, 0);
         BlockState newState = world.getBlockState(newPos);
-        if (newState.isReplaceable())
+        if (newState.isReplaceable() || FLOWER_BLOCKS.stream().anyMatch(b -> newState.isOf(b)))
           continue;
         return trySpreatAt(context, newState, newPos);
       }
@@ -210,17 +209,6 @@ public class KahoNesoComponent {
     BlockPos upPos = pos.up();
     BlockState upState = world.getBlockState(upPos);
     Random random = context.random();
-    // Check if there are flowers on the block already
-    if (upState.getBlock() instanceof FlowerBlock) {
-      // If there are flowers, grow them
-      if (upState.getBlock() instanceof TallFlowerBlock tallFlowerBlock) {
-        if (tallFlowerBlock.canGrow(world, random, upPos, upState) && context.tryAction()) {
-          tallFlowerBlock.grow(world, random, upPos, upState);
-          emitParticles(world, pos);
-        }
-      }
-      return;
-    }
     if (!upState.isReplaceable())
       return;
 
@@ -237,7 +225,11 @@ public class KahoNesoComponent {
       // Grow grass block with flowers
       if (context.tryAction()) {
         Block flowerBlock = CollectionUtils.getRandomElement(FLOWER_BLOCKS, random);
-        world.setBlockState(upPos, flowerBlock.getDefaultState());
+        if (flowerBlock instanceof TallFlowerBlock) {
+          TallFlowerBlock.placeAt(world, flowerBlock.getDefaultState(), upPos, Block.NOTIFY_LISTENERS);
+        } else {
+          world.setBlockState(upPos, flowerBlock.getDefaultState());
+        }
         emitParticles(world, pos);
       }
       return;

@@ -110,14 +110,13 @@ public class KahoNesoItem extends NesoItem {
       return ActionResult.PASS;
     }
     if (!user.getActiveItem().isEmpty()) {
-      return ActionResult.FAIL;
+      return ActionResult.PASS;
     }
     ItemStack stack = user.getStackInHand(hand);
     // Get the block under the player
     TickContext context = new TickContext(this, config, stack, (ServerWorld) world, 0, user.getRandom());
     var component = KahoNesoComponent.fromPlayerPos(context, user.getBlockPos());
     if (component.isEmpty()) {
-      Hasugoods.LOGGER.warn("KahoNesoComponent is empty for stack: {}", stack);
       return ActionResult.FAIL;
     }
     stack.set(NesoItem.KAHO_NESO_COMPONENT, component);
