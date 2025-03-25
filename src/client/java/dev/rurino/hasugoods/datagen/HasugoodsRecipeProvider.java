@@ -3,6 +3,8 @@ package dev.rurino.hasugoods.datagen;
 import java.util.concurrent.CompletableFuture;
 
 import dev.rurino.hasugoods.Hasugoods;
+import dev.rurino.hasugoods.block.ModBlocks;
+import dev.rurino.hasugoods.item.ModItems;
 import dev.rurino.hasugoods.item.badge.BadgeItem;
 import dev.rurino.hasugoods.item.neso.NesoItem;
 import dev.rurino.hasugoods.util.CharaUtils;
@@ -12,6 +14,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.data.recipe.RecipeExporter;
 import net.minecraft.data.recipe.RecipeGenerator;
 import net.minecraft.data.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.RegistryWrapper;
@@ -23,7 +26,7 @@ public class HasugoodsRecipeProvider extends FabricRecipeProvider {
     super(output, registriesFuture);
   }
 
-  protected ShapedRecipeJsonBuilder buildGinkoRecipe(
+  private ShapedRecipeJsonBuilder buildGinkoRecipe(
       ShapedRecipeJsonBuilder builder,
       NesoItem smallNeso,
       BadgeItem badge) {
@@ -38,7 +41,7 @@ public class HasugoodsRecipeProvider extends FabricRecipeProvider {
         .input('X', badge);
   }
 
-  protected ShapedRecipeJsonBuilder buildHimeRecipe(
+  private ShapedRecipeJsonBuilder buildHimeRecipe(
       ShapedRecipeJsonBuilder builder,
       NesoItem smallNeso,
       BadgeItem badge) {
@@ -53,7 +56,7 @@ public class HasugoodsRecipeProvider extends FabricRecipeProvider {
         .input('X', badge);
   }
 
-  protected ShapedRecipeJsonBuilder buildKosuzuRecipe(
+  private ShapedRecipeJsonBuilder buildKosuzuRecipe(
       ShapedRecipeJsonBuilder builder,
       NesoItem smallNeso,
       BadgeItem badge) {
@@ -68,7 +71,7 @@ public class HasugoodsRecipeProvider extends FabricRecipeProvider {
         .input('X', badge);
   }
 
-  protected ShapedRecipeJsonBuilder buildKahoRecipe(
+  private ShapedRecipeJsonBuilder buildKahoRecipe(
       ShapedRecipeJsonBuilder builder,
       NesoItem smallNeso,
       BadgeItem badge) {
@@ -82,7 +85,7 @@ public class HasugoodsRecipeProvider extends FabricRecipeProvider {
         .input('X', badge);
   }
 
-  protected ShapedRecipeJsonBuilder buildRurinoRecipe(
+  private ShapedRecipeJsonBuilder buildRurinoRecipe(
       ShapedRecipeJsonBuilder builder,
       NesoItem smallNeso,
       BadgeItem badge) {
@@ -98,7 +101,7 @@ public class HasugoodsRecipeProvider extends FabricRecipeProvider {
         .input('X', badge);
   }
 
-  protected ShapedRecipeJsonBuilder buildSayakaRecipe(
+  private ShapedRecipeJsonBuilder buildSayakaRecipe(
       ShapedRecipeJsonBuilder builder,
       NesoItem smallNeso,
       BadgeItem badge) {
@@ -112,7 +115,7 @@ public class HasugoodsRecipeProvider extends FabricRecipeProvider {
         .input('X', badge);
   }
 
-  protected ShapedRecipeJsonBuilder buildKozueRecipe(
+  private ShapedRecipeJsonBuilder buildKozueRecipe(
       ShapedRecipeJsonBuilder builder,
       NesoItem smallNeso,
       BadgeItem badge) {
@@ -127,7 +130,7 @@ public class HasugoodsRecipeProvider extends FabricRecipeProvider {
         .input('X', badge);
   }
 
-  protected ShapedRecipeJsonBuilder buildMegumiRecipe(
+  private ShapedRecipeJsonBuilder buildMegumiRecipe(
       ShapedRecipeJsonBuilder builder,
       NesoItem smallNeso,
       BadgeItem badge) {
@@ -141,7 +144,7 @@ public class HasugoodsRecipeProvider extends FabricRecipeProvider {
         .input('X', badge);
   }
 
-  protected ShapedRecipeJsonBuilder buildTsuzuriRecipe(
+  private ShapedRecipeJsonBuilder buildTsuzuriRecipe(
       ShapedRecipeJsonBuilder builder,
       NesoItem smallNeso,
       BadgeItem badge) {
@@ -158,6 +161,30 @@ public class HasugoodsRecipeProvider extends FabricRecipeProvider {
   @Override
   protected RecipeGenerator getRecipeGenerator(RegistryWrapper.WrapperLookup registryLookup, RecipeExporter exporter) {
     return new RecipeGenerator(registryLookup, exporter) {
+
+      private void generateNesoBaseRecipes(RegistryWrapper.WrapperLookup registryLookup, RecipeExporter exporter) {
+        Item nesoBaseBlockItem = ModBlocks.NESO_BASE_BLOCK.asItem();
+        Item positionZeroBlockItem = ModBlocks.POSITION_ZERO_BLOCK.asItem();
+
+        createShapeless(RecipeCategory.BUILDING_BLOCKS, nesoBaseBlockItem)
+            .input(ModItems.TAG_REGULAR_BADGES)
+            .input(Items.WHITE_CONCRETE)
+            .input(Items.NOTE_BLOCK)
+            .criterion("has_regular_badge", conditionsFromTag(ModItems.TAG_REGULAR_BADGES))
+            .offerTo(exporter);
+        createShaped(RecipeCategory.BUILDING_BLOCKS, positionZeroBlockItem)
+            .pattern("SNS")
+            .pattern("RBR")
+            .pattern(" R ")
+            .input('S', ModItems.TAG_SECRET_BADGES)
+            .input('N', nesoBaseBlockItem)
+            .input('R', Items.RED_CONCRETE)
+            .input('B', Items.BEACON)
+            .criterion("has_secret_badge", conditionsFromTag(ModItems.TAG_SECRET_BADGES))
+            .criterion(hasItem(nesoBaseBlockItem), conditionsFromItem(nesoBaseBlockItem))
+            .offerTo(exporter);
+      }
+
       @Override
       public void generate() {
         for (NesoItem mediumNeso : NesoItem.getAllNesos(NesoSize.MEDIUM)) {
@@ -212,6 +239,7 @@ public class HasugoodsRecipeProvider extends FabricRecipeProvider {
               .showNotification(true)
               .offerTo(exporter);
         }
+        generateNesoBaseRecipes(registryLookup, exporter);
       }
     };
   }

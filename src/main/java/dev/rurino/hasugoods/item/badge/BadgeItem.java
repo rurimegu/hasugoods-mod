@@ -107,7 +107,7 @@ public class BadgeItem extends CharaItem {
   public static final RegistryKey<Item> UNOPENED_BADGE_KEY = RegistryKey.of(RegistryKeys.ITEM,
       Hasugoods.id("unopened_badge"));
   public static final Item UNOPENED_BADGE = ModItems.register(UNOPENED_BADGE_KEY,
-      new UnopenedBadge(new Item.Settings().maxCount(16).rarity(Rarity.COMMON).registryKey(UNOPENED_BADGE_KEY)));
+      new UnopenedBadgeItem(new Item.Settings().maxCount(16).rarity(Rarity.COMMON).registryKey(UNOPENED_BADGE_KEY)));
 
   public static final RegistryKey<Item> BOX_OF_BADGE_KEY = RegistryKey.of(RegistryKeys.ITEM,
       Hasugoods.id("box_of_badge"));
@@ -141,7 +141,7 @@ public class BadgeItem extends CharaItem {
     }
 
     // Add the badge to the badge item group
-    ItemGroupEvents.modifyEntriesEvent(ModItems.BADGE_ITEM_GROUP_KEY).register(itemGroup -> {
+    ItemGroupEvents.modifyEntriesEvent(ModItems.HASU_ITEM_GROUP_KEY).register(itemGroup -> {
       for (Item badgeItem : badgeItems) {
         itemGroup.add(badgeItem);
       }

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "B": "minecraft:beacon",
+    "N": "hasugoods:neso_base_block",
+    "R": "minecraft:red_concrete",
+    "S": "#hasugoods:secret_badges"
+  },
+  "pattern": [
+    "SNS",
+    "RBR",
+    " R "
+  ],
+  "result": {
+    "count": 1,
+    "id": "hasugoods:position_zero_block"
+  }
+}

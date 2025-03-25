@@ -15,6 +15,7 @@ import dev.rurino.hasugoods.util.config.HcObj;
 import dev.rurino.hasugoods.util.CharaUtils;
 import dev.rurino.hasugoods.util.ItemStackUtils;
 import dev.rurino.hasugoods.util.HasuString;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.BlockState;
 import net.minecraft.component.ComponentType;
 import net.minecraft.entity.EntityType;
@@ -101,14 +102,19 @@ public class NesoItem extends CharaItem implements SimpleEnergyItem {
 
   public static void initialize() {
     for (NesoSize size : NesoSize.values()) {
-      registerConfig(CharaUtils.KAHO_KEY, size, new KahoNesoItem.Config(size));
       registerConfig(CharaUtils.RURINO_KEY, size, new RurinoNesoItem.Config(size));
+      registerConfig(CharaUtils.KAHO_KEY, size, new KahoNesoItem.Config(size));
     }
     for (String charaKey : CharaUtils.ALL_CHARA_KEYS) {
       for (NesoSize size : NesoSize.values()) {
         registerNeso(charaKey, size);
       }
     }
+    ItemGroupEvents.modifyEntriesEvent(ModItems.HASU_ITEM_GROUP_KEY).register((itemGroup) -> {
+      for (NesoItemEntry entry : ALL_NESOS.values()) {
+        itemGroup.add(entry.item());
+      }
+    });
   }
 
   // #endregion Static fields

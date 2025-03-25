@@ -16,15 +16,19 @@ import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.Text;
 
 public class ModItems {
-  public static final RegistryKey<ItemGroup> BADGE_ITEM_GROUP_KEY = RegistryKey.of(
+  public static final RegistryKey<ItemGroup> HASU_ITEM_GROUP_KEY = RegistryKey.of(
       Registries.ITEM_GROUP.getKey(), Hasugoods.id("item_group"));
-  public static final ItemGroup BADGE_ITEM_GROUP = FabricItemGroup.builder()
+  public static final ItemGroup HASU_ITEM_GROUP = FabricItemGroup.builder()
       .icon(() -> new ItemStack(BadgeItem.getBadgeItem(CharaUtils.RURINO_KEY).get()))
       .displayName(Text.translatable("itemGroup.hasugoods"))
       .build();
 
-  public static final TagKey<Item> REGULAR_BADGE_TAG = TagKey.of(RegistryKeys.ITEM, Hasugoods.id("regular_badges"));
-  public static final TagKey<Item> SECRET_BADGE_TAG = TagKey.of(RegistryKeys.ITEM, Hasugoods.id("secret_badges"));
+  public static final TagKey<Item> TAG_REGULAR_BADGES = TagKey.of(RegistryKeys.ITEM, Hasugoods.id("regular_badges"));
+  public static final TagKey<Item> TAG_SECRET_BADGES = TagKey.of(RegistryKeys.ITEM, Hasugoods.id("secret_badges"));
+  public static final TagKey<Item> TAG_SMALL_NESOS = TagKey.of(RegistryKeys.ITEM, Hasugoods.id("small_nesos"));
+  public static final TagKey<Item> TAG_MEDIUM_NESOS = TagKey.of(RegistryKeys.ITEM, Hasugoods.id("medium_nesos"));
+  public static final TagKey<Item> TAG_LARGE_NESOS = TagKey.of(RegistryKeys.ITEM, Hasugoods.id("large_nesos"));
+  public static final TagKey<Item> TAG_NESOS = TagKey.of(RegistryKeys.ITEM, Hasugoods.id("nesos"));
 
   public static Item register(RegistryKey<Item> registryKey, Item item) {
     Hasugoods.LOGGER.info("Register item: " + registryKey.getValue());
@@ -33,7 +37,7 @@ public class ModItems {
   }
 
   public static void initialize() {
-    Registry.register(Registries.ITEM_GROUP, BADGE_ITEM_GROUP_KEY, BADGE_ITEM_GROUP);
+    Registry.register(Registries.ITEM_GROUP, HASU_ITEM_GROUP_KEY, HASU_ITEM_GROUP);
     BadgeItem.initialize();
     NesoItem.initialize();
   }

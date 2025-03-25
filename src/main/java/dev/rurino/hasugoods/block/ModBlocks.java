@@ -11,24 +11,26 @@ import net.minecraft.block.MapColor;
 import net.minecraft.block.enums.NoteBlockInstrument;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.Item.Settings;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.util.Rarity;
 
 public class ModBlocks {
 
   public static Block register(String name, Function<AbstractBlock.Settings, Block> blockFactory,
-      AbstractBlock.Settings settings, boolean shouldRegisterItem) {
+      AbstractBlock.Settings settings, Settings itemSettings) {
     RegistryKey<Block> blockKey = RegistryKey.of(RegistryKeys.BLOCK, Hasugoods.id(name));
     Block block = blockFactory.apply(settings.registryKey(blockKey));
 
-    if (shouldRegisterItem) {
+    if (itemSettings != null) {
       RegistryKey<Item> itemKey = RegistryKey.of(RegistryKeys.ITEM, Hasugoods.id(name));
       Hasugoods.LOGGER.info("Register block item: {}", itemKey.getValue());
 
-      BlockItem blockItem = new BlockItem(block, new Item.Settings().registryKey(itemKey));
+      BlockItem blockItem = new BlockItem(block, itemSettings.registryKey(itemKey));
       Registry.register(Registries.ITEM, itemKey, blockItem);
     }
 
@@ -43,7 +45,8 @@ public class ModBlocks {
           .instrument(NoteBlockInstrument.BASEDRUM)
           .strength(1.8F)
           .luminance((state) -> 14),
-      true);
+      new Item.Settings()
+          .rarity(Rarity.COMMON));
   public static final Block POSITION_ZERO_BLOCK = register("position_zero_block", PositionZeroBlock::new,
       AbstractBlock.Settings.create()
           .sounds(BlockSoundGroup.STONE)
@@ -51,13 +54,14 @@ public class ModBlocks {
           .instrument(NoteBlockInstrument.BELL)
           .strength(1.8F)
           .luminance((state) -> 15),
-      true);
+      new Item.Settings()
+          .rarity(Rarity.RARE));
 
   public static void initialize() {
     NesoBaseBlock.initialize();
     PositionZeroBlock.initialize();
 
-    ItemGroupEvents.modifyEntriesEvent(ModItems.BADGE_ITEM_GROUP_KEY).register((itemGroup) -> {
+    ItemGroupEvents.modifyEntriesEvent(ModItems.HASU_ITEM_GROUP_KEY).register((itemGroup) -> {
       itemGroup.add(NESO_BASE_BLOCK.asItem());
       itemGroup.add(POSITION_ZERO_BLOCK.asItem());
     });

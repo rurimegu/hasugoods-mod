@@ -2,6 +2,7 @@ package dev.rurino.hasugoods.item.badge;
 
 import java.util.List;
 
+import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.item.ModItems;
 import dev.rurino.hasugoods.util.ItemStackUtils;
 import dev.rurino.hasugoods.util.config.HcVal;
@@ -18,18 +19,18 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
-public class UnopenedBadge extends Item {
+public class UnopenedBadgeItem extends Item {
   private static final HcVal.Int REGULAR_BADGE_DROP_WEIGHT = BadgeItem.HC_LOOT.getInt("regularBadgeDropWeight", 95);
   private static final HcVal.Int SECRET_BADGE_DROP_WEIGHT = BadgeItem.HC_LOOT.getInt("secretBadgeDropWeight", 5);
 
   private static final LootTable BADGE_LOOT_TABLE = LootTable.builder().type(LootContextTypes.EMPTY).pool(
       LootPool.builder()
-          .with(TagEntry.expandBuilder(ModItems.REGULAR_BADGE_TAG).weight(REGULAR_BADGE_DROP_WEIGHT.val()))
-          .with(TagEntry.expandBuilder(ModItems.SECRET_BADGE_TAG).weight(SECRET_BADGE_DROP_WEIGHT.val()))
+          .with(TagEntry.expandBuilder(ModItems.TAG_REGULAR_BADGES).weight(REGULAR_BADGE_DROP_WEIGHT.val()))
+          .with(TagEntry.expandBuilder(ModItems.TAG_SECRET_BADGES).weight(SECRET_BADGE_DROP_WEIGHT.val()))
           .build())
       .build();
 
-  public UnopenedBadge(Settings settings) {
+  public UnopenedBadgeItem(Settings settings) {
     super(settings);
   }
 
@@ -40,13 +41,18 @@ public class UnopenedBadge extends Item {
     ServerWorld serverWorld = (ServerWorld) world;
     List<ItemStack> stacks = BADGE_LOOT_TABLE
         .generateLoot(new LootWorldContext.Builder(serverWorld).build(LootContextTypes.EMPTY));
-    if (stacks.isEmpty())
+    if (stacks.isEmpty() || stacks.size() > 1) {
+      Hasugoods.LOGGER.warn("Unopened badge loot table returned {} items, ignored", stacks.size());
       return ActionResult.FAIL;
-    ItemStack handStack = user.getStackInHand(hand);
-    handStack.decrement(1);
-    for (ItemStack stack : stacks) {
-      ItemStackUtils.giveItemsToPlayerOrDrop(user, stack);
     }
-    return ActionResult.SUCCESS;
+    ItemStack handStack = user.getStackInHand(hand);
+    ItemStack newStack = stacks.get(0);
+    if (handStack.getCount() <= 1) {
+      return ItemStackUtils.replaceItemsToPlayerOrDrop(user, newStack.getItem(), newStack.getCount());
+    } else {
+      ItemStackUtils.giveItemsToPlayerOrDrop(user, newStack);
+      handStack.decrement(1);
+      return ActionResult.SUCCESS;
+    }
   }
 }
