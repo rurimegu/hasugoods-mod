@@ -1,7 +1,7 @@
 package dev.rurino.hasugoods.jade;
 
+import dev.rurino.hasugoods.config.NesoConfig;
 import dev.rurino.hasugoods.entity.NesoEntity;
-import dev.rurino.hasugoods.item.neso.NesoItem;
 import dev.rurino.hasugoods.util.HasuString;
 import net.minecraft.util.Identifier;
 import snownee.jade.api.EntityAccessor;
@@ -14,7 +14,7 @@ class NesoEntityProvider implements IEntityComponentProvider {
   @Override
   public void appendTooltip(ITooltip tooltip, EntityAccessor entityAccessor, IPluginConfig pluginConfig) {
     if (entityAccessor.getEntity() instanceof NesoEntity nesoEntity) {
-      long capacity = NesoItem.getConfig(nesoEntity.getCharaKey(), nesoEntity.getNesoSize()).maxEnergy();
+      long capacity = NesoConfig.getConfig(nesoEntity.getCharaKey(), nesoEntity.getNesoSize()).maxEnergy();
       long energy = nesoEntity.getStoredEnergy();
       tooltip.add(HasuString.formatEnergyTooltip(energy, capacity));
     }

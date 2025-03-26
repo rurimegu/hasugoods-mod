@@ -117,13 +117,27 @@ public class HcRoot extends HcObj {
     }
   }
 
-  protected static JsonObject readConfig(File configFile) {
+  private static JsonObject readConfig(File configFile) {
     Hasugoods.LOGGER.info("Reading Config file: {}", configFile.getAbsolutePath());
     try (FileReader reader = new FileReader(configFile)) {
       return JsonParser.parseReader(reader).getAsJsonObject();
     } catch (Exception e) {
       Hasugoods.LOGGER.error("Failed to read config file: {}\n{}", configFile.getAbsolutePath(), e);
       return null;
+    }
+  }
+
+  private static void checkUnused(HcBase obj) {
+    if (!(obj instanceof HcObj hcObj))
+      return;
+    for (var entry : hcObj.obj.getAsJsonObject().entrySet()) {
+      var child = hcObj.children.get(entry.getKey());
+      if (child == null) {
+        Hasugoods.LOGGER.warn("Unknown config on initialization complete: {}, ignored",
+            hcObj.path + "." + entry.getKey());
+      } else {
+        checkUnused(child);
+      }
     }
   }
 
@@ -169,6 +183,10 @@ public class HcRoot extends HcObj {
   }
 
   public HcRoot onInitializateComplete() {
+    if (initialized) {
+      Hasugoods.LOGGER.warn("HcRoot initialized multiple times!");
+    }
+    checkUnused(this);
     maybeWriteConfig();
     initialized = true;
     return this;

@@ -10,11 +10,11 @@ import java.util.stream.Stream;
 import com.google.common.collect.ImmutableSet;
 
 import dev.rurino.hasugoods.Hasugoods;
+import dev.rurino.hasugoods.config.ModConfig;
 import dev.rurino.hasugoods.effect.ToutoshiEffectsConsumeEffect;
 import dev.rurino.hasugoods.item.ModItems;
 import dev.rurino.hasugoods.item.CharaItem;
 import dev.rurino.hasugoods.util.CharaUtils;
-import dev.rurino.hasugoods.util.config.HcObj;
 import dev.rurino.hasugoods.util.config.HcVal;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
@@ -40,12 +40,15 @@ public class BadgeItem extends CharaItem {
   public static final DeathProtectionComponent HASU_BADGE_DEATH_PROTECTION = new DeathProtectionComponent(
       List.<ConsumeEffect>of(new ClearAllEffectsConsumeEffect(), new ToutoshiEffectsConsumeEffect()));
 
-  public static final HcObj HC_LOOT = Hasugoods.CONFIG.child("loot");
-  private static final HcVal.Int CHEST_BADGE_DROP_MIN_COUNT = HC_LOOT.getInt("chestBadgeDropMinCount", 1).nonnegative();
-  private static final HcVal.Int CHEST_BADGE_DROP_MAX_COUNT = HC_LOOT.getInt("chestBadgeDropMaxCount", 3).nonnegative();
-  private static final HcVal.Int CHEST_EMPTY_DROP_WEIGHT = HC_LOOT.getInt("chestEmptyDropWeight", 20).nonnegative();
-  private static final HcVal.Int CHEST_BADGE_DROP_WEIGHT = HC_LOOT.getInt("chestBadgeDropWeight", 70).nonnegative();
-  private static final HcVal.Int CHEST_BOX_DROP_WEIGHT = HC_LOOT.getInt("chestBoxDropWeight", 10).nonnegative();
+  private static final HcVal.Int CHEST_BADGE_DROP_MIN_COUNT = ModConfig.LOOT.getInt("chestBadgeDropMinCount", 1)
+      .nonnegative();
+  private static final HcVal.Int CHEST_BADGE_DROP_MAX_COUNT = ModConfig.LOOT.getInt("chestBadgeDropMaxCount", 3)
+      .nonnegative();
+  private static final HcVal.Int CHEST_EMPTY_DROP_WEIGHT = ModConfig.LOOT.getInt("chestEmptyDropWeight", 20)
+      .nonnegative();
+  private static final HcVal.Int CHEST_BADGE_DROP_WEIGHT = ModConfig.LOOT.getInt("chestBadgeDropWeight", 70)
+      .nonnegative();
+  private static final HcVal.Int CHEST_BOX_DROP_WEIGHT = ModConfig.LOOT.getInt("chestBoxDropWeight", 10).nonnegative();
 
   public static final ImmutableSet<VillagerProfession> BADGE_TRADE_VILLAGER_PROFESSIONS = ImmutableSet
       .of(VillagerProfession.ARMORER,

@@ -10,13 +10,13 @@ import com.google.gson.Gson;
 
 import dev.rurino.hasugoods.block.ModBlockEntities;
 import dev.rurino.hasugoods.block.ModBlocks;
+import dev.rurino.hasugoods.config.ModConfig;
 import dev.rurino.hasugoods.damage.ModDamageTypes;
 import dev.rurino.hasugoods.effect.ModEffects;
 import dev.rurino.hasugoods.entity.ModEntities;
 import dev.rurino.hasugoods.item.ModItems;
 import dev.rurino.hasugoods.network.ModNetwork;
 import dev.rurino.hasugoods.particle.ModParticles;
-import dev.rurino.hasugoods.util.config.HcRoot;
 
 public class Hasugoods implements ModInitializer {
   public static final String MOD_ID = "hasugoods";
@@ -27,11 +27,6 @@ public class Hasugoods implements ModInitializer {
   // It is considered best practice to use your mod id as the logger's name.
   // That way, it's clear which mod wrote info, warnings, and errors.
   public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-
-  public static final HcRoot CONFIG = HcRoot
-      .createAndLoad(MOD_ID + "-config")
-      .autoCreateConfig()
-      .autoOverwriteConfig();
 
   public static Identifier id(String path) {
     return Identifier.of(MOD_ID, path);
@@ -54,6 +49,6 @@ public class Hasugoods implements ModInitializer {
     ModEntities.initialize();
     ModNetwork.initialize();
 
-    CONFIG.onInitializateComplete();
+    ModConfig.onInitializateComplete();
   }
 }

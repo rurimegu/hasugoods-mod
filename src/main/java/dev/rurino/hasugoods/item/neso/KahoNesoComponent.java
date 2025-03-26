@@ -8,6 +8,7 @@ import java.util.Set;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
+import dev.rurino.hasugoods.config.NesoConfig;
 import dev.rurino.hasugoods.network.EmitParticlesPayload;
 import dev.rurino.hasugoods.particle.HasuParticleEffect;
 import dev.rurino.hasugoods.util.CharaUtils;
@@ -31,11 +32,11 @@ import net.minecraft.world.World;
 
 public class KahoNesoComponent {
   // #region Static fields
-  private static final HcVal.Int MAX_SPREAD_DELTA_Y = KahoNesoItem.HC_KAHO
+  private static final HcVal.Int MAX_SPREAD_DELTA_Y = NesoConfig.KAHO
       .getInt("maxSpreadDeltaY", 3)
       .nonnegative()
       .max(128);
-  private static final HcVal.Int NUM_PARTICLES = KahoNesoItem.HC_KAHO
+  private static final HcVal.Int NUM_PARTICLES = NesoConfig.KAHO
       .getInt("numParticles", 4)
       .nonnegative()
       .max(128);
@@ -75,7 +76,7 @@ public class KahoNesoComponent {
 
   static record TickContext(
       KahoNesoItem item,
-      KahoNesoItem.Config config,
+      NesoConfig.Kaho config,
       ItemStack stack,
       ServerWorld world,
       int usedTicks,

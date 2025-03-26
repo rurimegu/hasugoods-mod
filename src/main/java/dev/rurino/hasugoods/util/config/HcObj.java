@@ -17,7 +17,7 @@ import com.google.gson.JsonObject;
  */
 public class HcObj extends HcBase {
 
-  private final Map<String, HcBase> children = new HashMap<>();
+  protected final Map<String, HcBase> children = new HashMap<>();
 
   protected HcObj(String path, JsonElement obj) {
     super(path, obj == null ? new JsonObject() : obj);

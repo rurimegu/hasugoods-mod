@@ -5,6 +5,7 @@ import java.util.Optional;
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.component.IOshiComponent;
 import dev.rurino.hasugoods.component.ModComponents;
+import dev.rurino.hasugoods.config.ModConfig;
 import dev.rurino.hasugoods.util.CharaUtils;
 import dev.rurino.hasugoods.util.config.HcVal;
 import net.minecraft.entity.Entity;
@@ -18,34 +19,34 @@ import net.minecraft.village.TradedItem;
 
 public class BadgeTradeOffers {
   // #region Config
-  private static final HcVal.Int TRADE_EXP = Hasugoods.CONFIG.getInt("trade.exp", 1);
-  private static final HcVal.Float TRADE_PROB = Hasugoods.CONFIG.getFloat("trade.prob", 0.5f);
-  private static final HcVal.Float TRADE_SECRET_PROB = Hasugoods.CONFIG.getFloat("trade.secretProb", 0.1f);
-  private static final HcVal.Int TRADE_MAX_USES = Hasugoods.CONFIG.getInt("trade.maxUses", 12);
-  private static final HcVal.Int TRADE_SECRET_MAX_USES = Hasugoods.CONFIG.getInt("trade.secretMaxUses", 3);
+  private static final HcVal.Int TRADE_EXP = ModConfig.TRADE.getInt("exp", 1);
+  private static final HcVal.Float TRADE_PROB = ModConfig.TRADE.getFloat("prob", 0.5f);
+  private static final HcVal.Float TRADE_SECRET_PROB = ModConfig.TRADE.getFloat("secretProb", 0.1f);
+  private static final HcVal.Int TRADE_MAX_USES = ModConfig.TRADE.getInt("maxUses", 12);
+  private static final HcVal.Int TRADE_SECRET_MAX_USES = ModConfig.TRADE.getInt("secretMaxUses", 3);
 
-  private static final HcVal.Int BUY_EXP = Hasugoods.CONFIG.getInt("buy.exp", 3);
-  private static final HcVal.Float BUY_PROB = Hasugoods.CONFIG.getFloat("buy.prob", 0.5f);
-  private static final HcVal.Float BUY_SECRET_PROB = Hasugoods.CONFIG.getFloat("buy.secretProb", 0.1f);
-  private static final HcVal.Int BUY_MAX_USES = Hasugoods.CONFIG.getInt("buy.maxUses", 12);
-  private static final HcVal.Int BUY_SECRET_MAX_USES = Hasugoods.CONFIG.getInt("buy.secretMaxUses",
+  private static final HcVal.Int BUY_EXP = ModConfig.BUY.getInt("exp", 3);
+  private static final HcVal.Float BUY_PROB = ModConfig.BUY.getFloat("prob", 0.5f);
+  private static final HcVal.Float BUY_SECRET_PROB = ModConfig.BUY.getFloat("secretProb", 0.1f);
+  private static final HcVal.Int BUY_MAX_USES = ModConfig.BUY.getInt("maxUses", 12);
+  private static final HcVal.Int BUY_SECRET_MAX_USES = ModConfig.BUY.getInt("secretMaxUses",
       3);
-  private static final HcVal.Int BUY_REGULAR_PRICE = Hasugoods.CONFIG.getInt("buy.regularPrice", 1);
-  private static final HcVal.Int BUY_SECRET_PRICE = Hasugoods.CONFIG.getInt("buy.secretPrice", 5);
+  private static final HcVal.Int BUY_REGULAR_PRICE = ModConfig.BUY.getInt("regularPrice", 1);
+  private static final HcVal.Int BUY_SECRET_PRICE = ModConfig.BUY.getInt("secretPrice", 5);
 
-  private static final HcVal.Int SELL_EXP = Hasugoods.CONFIG.getInt("sell.exp", 3);
-  private static final HcVal.Float SELL_PROB = Hasugoods.CONFIG.getFloat("sell.prob", 0.5f);
-  private static final HcVal.Float SELL_SECRET_PROB = Hasugoods.CONFIG.getFloat("sell.secretProb", 0.1f);
-  private static final HcVal.Int SELL_MAX_USES = Hasugoods.CONFIG.getInt("sell.maxUses", 12);
-  private static final HcVal.Int SELL_SECRET_MAX_USES = Hasugoods.CONFIG.getInt("sell.secretMaxUses",
+  private static final HcVal.Int SELL_EXP = ModConfig.SELL.getInt("exp", 3);
+  private static final HcVal.Float SELL_PROB = ModConfig.SELL.getFloat("prob", 0.5f);
+  private static final HcVal.Float SELL_SECRET_PROB = ModConfig.SELL.getFloat("secretProb", 0.1f);
+  private static final HcVal.Int SELL_MAX_USES = ModConfig.SELL.getInt("maxUses", 12);
+  private static final HcVal.Int SELL_SECRET_MAX_USES = ModConfig.SELL.getInt("secretMaxUses",
       3);
-  private static final HcVal.Int SELL_REGULAR_PRICE = Hasugoods.CONFIG.getInt("sell.regularPrice", 4);
-  private static final HcVal.Int SELL_SECRET_PRICE = Hasugoods.CONFIG.getInt("sell.secretPrice", 30);
+  private static final HcVal.Int SELL_REGULAR_PRICE = ModConfig.SELL.getInt("regularPrice", 4);
+  private static final HcVal.Int SELL_SECRET_PRICE = ModConfig.SELL.getInt("secretPrice", 30);
 
-  private static final HcVal.Int UNOPENED_PACKET_PRICE = Hasugoods.CONFIG.getInt("sell.unopenedPacketPrice", 3);
-  private static final HcVal.Int UNOPENED_PACKET_MAX_USES = Hasugoods.CONFIG.getInt("sell.unopenedPacketMaxUses", 9);
-  private static final HcVal.Float UNOPENED_BOX_DISCOUNT = Hasugoods.CONFIG.getFloat("sell.unopenedBoxDiscount", 0.1f);
-  private static final HcVal.Int UNOPENED_BOX_MAX_USES = Hasugoods.CONFIG.getInt("sell.unopenedBoxMaxUses", 2);
+  private static final HcVal.Int UNOPENED_PACKET_PRICE = ModConfig.SELL.getInt("unopenedPacketPrice", 3);
+  private static final HcVal.Int UNOPENED_PACKET_MAX_USES = ModConfig.SELL.getInt("unopenedPacketMaxUses", 9);
+  private static final HcVal.Float UNOPENED_BOX_DISCOUNT = ModConfig.SELL.getFloat("unopenedBoxDiscount", 0.1f);
+  private static final HcVal.Int UNOPENED_BOX_MAX_USES = ModConfig.SELL.getInt("unopenedBoxMaxUses", 2);
   // #endregion Config
 
   public static class Trade implements TradeOffers.Factory {

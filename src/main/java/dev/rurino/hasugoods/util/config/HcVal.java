@@ -3,8 +3,6 @@ package dev.rurino.hasugoods.util.config;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 
-import dev.rurino.hasugoods.Hasugoods;
-
 /**
  * HasuConfig value object.
  * <p>
@@ -55,7 +53,6 @@ public abstract class HcVal<T> extends HcBase {
         throw new IllegalArgumentException(
             String.format("At %s: must be nonzero, got %s", path, val));
       }
-      Hasugoods.LOGGER.info("compare {} {} {}", val, minVal == null ? "null" : minVal.getClass(), maxVal);
       if (minVal != null && val.compareTo(minVal) < 0) {
         throw new IllegalArgumentException(
             String.format("At %s: Value %s is less than minimum %s", path, val, minVal));

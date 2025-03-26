@@ -7,8 +7,7 @@ import java.util.Queue;
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.component.INesoComponent;
 import dev.rurino.hasugoods.component.ModComponents;
-import dev.rurino.hasugoods.item.neso.NesoItem;
-import dev.rurino.hasugoods.item.neso.RurinoNesoItem;
+import dev.rurino.hasugoods.config.NesoConfig;
 import dev.rurino.hasugoods.util.CharaUtils;
 import dev.rurino.hasugoods.util.MathUtils;
 import dev.rurino.hasugoods.util.Timer;
@@ -23,14 +22,14 @@ import net.minecraft.world.World;
 public class RurinoNesoEntity extends NesoEntity {
   private static final int CHECK_BOX_INTERVAL = 8;
 
-  private final RurinoNesoItem.Config config;
+  private final NesoConfig.Rurino config;
   private final Timer checkBoxTimer;
   private boolean isInBox = false;
   private boolean isWithMegu = false;
 
   public RurinoNesoEntity(EntityType<? extends LivingEntity> type, World world, NesoSize size) {
     super(type, world, CharaUtils.RURINO_KEY, size);
-    config = (RurinoNesoItem.Config) NesoItem.getConfig(CharaUtils.RURINO_KEY, size);
+    config = NesoConfig.getConfig(NesoConfig.Rurino.class, CharaUtils.RURINO_KEY, size);
     checkBoxTimer = Timer.loop(CHECK_BOX_INTERVAL, this::checkIfInBox);
   }
 
@@ -94,7 +93,7 @@ public class RurinoNesoEntity extends NesoEntity {
       amount += config.energyChargeInBoxPerTick();
     }
     if (isWithMegu) {
-      amount *= config.energyBoostByMeguPerTick();
+      amount += amount * config.energyBoostByMeguPerTick();
     }
     charge(amount);
   }

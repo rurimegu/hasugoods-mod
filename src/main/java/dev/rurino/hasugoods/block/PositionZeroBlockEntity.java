@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 import dev.rurino.hasugoods.Hasugoods;
+import dev.rurino.hasugoods.config.NesoConfig;
 import dev.rurino.hasugoods.item.neso.NesoItem;
 import dev.rurino.hasugoods.network.FinishNesoMergePayload;
 import dev.rurino.hasugoods.network.PlayAnimPayload;
@@ -38,8 +39,8 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
   private static final int CHECK_STRUCTURE_INTERVAL = 8;
   private static final float LINK_PARTICLE_VELOCITY = 0.1f;
   private static final String NBT_NESOBASES = "nesobases";
-  private static final HcVal.Long CHARGE_AMOUNT_PER_TICK = Hasugoods.CONFIG
-      .getLong("neso.pos0ChargeAmountPerTick", 16);
+  private static final HcVal.Long CHARGE_AMOUNT_PER_TICK = NesoConfig.NESO
+      .getLong("pos0ChargeAmountPerTick", 128);
 
   static void initialize() {
     Hasugoods.LOGGER.debug("Position zero block entity initialized");

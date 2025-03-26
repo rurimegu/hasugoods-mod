@@ -3,6 +3,7 @@ package dev.rurino.hasugoods.item.badge;
 import java.util.List;
 
 import dev.rurino.hasugoods.Hasugoods;
+import dev.rurino.hasugoods.config.ModConfig;
 import dev.rurino.hasugoods.item.ModItems;
 import dev.rurino.hasugoods.util.ItemStackUtils;
 import dev.rurino.hasugoods.util.config.HcVal;
@@ -20,8 +21,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
 public class UnopenedBadgeItem extends Item {
-  private static final HcVal.Int REGULAR_BADGE_DROP_WEIGHT = BadgeItem.HC_LOOT.getInt("regularBadgeDropWeight", 95);
-  private static final HcVal.Int SECRET_BADGE_DROP_WEIGHT = BadgeItem.HC_LOOT.getInt("secretBadgeDropWeight", 5);
+  private static final HcVal.Int REGULAR_BADGE_DROP_WEIGHT = ModConfig.LOOT.getInt("regularBadgeDropWeight", 95);
+  private static final HcVal.Int SECRET_BADGE_DROP_WEIGHT = ModConfig.LOOT.getInt("secretBadgeDropWeight", 5);
 
   private static final LootTable BADGE_LOOT_TABLE = LootTable.builder().type(LootContextTypes.EMPTY).pool(
       LootPool.builder()

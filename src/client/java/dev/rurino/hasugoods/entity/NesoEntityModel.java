@@ -16,8 +16,8 @@ public class NesoEntityModel extends EntityModel<LivingEntityRenderState> {
   public static final CustomModelDataComponent NESO_3D_CUSTOM_MODEL_DATA = new CustomModelDataComponent(
       List.of(), List.of(true), List.of(), List.of());
 
-  protected final NesoItem item;
-  protected final ItemStack stack;
+  private final NesoItem item;
+  private final ItemStack stack;
 
   protected NesoEntityModel(NesoItem item) {
     super(new ModelPart(List.of(), Map.of()));

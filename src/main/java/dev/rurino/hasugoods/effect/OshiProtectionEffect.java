@@ -5,9 +5,9 @@ import java.util.Optional;
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.component.IToutoshiComponent;
 import dev.rurino.hasugoods.component.ModComponents;
+import dev.rurino.hasugoods.config.ModConfig;
 import dev.rurino.hasugoods.damage.ModDamageTypes;
 import dev.rurino.hasugoods.damage.ToutoshiDamageSource;
-import dev.rurino.hasugoods.util.config.HcObj;
 import dev.rurino.hasugoods.util.config.HcVal;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -19,8 +19,7 @@ import net.minecraft.server.world.ServerWorld;
 
 public class OshiProtectionEffect extends StatusEffect {
 
-  public static final HcObj HC_OSHI_PROTECTION = Hasugoods.CONFIG.child("oshiProtection");
-  private static final HcVal.Float TOUTOSHISHI_DAMAGE = HC_OSHI_PROTECTION.getFloat("toutoshiDamage", 1000f)
+  private static final HcVal.Float TOUTOSHISHI_DAMAGE = ModConfig.OSHI_PROTECTION.getFloat("toutoshiDamage", 1000f)
       .nonnegative();
 
   public OshiProtectionEffect() {

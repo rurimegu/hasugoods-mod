@@ -7,11 +7,11 @@ import java.util.Objects;
 import java.util.Optional;
 
 import dev.rurino.hasugoods.Hasugoods;
+import dev.rurino.hasugoods.config.NesoConfig;
 import dev.rurino.hasugoods.entity.NesoEntity;
 import dev.rurino.hasugoods.item.ModItems;
 import dev.rurino.hasugoods.item.CharaItem;
 import dev.rurino.hasugoods.util.CharaUtils.NesoSize;
-import dev.rurino.hasugoods.util.config.HcObj;
 import dev.rurino.hasugoods.util.CharaUtils;
 import dev.rurino.hasugoods.util.ItemStackUtils;
 import dev.rurino.hasugoods.util.HasuString;
@@ -46,12 +46,8 @@ public class NesoItem extends CharaItem implements SimpleEnergyItem {
 
   protected static final Map<String, NesoItemEntry> ALL_NESOS = new HashMap<>();
 
-  public static String nesoKey(String charaKey, NesoSize size) {
-    return charaKey + "_neso_" + size.name().toLowerCase();
-  }
-
   protected static Optional<NesoItemEntry> getNesoItemEntry(String charaKey, NesoSize size) {
-    return Optional.ofNullable(ALL_NESOS.get(nesoKey(charaKey, size)));
+    return Optional.ofNullable(ALL_NESOS.get(NesoConfig.nesoKey(charaKey, size)));
   }
 
   public static Optional<NesoItem> getNesoItem(String charaKey, NesoSize size) {
@@ -81,7 +77,7 @@ public class NesoItem extends CharaItem implements SimpleEnergyItem {
   }
 
   private static NesoItem registerNeso(String charaKey, NesoSize size) {
-    String itemKey = nesoKey(charaKey, size);
+    String itemKey = NesoConfig.nesoKey(charaKey, size);
     RegistryKey<Item> key = RegistryKey.of(RegistryKeys.ITEM, Hasugoods.id(itemKey));
     Rarity rarity = switch (size) {
       case SMALL -> Rarity.COMMON;
@@ -89,7 +85,7 @@ public class NesoItem extends CharaItem implements SimpleEnergyItem {
       case LARGE -> Rarity.RARE;
     };
     Settings settings = new Settings().maxCount(1).rarity(rarity).registryKey(key);
-    Config config = getConfig(charaKey, size);
+    NesoConfig.Base config = NesoConfig.getConfig(charaKey, size);
     if (config == null) {
       Hasugoods.LOGGER.warn("Config for {}, {} not found", charaKey, size);
     } else {
@@ -101,10 +97,6 @@ public class NesoItem extends CharaItem implements SimpleEnergyItem {
   }
 
   public static void initialize() {
-    for (NesoSize size : NesoSize.values()) {
-      registerConfig(CharaUtils.RURINO_KEY, size, new RurinoNesoItem.Config(size));
-      registerConfig(CharaUtils.KAHO_KEY, size, new KahoNesoItem.Config(size));
-    }
     for (String charaKey : CharaUtils.ALL_CHARA_KEYS) {
       for (NesoSize size : NesoSize.values()) {
         registerNeso(charaKey, size);
@@ -119,53 +111,6 @@ public class NesoItem extends CharaItem implements SimpleEnergyItem {
 
   // #endregion Static fields
 
-  // #region Config
-  public static final HcObj HC_NESO = Hasugoods.CONFIG.child("neso");
-  protected static final HcObj HC_SMALL = HC_NESO.child("small");
-  protected static final HcObj HC_MEDIUM = HC_NESO.child("medium");
-  protected static final HcObj HC_LARGE = HC_NESO.child("large");
-
-  public static abstract class Config {
-    private final long maxEnergy;
-
-    protected Config(NesoSize size) {
-      this.maxEnergy = switch (size) {
-        case SMALL -> HC_SMALL.getLong("maxEnergy", 128 * 1000).val();
-        case MEDIUM -> HC_MEDIUM.getLong("maxEnergy", 1000 * 1000).val();
-        case LARGE -> HC_LARGE.getLong("maxEnergy", 16 * 1000 * 1000).val();
-      };
-    }
-
-    public long maxEnergy() {
-      return maxEnergy;
-    }
-
-    public abstract long energyPerAction();
-
-    public abstract float useCooldown();
-  }
-
-  private static Map<String, Config> CONFIGS = new HashMap<>();
-
-  private static void registerConfig(String charaKey, NesoSize size, Config config) {
-    String key = nesoKey(charaKey, size);
-    if (CONFIGS.containsKey(key)) {
-      Hasugoods.LOGGER.warn("Config for {} already registered, replacing", key);
-    }
-    CONFIGS.put(key, config);
-  }
-
-  public static Config getConfig(String charaKey, NesoSize size) {
-    String key = nesoKey(charaKey, size);
-    if (!CONFIGS.containsKey(key)) {
-      Hasugoods.LOGGER.error("Config for {} not found", key);
-      return null;
-    }
-    return CONFIGS.get(key);
-  }
-
-  // #endregion Config
-
   // #region Data component
   public static final ComponentType<KahoNesoComponent> KAHO_NESO_COMPONENT = Registry.register(
       Registries.DATA_COMPONENT_TYPE,
@@ -173,13 +118,13 @@ public class NesoItem extends CharaItem implements SimpleEnergyItem {
       ComponentType.<KahoNesoComponent>builder().codec(KahoNesoComponent.CODEC).build());
 
   // #endregion Data component
-  protected final NesoSize nesoSize;
-  protected final Config config;
+  private final NesoSize nesoSize;
+  protected final NesoConfig.Base config;
 
   public NesoItem(Settings settings, String charaKey, NesoSize size) {
     super(settings, charaKey);
     this.nesoSize = size;
-    this.config = getConfig(this.getCharaKey(), size);
+    this.config = NesoConfig.getConfig(charaKey, size);
   }
 
   public NesoSize getNesoSize() {

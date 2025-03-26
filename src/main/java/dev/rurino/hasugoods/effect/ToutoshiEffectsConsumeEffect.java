@@ -7,6 +7,7 @@ import com.mojang.serialization.MapCodec;
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.component.IToutoshiComponent;
 import dev.rurino.hasugoods.component.ModComponents;
+import dev.rurino.hasugoods.config.ModConfig;
 import dev.rurino.hasugoods.item.badge.BadgeItem;
 import dev.rurino.hasugoods.util.config.HcVal;
 import net.minecraft.entity.LivingEntity;
@@ -23,9 +24,9 @@ public record ToutoshiEffectsConsumeEffect() implements ConsumeEffect {
   public static final PacketCodec<RegistryByteBuf, ToutoshiEffectsConsumeEffect> PACKET_CODEC = PacketCodec.unit(
       new ToutoshiEffectsConsumeEffect());
 
-  private static final HcVal.Int OSHI_PROTECTION_DURATION = OshiProtectionEffect.HC_OSHI_PROTECTION
+  private static final HcVal.Int OSHI_PROTECTION_DURATION = ModConfig.OSHI_PROTECTION
       .getInt("duration", 2 * 20).nonnegative();
-  private static final HcVal.Int OSHI_SECRET_PROTECTION_DURATION = OshiProtectionEffect.HC_OSHI_PROTECTION
+  private static final HcVal.Int OSHI_SECRET_PROTECTION_DURATION = ModConfig.OSHI_PROTECTION
       .getInt("secretDuration", 10 * 20)
       .nonnegative();
 
