@@ -25,7 +25,7 @@ public class RurinoNesoEntity extends NesoEntity {
   private final NesoConfig.Rurino config;
   private final Timer checkBoxTimer;
   private boolean isInBox = false;
-  private boolean isWithMegu = false;
+  private float chargeBoost = 0;
 
   public RurinoNesoEntity(EntityType<? extends LivingEntity> type, World world, NesoSize size) {
     super(type, world, CharaUtils.RURINO_KEY, size);
@@ -39,17 +39,20 @@ public class RurinoNesoEntity extends NesoEntity {
     HashSet<BlockPos> visited = new HashSet<>();
     int boxSize = 0;
     queue.add(pos);
-    isWithMegu = false;
+    float meguChargeBoost = 0;
     World world = getWorld();
     while (!queue.isEmpty()) {
       BlockPos current = queue.poll();
       if (++boxSize > config.maxBoxSize())
         break;
       Box box = new Box(current);
-      if (world
+      var meguOptional = world
           .getEntitiesByClass(NesoEntity.class, box, e -> e.getCharaKey() == CharaUtils.MEGUMI_KEY)
-          .stream().findFirst().isPresent()) {
-        isWithMegu = true;
+          .stream().findFirst();
+      if (meguOptional.isPresent()) {
+        var megu = meguOptional.get();
+        meguChargeBoost = Math.max(meguChargeBoost,
+            NesoConfig.getConfig(NesoConfig.Megumi.class, megu.getCharaKey(), megu.getNesoSize()).rurinoChargeBoost());
       }
 
       for (BlockPos delta : MathUtils.NEIGHBORS) {
@@ -65,10 +68,11 @@ public class RurinoNesoEntity extends NesoEntity {
     }
     if (boxSize > config.maxBoxSize()) {
       isInBox = false;
-      isWithMegu = false;
+      meguChargeBoost = 0;
     } else {
       isInBox = true;
     }
+    chargeBoost = meguChargeBoost;
   }
 
   private void charge(long amount) {
@@ -92,9 +96,7 @@ public class RurinoNesoEntity extends NesoEntity {
     if (isInBox) {
       amount += config.energyChargeInBoxPerTick();
     }
-    if (isWithMegu) {
-      amount += amount * config.energyBoostByMeguPerTick();
-    }
+    amount *= (1 + chargeBoost);
     charge(amount);
   }
 

@@ -86,4 +86,9 @@ public class KahoNesoItem extends NesoItem {
     return true;
   }
 
+  @Override
+  public NesoConfig.Kaho getConfig() {
+    return config;
+  }
+
 }

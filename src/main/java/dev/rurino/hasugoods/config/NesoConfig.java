@@ -178,7 +178,6 @@ public class NesoConfig {
     private final long energyPerAction;
     private final int maxBoxSize;
     private final long energyChargeInBoxPerTick;
-    private final float energyBoostByMeguPerTick;
     private final float useCooldown;
 
     public Rurino(NesoSize size) {
@@ -190,7 +189,6 @@ public class NesoConfig {
           energyPerAction = RURINO_SMALL.getLong("energyPerAction", 16_000).val();
           maxBoxSize = RURINO_SMALL.getInt("maxBoxSize", 3 * 3 * 3).val();
           energyChargeInBoxPerTick = RURINO_SMALL.getLong("energyChargeInBoxPerTick", 128).val();
-          energyBoostByMeguPerTick = RURINO_SMALL.getFloat("energyBoostByMeguPerTick", 4f).val();
           useCooldown = RURINO_SMALL.getFloat("useCooldown", 1f).val();
           break;
         case MEDIUM:
@@ -199,7 +197,6 @@ public class NesoConfig {
           energyPerAction = RURINO_MEDIUM.getLong("energyPerAction", 128_000).val();
           maxBoxSize = RURINO_MEDIUM.getInt("maxBoxSize", 4 * 4 * 4).val();
           energyChargeInBoxPerTick = RURINO_MEDIUM.getLong("energyChargeInBoxPerTick", 512).val();
-          energyBoostByMeguPerTick = RURINO_MEDIUM.getFloat("energyBoostByMeguPerTick", 4f).val();
           useCooldown = RURINO_MEDIUM.getFloat("useCooldown", 1f).val();
           break;
         case LARGE:
@@ -208,7 +205,6 @@ public class NesoConfig {
           energyPerAction = RURINO_LARGE.getLong("energyPerAction", 1_000_000).val();
           maxBoxSize = RURINO_LARGE.getInt("maxBoxSize", 5 * 5 * 5).val();
           energyChargeInBoxPerTick = RURINO_LARGE.getLong("energyChargeInBoxPerTick", 2048).val();
-          energyBoostByMeguPerTick = RURINO_LARGE.getFloat("energyBoostByMeguPerTick", 8f).val();
           useCooldown = RURINO_LARGE.getFloat("useCooldown", 1f).val();
           break;
         default:
@@ -239,10 +235,6 @@ public class NesoConfig {
       return energyChargeInBoxPerTick;
     }
 
-    public float energyBoostByMeguPerTick() {
-      return energyBoostByMeguPerTick;
-    }
-
     @Override
     public float useCooldown() {
       return useCooldown;
@@ -250,6 +242,49 @@ public class NesoConfig {
 
     public long chargeAmount(long prev, long amount) {
       return Math.min(amount, maxEnergy - prev);
+    }
+  }
+
+  public static class Megumi extends Base {
+    private final long energyPerAction;
+    private final float useCooldown;
+    private final float rurinoChargeBoost;
+
+    public Megumi(NesoSize size) {
+      super(size);
+      switch (size) {
+        case SMALL:
+          energyPerAction = MEGUMI_SMALL.getLong("energyPerAction", 1000).val();
+          useCooldown = MEGUMI_SMALL.getFloat("useCooldown", 1f).val();
+          rurinoChargeBoost = MEGUMI_SMALL.getFloat("rurinoChargeBoost", 3f).val();
+          break;
+        case MEDIUM:
+          energyPerAction = MEGUMI_MEDIUM.getLong("energyPerAction", 2000).val();
+          useCooldown = MEGUMI_MEDIUM.getFloat("useCooldown", 1f).val();
+          rurinoChargeBoost = MEGUMI_MEDIUM.getFloat("rurinoChargeBoost", 3f).val();
+          break;
+        case LARGE:
+          energyPerAction = MEGUMI_LARGE.getLong("energyPerAction", 4000).val();
+          useCooldown = MEGUMI_LARGE.getFloat("useCooldown", 1f).val();
+          rurinoChargeBoost = MEGUMI_LARGE.getFloat("rurinoChargeBoost", 7f).val();
+          break;
+        default:
+          throw new IllegalArgumentException("Unknown NesoSize: " + size);
+      }
+    }
+
+    @Override
+    public long energyPerAction() {
+      return energyPerAction;
+    }
+
+    @Override
+    public float useCooldown() {
+      return useCooldown;
+    }
+
+    public float rurinoChargeBoost() {
+      return rurinoChargeBoost;
     }
   }
   // #endregion Config impls
@@ -282,7 +317,7 @@ public class NesoConfig {
   static {
     for (NesoSize size : NesoSize.values()) {
       registerConfig(CharaUtils.RURINO_KEY, size, new Rurino(size));
-      registerConfig(CharaUtils.MEGUMI_KEY, size, new Placeholder(size));
+      registerConfig(CharaUtils.MEGUMI_KEY, size, new Megumi(size));
       registerConfig(CharaUtils.HIME_KEY, size, new Placeholder(size));
       registerConfig(CharaUtils.KAHO_KEY, size, new Kaho(size));
       registerConfig(CharaUtils.GINKO_KEY, size, new Placeholder(size));

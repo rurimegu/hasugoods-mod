@@ -39,4 +39,9 @@ public class RurinoNesoItem extends NesoItem {
     return ActionResult.SUCCESS;
   }
 
+  @Override
+  public NesoConfig.Rurino getConfig() {
+    return config;
+  }
+
 }

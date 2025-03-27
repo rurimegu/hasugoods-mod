@@ -140,6 +140,10 @@ public class NesoItem extends CharaItem implements SimpleEnergyItem {
     return type.get();
   }
 
+  public NesoConfig.Base getConfig() {
+    return config;
+  }
+
   // #region GUI
 
   @Override
