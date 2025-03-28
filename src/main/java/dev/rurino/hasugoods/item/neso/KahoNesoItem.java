@@ -29,7 +29,7 @@ public class KahoNesoItem extends NesoItem {
     if (world.isClient) {
       return ActionResult.PASS;
     }
-    if (!user.getActiveItem().isEmpty()) {
+    if (!user.getActiveItem().isEmpty() || hand != Hand.MAIN_HAND) {
       return ActionResult.PASS;
     }
     ItemStack stack = user.getStackInHand(hand);

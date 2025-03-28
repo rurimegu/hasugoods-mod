@@ -1,10 +1,10 @@
 package dev.rurino.hasugoods.component;
 
-import org.ladysnake.cca.api.v3.component.Component;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 
 import net.minecraft.item.ItemStack;
 
-public interface INesoComponent extends Component {
+public interface INesoComponent extends AutoSyncedComponent {
   long getStoredEnergy();
 
   void setStoredEnergy(long energyStored);

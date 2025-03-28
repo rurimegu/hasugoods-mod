@@ -1,5 +1,7 @@
 package dev.rurino.hasugoods.util;
 
+import dev.rurino.hasugoods.Hasugoods;
+import dev.rurino.hasugoods.item.neso.NesoItem;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -43,4 +45,18 @@ public class ItemStackUtils {
   public static int getItemBarStep(float progress) {
     return MathHelper.clamp(Math.round(progress * MAX_ITEM_BAR_STEPS), 0, MAX_ITEM_BAR_STEPS);
   }
+
+  public static long transferEnergy(ItemStack source, ItemStack target, long amount) {
+    NesoItem sourceNeso = (NesoItem) source.getItem();
+    NesoItem targetNeso = (NesoItem) target.getItem();
+    long maxEnergyTransfer = Math.min(amount, sourceNeso.getStoredEnergy(source));
+    long energyTransferred = targetNeso.chargeEnergy(target, maxEnergyTransfer);
+    long energyExtracted = sourceNeso.extractEnergy(source, energyTransferred);
+    if (energyExtracted != energyTransferred) {
+      Hasugoods.LOGGER.warn("Tranferred energy does not match: charged {}, extracted {}",
+          energyTransferred, energyExtracted);
+    }
+    return energyTransferred;
+  }
+
 }

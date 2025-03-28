@@ -251,14 +251,29 @@ public class NesoItem extends CharaItem implements SimpleEnergyItem {
     return 0;
   }
 
-  public void chargeEnergy(ItemStack stack, long amount) {
+  public long chargeEnergy(ItemStack stack, long amount) {
     if (amount > 0) {
       long stored = getStoredEnergy(stack);
       long capacity = getEnergyCapacity(stack);
-      if (stored < capacity) {
-        setStoredEnergy(stack, Math.min(stored + amount, capacity));
+      amount = Math.min(amount, capacity - stored);
+      if (amount > 0) {
+        setStoredEnergy(stack, stored + amount);
+        return amount;
       }
     }
+    return 0;
+  }
+
+  public long extractEnergy(ItemStack stack, long amount) {
+    if (amount > 0) {
+      long stored = getStoredEnergy(stack);
+      amount = Math.min(amount, stored);
+      if (amount > 0) {
+        setStoredEnergy(stack, stored - amount);
+        return amount;
+      }
+    }
+    return 0;
   }
 
   public void setFullEnergy(ItemStack stack) {

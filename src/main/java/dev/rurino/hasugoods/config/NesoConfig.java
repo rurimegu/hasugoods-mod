@@ -88,6 +88,7 @@ public class NesoConfig {
   public static class Placeholder extends Base {
     public Placeholder(NesoSize size) {
       super(size);
+      Hasugoods.LOGGER.warn("Config for {} not implemented, using placeholder values", nesoKey(size.name(), size));
     }
 
     @Override
