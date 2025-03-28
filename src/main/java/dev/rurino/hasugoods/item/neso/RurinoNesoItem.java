@@ -39,7 +39,7 @@ public class RurinoNesoItem extends NesoItem {
         || getStoredEnergy(stack) <= 0) {
       return;
     }
-    InventoryUtils.getHotbarStacks(playerEntity)
+    InventoryUtils.getHotbarStacks(playerEntity, true)
         .filter(s -> s.getItem() instanceof NesoItem nesoItem && !nesoItem.getCharaKey().equals(getCharaKey()))
         .forEach(s -> ItemStackUtils.transferEnergy(stack, s, config.energyTransferPerTick()));
   }

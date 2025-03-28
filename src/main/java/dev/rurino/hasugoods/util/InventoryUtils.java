@@ -12,9 +12,14 @@ public class InventoryUtils {
     return slot >= 0 && slot < 9;
   }
 
-  public static Stream<ItemStack> getHotbarStacks(PlayerEntity entity) {
-    return IntStream.range(0, PlayerInventory.getHotbarSize())
-        .mapToObj(entity.getInventory()::getStack)
+  public static Stream<ItemStack> getHotbarStacks(PlayerEntity entity, boolean includeOffhand) {
+    return Stream.concat(IntStream.range(0, PlayerInventory.getHotbarSize())
+        .mapToObj(entity.getInventory()::getStack),
+        includeOffhand ? Stream.of(entity.getOffHandStack()) : Stream.empty())
         .filter(stack -> !stack.isEmpty());
+  }
+
+  public static Stream<ItemStack> getHotbarStacks(PlayerEntity entity) {
+    return getHotbarStacks(entity, false);
   }
 }
