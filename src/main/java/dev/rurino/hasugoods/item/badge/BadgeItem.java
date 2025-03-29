@@ -16,7 +16,6 @@ import dev.rurino.hasugoods.item.ModItems;
 import dev.rurino.hasugoods.item.CharaItem;
 import dev.rurino.hasugoods.util.CharaUtils;
 import dev.rurino.hasugoods.util.config.HcVal;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.minecraft.component.DataComponentTypes;
@@ -142,15 +141,6 @@ public class BadgeItem extends CharaItem {
       badgeItems.add(registerBadge(charaKey, false));
       badgeItems.add(registerBadge(charaKey, true));
     }
-
-    // Add the badge to the badge item group
-    ItemGroupEvents.modifyEntriesEvent(ModItems.HASU_ITEM_GROUP_KEY).register(itemGroup -> {
-      for (Item badgeItem : badgeItems) {
-        itemGroup.add(badgeItem);
-      }
-      itemGroup.add(UNOPENED_BADGE);
-      itemGroup.add(BOX_OF_BADGE);
-    });
 
     // Modify loot tables to include the badges
     LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {

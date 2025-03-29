@@ -1,5 +1,7 @@
 package dev.rurino.hasugoods.block;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 import dev.rurino.hasugoods.Hasugoods;
@@ -21,6 +23,8 @@ import net.minecraft.util.Rarity;
 
 public class ModBlocks {
 
+  private static final List<BlockItem> ALL_BLOCKS_ITEMS = new ArrayList<>();
+
   public static Block register(String name, Function<AbstractBlock.Settings, Block> blockFactory,
       AbstractBlock.Settings settings, Settings itemSettings) {
     RegistryKey<Block> blockKey = RegistryKey.of(RegistryKeys.BLOCK, Hasugoods.id(name));
@@ -31,7 +35,7 @@ public class ModBlocks {
       Hasugoods.LOGGER.info("Register block item: {}", itemKey.getValue());
 
       BlockItem blockItem = new BlockItem(block, itemSettings.registryKey(itemKey));
-      Registry.register(Registries.ITEM, itemKey, blockItem);
+      ALL_BLOCKS_ITEMS.add(Registry.register(Registries.ITEM, itemKey, blockItem));
     }
 
     Hasugoods.LOGGER.info("Register block: {}", blockKey.getValue());
@@ -62,8 +66,7 @@ public class ModBlocks {
     PositionZeroBlock.initialize();
 
     ItemGroupEvents.modifyEntriesEvent(ModItems.HASU_ITEM_GROUP_KEY).register((itemGroup) -> {
-      itemGroup.add(NESO_BASE_BLOCK.asItem());
-      itemGroup.add(POSITION_ZERO_BLOCK.asItem());
+      ALL_BLOCKS_ITEMS.forEach(itemGroup::add);
     });
   }
 }

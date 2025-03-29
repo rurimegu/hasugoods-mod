@@ -1,10 +1,14 @@
 package dev.rurino.hasugoods.item;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.item.badge.BadgeItem;
 import dev.rurino.hasugoods.item.neso.NesoItem;
 import dev.rurino.hasugoods.util.CharaUtils;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -23,6 +27,8 @@ public class ModItems {
       .displayName(Text.translatable("itemGroup.hasugoods"))
       .build();
 
+  private static final List<Item> ALL_ITEMS_IN_GROUP = new ArrayList<>();
+
   public static final TagKey<Item> TAG_REGULAR_BADGES = TagKey.of(RegistryKeys.ITEM, Hasugoods.id("regular_badges"));
   public static final TagKey<Item> TAG_SECRET_BADGES = TagKey.of(RegistryKeys.ITEM, Hasugoods.id("secret_badges"));
   public static final TagKey<Item> TAG_SMALL_NESOS = TagKey.of(RegistryKeys.ITEM, Hasugoods.id("small_nesos"));
@@ -30,15 +36,25 @@ public class ModItems {
   public static final TagKey<Item> TAG_LARGE_NESOS = TagKey.of(RegistryKeys.ITEM, Hasugoods.id("large_nesos"));
   public static final TagKey<Item> TAG_NESOS = TagKey.of(RegistryKeys.ITEM, Hasugoods.id("nesos"));
 
-  public static Item register(RegistryKey<Item> registryKey, Item item) {
+  public static Item register(RegistryKey<Item> registryKey, Item item, boolean registerInGroup) {
     Hasugoods.LOGGER.info("Register item: " + registryKey.getValue());
     Item registeredItem = Registry.register(Registries.ITEM, registryKey.getValue(), item);
+    if (registerInGroup) {
+      ALL_ITEMS_IN_GROUP.add(registeredItem);
+    }
     return registeredItem;
+  }
+
+  public static Item register(RegistryKey<Item> registryKey, Item item) {
+    return register(registryKey, item, true);
   }
 
   public static void initialize() {
     Registry.register(Registries.ITEM_GROUP, HASU_ITEM_GROUP_KEY, HASU_ITEM_GROUP);
     BadgeItem.initialize();
     NesoItem.initialize();
+    ItemGroupEvents.modifyEntriesEvent(ModItems.HASU_ITEM_GROUP_KEY).register(itemGroup -> {
+      ALL_ITEMS_IN_GROUP.forEach(itemGroup::add);
+    });
   }
 }

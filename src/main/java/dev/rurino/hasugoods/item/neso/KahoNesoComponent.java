@@ -60,6 +60,9 @@ public class KahoNesoComponent {
       Blocks.ROSE_BUSH,
       Blocks.PEONY);
 
+  private static final List<Block> NONREPLACEABLE_BLOCKS = List.of(
+      Blocks.BEDROCK);
+
   public static final KahoNesoComponent EMPTY = new KahoNesoComponent();
 
   public static final Codec<KahoNesoComponent> CODEC = RecordCodecBuilder.create(builder -> {
@@ -119,7 +122,8 @@ public class KahoNesoComponent {
   }
 
   private static boolean validForReplace(World world, BlockState state, BlockPos pos) {
-    return state.isSolidBlock(world, pos) && !state.hasBlockEntity();
+    return state.isSolidBlock(world, pos) && !state.hasBlockEntity()
+        && !NONREPLACEABLE_BLOCKS.contains(state.getBlock());
   }
 
   public static KahoNesoComponent fromPlayerPos(TickContext context, BlockPos pos) {
