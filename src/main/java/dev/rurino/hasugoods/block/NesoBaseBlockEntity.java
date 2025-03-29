@@ -2,7 +2,6 @@ package dev.rurino.hasugoods.block;
 
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.config.NesoConfig;
-import dev.rurino.hasugoods.item.neso.NesoItem;
 import dev.rurino.hasugoods.util.Timer;
 import dev.rurino.hasugoods.util.config.HcVal;
 import net.minecraft.block.BlockState;
@@ -49,9 +48,11 @@ public class NesoBaseBlockEntity extends AbstractNesoBaseBlockEntity {
   @Override
   protected ParticleState getParticleState() {
     if (getItemStack().isEmpty())
-      return ParticleState.RANDOM;
+      return super.getParticleState();
     return ParticleState.SPIRAL;
   }
+
+  // #region Ticking
 
   private void syncPos0() {
     if (getPos0() != null) {
@@ -65,17 +66,19 @@ public class NesoBaseBlockEntity extends AbstractNesoBaseBlockEntity {
   }
 
   @Override
+  protected long chargeAmountPerTick(World world, BlockPos blockPos, BlockState blockState) {
+    return CHARGE_AMOUNT_PER_TICK.val();
+  }
+
+  @Override
   protected void tick(World world, BlockPos blockPos, BlockState blockState) {
     super.tick(world, blockPos, blockState);
     if (!world.isClient) {
-      if (getItemStack().getItem() instanceof NesoItem item) {
-        item.chargeEnergy(getItemStack(), CHARGE_AMOUNT_PER_TICK.val());
-        markDirty();
-        sync();
-      }
       timer.tick();
     }
   }
+
+  // #endregion Ticking
 
   // #region Serialization
 

@@ -56,7 +56,7 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
   @Override
   protected ParticleState getParticleState() {
     if (getItemStack().isEmpty())
-      return ParticleState.RANDOM;
+      return super.getParticleState();
     return ParticleState.WAVE;
   }
 
@@ -272,15 +272,10 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
     NesoBaseState[] ret = new NesoBaseState[n];
     // Center item
     ItemStack centerItemStack = getItemStack();
-    if (centerItemStack.isEmpty()) {
-      Arrays.fill(ret, NesoBaseState.NONE);
-      return ret;
-    }
-    if (!(centerItemStack.getItem() instanceof NesoItem centerNesoItem)) {
-      Arrays.fill(ret, NesoBaseState.NONE);
-      return ret;
-    }
-    if (centerNesoItem.getNesoSize() != NesoSize.MEDIUM) {
+    if (centerItemStack.isEmpty()
+        || !(centerItemStack.getItem() instanceof NesoItem centerNesoItem)
+        || centerNesoItem.getNesoSize() != NesoSize.MEDIUM
+        || !isTopAir()) {
       Arrays.fill(ret, NesoBaseState.NONE);
       return ret;
     }
@@ -291,12 +286,9 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
     String[] nodes = new String[n + 1];
     nodes[n] = centerNesoItem.getCharaKey();
     for (int i = 0; i < n; i++) {
-      ItemStack itemStack = nesobases[i].getItemStack();
-      if (itemStack.isEmpty()) {
-        ret[i] = NesoBaseState.NONE;
-        continue;
-      }
-      if (!(itemStack.getItem() instanceof NesoItem nesoItem)) {
+      var nesobase = nesobases[i];
+      ItemStack itemStack = nesobase.getItemStack();
+      if (itemStack.isEmpty() || !(itemStack.getItem() instanceof NesoItem nesoItem) || !nesobase.isTopAir()) {
         ret[i] = NesoBaseState.NONE;
         continue;
       }
@@ -360,7 +352,6 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
       Hasugoods.LOGGER.info("Position zero {}: Linked nesobases", pos);
       this.linkedNesoBases = true;
       markDirty();
-      sync();
     }
 
     boolean shouldMerge = Arrays.stream(checkNesoBaseState(nesobases)).allMatch(s -> s == NesoBaseState.OK);
@@ -405,17 +396,19 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
   }
 
   // #endregion Particles
+
+  // #region Ticking
   private int curTick = 0;
+
+  @Override
+  protected long chargeAmountPerTick(World world, BlockPos blockPos, BlockState blockState) {
+    return CHARGE_AMOUNT_PER_TICK.val();
+  }
 
   @Override
   protected void tick(World world, BlockPos blockPos, BlockState blockState) {
     super.tick(world, blockPos, blockState);
     if (!world.isClient) {
-      if (getItemStack().getItem() instanceof NesoItem item) {
-        item.chargeEnergy(getItemStack(), CHARGE_AMOUNT_PER_TICK.val());
-        markDirty();
-        sync();
-      }
       if (isPlayingMergeAnim()) {
         mergeAnimTimer.tick();
       }
@@ -430,6 +423,8 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
     super.clientTick(world, blockPos, blockState);
     lineParticleEmitter.tick(world, blockPos);
   }
+
+  // #endregion Ticking
 
   // #region Serialization
 

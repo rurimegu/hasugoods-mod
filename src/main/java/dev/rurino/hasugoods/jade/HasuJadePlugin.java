@@ -1,7 +1,7 @@
 package dev.rurino.hasugoods.jade;
 
 import dev.rurino.hasugoods.Hasugoods;
-import dev.rurino.hasugoods.block.AbstractNesoBaseBlock;
+import dev.rurino.hasugoods.block.AbstractNesoBaseBlockEntity;
 import dev.rurino.hasugoods.entity.NesoEntity;
 import net.minecraft.util.Identifier;
 import snownee.jade.api.IWailaClientRegistration;
@@ -17,11 +17,13 @@ public class HasuJadePlugin implements IWailaPlugin {
 
   @Override
   public void register(IWailaCommonRegistration registration) {
+    registration.registerEnergyStorage(AbstractNesoBaseBlockEnergyProvider.INSTANCE, AbstractNesoBaseBlockEntity.class);
+    registration.registerEnergyStorage(NesoEntityEnergyProvider.INSTANCE, NesoEntity.class);
   }
 
   @Override
   public void registerClient(IWailaClientRegistration registration) {
-    registration.registerBlockComponent(new AbstractNesoBaseBlockProvider(), AbstractNesoBaseBlock.class);
-    registration.registerEntityComponent(new NesoEntityProvider(), NesoEntity.class);
+    registration.registerEnergyStorageClient(AbstractNesoBaseBlockEnergyProvider.INSTANCE);
+    registration.registerEnergyStorageClient(NesoEntityEnergyProvider.INSTANCE);
   }
 }

@@ -21,6 +21,8 @@ import dev.rurino.hasugoods.util.animation.Animation.LoopType;
 import dev.rurino.hasugoods.util.animation.Interpolator;
 import dev.rurino.hasugoods.util.animation.KeyFrame;
 import dev.rurino.hasugoods.util.animation.StateMachine;
+import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -32,10 +34,13 @@ import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.RegistryWrapper.WrapperLookup;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+import team.reborn.energy.api.EnergyStorage;
 
 public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements IWithStateMachine {
   // #region Static members
@@ -52,6 +57,7 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
       0xFF0000);
 
   protected static enum ParticleState {
+    NONE,
     RANDOM,
     SPIRAL,
     WAVE
@@ -63,6 +69,7 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
     if (world.isClient) {
       entity.clientTick(world, blockPos, blockState);
     }
+    entity.maybeSync();
   }
 
   // #endregion Static members
@@ -140,10 +147,14 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
   }
   // #endregion Animation
 
+  // #region Constructor
+
   public AbstractNesoBaseBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
     super(type, pos, state);
     stateMachine = STATE_MACHINE.copy();
   }
+
+  // #endregion Constructor
 
   // #region Item stack
 
@@ -239,20 +250,71 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
       case SPIRAL -> spiralEmitter;
       case WAVE -> waveEmitter;
       case RANDOM -> randomEmitter;
+      default -> null;
     };
   }
 
-  abstract protected ParticleState getParticleState();
+  protected ParticleState getParticleState() {
+    return isTopAir() ? ParticleState.RANDOM : ParticleState.NONE;
+  }
 
   // #endregion Particles
 
+  // #region Ticking
+
+  private boolean shouldSync = false;
+  private BlockApiCache<EnergyStorage, Direction> energyStorageAbove = null;
+
+  @Override
+  public void markDirty() {
+    super.markDirty();
+    shouldSync = true;
+  }
+
+  protected void maybeSync() {
+    if (shouldSync) {
+      sync();
+      shouldSync = false;
+    }
+  }
+
   protected void clientTick(World world, BlockPos blockPos, BlockState blockState) {
     stateMachine.tick();
-    getParticleEmitter().tick(world, blockPos);
+    var emitter = getParticleEmitter();
+    if (emitter != null)
+      emitter.tick(world, blockPos);
+  }
+
+  protected long chargeAmountPerTick(World world, BlockPos blockPos, BlockState blockState) {
+    return 0;
   }
 
   protected void tick(World world, BlockPos blockPos, BlockState blockState) {
+    if (!world.isClient) {
+      if (energyStorageAbove == null) {
+        energyStorageAbove = BlockApiCache.create(
+            EnergyStorage.SIDED, (ServerWorld) world, pos.offset(Direction.UP));
+      }
+      if (isTopAir()) {
+        if (getItemStack().getItem() instanceof NesoItem item) {
+          item.chargeEnergy(getItemStack(), chargeAmountPerTick(world, blockPos, blockState));
+          markDirty();
+        }
+      } else {
+        EnergyStorage storage = energyStorageAbove.find(Direction.DOWN);
+        if (storage != null && storage.supportsInsertion()) {
+          try (Transaction transaction = Transaction.openOuter()) {
+            storage.insert(
+                chargeAmountPerTick(world, blockPos, blockState),
+                transaction);
+            transaction.commit();
+          }
+        }
+      }
+    }
   }
+
+  // #endregion Ticking
 
   // #region Serialization
 

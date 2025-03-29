@@ -169,16 +169,12 @@ public class NesoItem extends CharaItem implements SimpleEnergyItem {
     return ItemStackUtils.getItemBarStep((float) getStoredEnergy(stack) / capacity);
   }
 
-  public Text getTooltip(ItemStack stack) {
-    long stored = getStoredEnergy(stack);
-    long capacity = getEnergyCapacity(stack);
-    return HasuString.formatEnergyTooltip(stored, capacity);
-  }
-
   @Override
   public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
     super.appendTooltip(stack, context, tooltip, type);
-    tooltip.add(getTooltip(stack));
+    long stored = getStoredEnergy(stack);
+    long capacity = getEnergyCapacity(stack);
+    tooltip.add(HasuString.formatEnergyTooltip(stored, capacity));
   }
 
   // #endregion GUI
