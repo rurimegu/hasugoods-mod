@@ -168,7 +168,7 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
     }
     for (NesoBaseBlockEntity e : nesobases) {
       if (pos.equals(e.getPos0())) {
-        e.setPos0(null);
+        e.resetPos0();
       } else {
         Hasugoods.LOGGER.warn("Position zero {}: Cannot unlink nesobase {} with invalid pos0 {}", pos, e.getPos(),
             e.getPos0());
@@ -344,7 +344,7 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
     }
     for (NesoBaseBlockEntity e : nesobases) {
       if (e.getPos0() == null) {
-        e.setPos0(pos);
+        e.setPos0(world, this);
       }
     }
 

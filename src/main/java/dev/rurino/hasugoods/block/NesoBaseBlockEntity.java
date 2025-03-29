@@ -27,8 +27,22 @@ public class NesoBaseBlockEntity extends AbstractNesoBaseBlockEntity {
     super(ModBlockEntities.NESO_BASE_BLOCK_ENTITY_TYPE, pos, state);
   }
 
-  public void setPos0(BlockPos pos0) {
-    this.pos0 = pos0;
+  protected void setPos0(World world, PositionZeroBlockEntity pos0) {
+    if (pos0 == null) {
+      Hasugoods.LOGGER.warn("{}: Pos0 is set to null, should use resetPos0() instead.", pos);
+      return;
+    }
+    this.pos0 = pos0.getPos();
+    world.setBlockState(pos,
+        getCachedState().with(
+            AbstractNesoBaseBlock.FACING, pos0.getCachedState().get(AbstractNesoBaseBlock.FACING)));
+    this.unlockItemStack();
+    this.markDirty();
+    this.sync();
+  }
+
+  protected void resetPos0() {
+    this.pos0 = null;
     this.unlockItemStack();
     this.markDirty();
     this.sync();
@@ -59,7 +73,7 @@ public class NesoBaseBlockEntity extends AbstractNesoBaseBlockEntity {
       PositionZeroBlockEntity pos0BlockEntity = getPos0BlockEntity();
       if (pos0BlockEntity == null) {
         Hasugoods.LOGGER.warn("Neso base {}: Pos0 block entity not found at {}, disconnceted", pos, getPos0());
-        setPos0(null);
+        resetPos0();
       }
       return;
     }
