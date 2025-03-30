@@ -53,6 +53,14 @@ public class CharaUtils {
     return CHARA_COLOR_MAP.getOrDefault(charaKey, DEFAULT_CHARA_COLOR);
   }
 
+  public static interface IWithChara {
+    String getCharaKey();
+
+    default Text getCharaDisplayName() {
+      return CharaUtils.getCharaDisplayName(getCharaKey());
+    }
+  }
+
   // #region Groups
 
   public static enum HasuUnit {

@@ -4,8 +4,7 @@ import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 
-import dev.rurino.hasugoods.config.NesoConfig;
-import dev.rurino.hasugoods.entity.NesoEntity;
+import dev.rurino.hasugoods.entity.INesoEntity;
 import dev.rurino.hasugoods.util.HasuString;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -33,10 +32,10 @@ class NesoEntityEnergyProvider
 
   @Override
   public @Nullable List<ViewGroup<Data>> getGroups(Accessor<?> accessor) {
-    if (!(accessor.getTarget() instanceof NesoEntity nesoEntity)) {
+    if (!(accessor.getTarget() instanceof INesoEntity nesoEntity)) {
       return null;
     }
-    long capacity = NesoConfig.getConfig(nesoEntity.getCharaKey(), nesoEntity.getNesoSize()).maxEnergy();
+    long capacity = nesoEntity.getConfig().maxEnergy();
     long energy = nesoEntity.getStoredEnergy();
     return List.of(HasuString.createEnergyView(energy, capacity));
   }

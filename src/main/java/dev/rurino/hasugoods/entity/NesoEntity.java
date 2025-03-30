@@ -9,11 +9,11 @@ import java.util.function.Consumer;
 
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.component.ModComponents;
+import dev.rurino.hasugoods.config.NesoConfig;
 import dev.rurino.hasugoods.item.neso.NesoItem;
 import dev.rurino.hasugoods.util.CharaUtils;
 import dev.rurino.hasugoods.util.CharaUtils.NesoSize;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -28,14 +28,13 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class NesoEntity extends LivingEntity {
+public class NesoEntity extends LivingEntity implements INesoEntity {
   // #region Static fields
   protected static record NesoEntityEntry(RegistryKey<EntityType<?>> key, EntityType<NesoEntity> entity) {
   }
@@ -124,7 +123,7 @@ public class NesoEntity extends LivingEntity {
     return entity;
   }
 
-  public static void Initialize() {
+  public static void initialize() {
     for (NesoItem neso : NesoItem.getAllNesos()) {
       registerNeso(neso.getCharaKey(), neso.getNesoSize());
     }
@@ -190,14 +189,21 @@ public class NesoEntity extends LivingEntity {
     return 0f;
   }
 
+  @Override
   public String getCharaKey() {
     return charaKey;
   }
 
+  @Override
   public NesoSize getNesoSize() {
     return nesoSize;
   }
 
+  public NesoConfig.Base getConfig() {
+    return NesoConfig.getConfig(NesoConfig.Base.class, charaKey, nesoSize);
+  }
+
+  @Override
   public long getStoredEnergy() {
     var nesoComponentOptional = ModComponents.NESO.maybeGet(this);
     if (nesoComponentOptional.isPresent()) {
@@ -206,29 +212,5 @@ public class NesoEntity extends LivingEntity {
       Hasugoods.LOGGER.warn("NesoComponent not found for NesoEntity: {}", this);
       return 0;
     }
-  }
-
-  public NesoItem getNesoItem() {
-    Optional<NesoItem> item = NesoItem.getNesoItem(charaKey, nesoSize);
-    if (item.isEmpty()) {
-      Hasugoods.LOGGER.error("NesoItem not found: {} {}", charaKey, nesoSize);
-    }
-    return item.get();
-  }
-
-  protected ItemStack convertToNesoItemStack() {
-    ItemStack stack = new ItemStack(getNesoItem());
-    // Set custom name
-    Text text = this.getCustomName();
-    if (text != null) {
-      stack.set(DataComponentTypes.CUSTOM_NAME, text);
-    }
-    var nesoComponentOptional = ModComponents.NESO.maybeGet(this);
-    if (nesoComponentOptional.isPresent()) {
-      nesoComponentOptional.get().apply(stack);
-    } else {
-      Hasugoods.LOGGER.warn("NesoComponent not found for NesoEntity: {}", this);
-    }
-    return stack;
   }
 }

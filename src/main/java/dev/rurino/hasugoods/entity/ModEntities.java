@@ -15,6 +15,6 @@ public class ModEntities {
   }
 
   public static void initialize() {
-    NesoEntity.Initialize();
+    NesoEntity.initialize();
   }
 }
