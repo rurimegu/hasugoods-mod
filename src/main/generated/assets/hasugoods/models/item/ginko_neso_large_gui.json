@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "hasugoods:item/ginko_badge",
+    "layer1": "hasugoods:item/neso/large"
+  }
+}

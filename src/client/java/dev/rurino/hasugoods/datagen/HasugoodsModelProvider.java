@@ -21,6 +21,7 @@ import net.minecraft.client.data.ModelSupplier;
 import net.minecraft.client.data.Models;
 import net.minecraft.client.render.item.model.ItemModel;
 import net.minecraft.client.render.item.property.bool.CustomModelDataFlagProperty;
+import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 
 public class HasugoodsModelProvider extends FabricModelProvider {
@@ -106,6 +107,37 @@ public class HasugoodsModelProvider extends FabricModelProvider {
     }
   }
 
+  private static class NesoGuiModelSupplier implements ModelSupplier {
+    private static final Identifier PARENT = Identifier.of("minecraft", "item/generated");
+
+    private final NesoItem item;
+
+    public NesoGuiModelSupplier(NesoItem item) {
+      this.item = item;
+    }
+
+    public JsonObject getTextures() {
+      JsonObject ret = new JsonObject();
+      Item badgeItem = BadgeItem.getBadgeItem(item.getCharaKey()).get();
+      ret.addProperty("layer0", ModelIds.getItemModelId(badgeItem).toString());
+      ret.addProperty("layer1", switch (item.getNesoSize()) {
+        case SMALL -> Hasugoods.id("item/neso/small").toString();
+        case MEDIUM -> Hasugoods.id("item/neso/medium").toString();
+        case LARGE -> Hasugoods.id("item/neso/large").toString();
+      });
+      return ret;
+    }
+
+    @Override
+    public JsonElement get() {
+      JsonObject jsonObject = new JsonObject();
+      jsonObject.addProperty("parent", PARENT.toString());
+      jsonObject.add("textures", getTextures());
+      return jsonObject;
+    }
+
+  }
+
   private static class ParticleModelSupplier implements ModelSupplier {
     private final String charaKey;
 
@@ -138,10 +170,11 @@ public class HasugoodsModelProvider extends FabricModelProvider {
     }
     for (var neso : NesoItem.getAllNesos()) {
       Identifier inhandModelId = ModelIds.getItemSubModelId(neso, "_in_hand");
-      Identifier modelId = ModelIds.getItemModelId(BadgeItem.getBadgeItem(neso.getCharaKey()).get());
+      Identifier guiModelId = ModelIds.getItemSubModelId(neso, "_gui");
       itemModelGenerator.modelCollector.accept(inhandModelId, new NesoModelSupplier(neso));
+      itemModelGenerator.modelCollector.accept(guiModelId, new NesoGuiModelSupplier(neso));
       // Register hand model
-      ItemModel.Unbaked guiModel = ItemModels.basic(modelId);
+      ItemModel.Unbaked guiModel = ItemModels.basic(guiModelId);
       ItemModel.Unbaked handModel = ItemModels.basic(inhandModelId);
       ItemModel.Unbaked model = ItemModels.condition(new CustomModelDataFlagProperty(0), handModel, guiModel);
       itemModelGenerator.output.accept(neso, ItemModelGenerator.createModelWithInHandVariant(model, handModel));

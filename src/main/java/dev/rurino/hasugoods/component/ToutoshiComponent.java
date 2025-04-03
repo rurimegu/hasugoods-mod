@@ -46,7 +46,7 @@ public class ToutoshiComponent implements IToutoshiComponent {
     if (item instanceof CharaItem) {
       toutoshiSourceItem = (CharaItem) item;
     } else {
-      Hasugoods.LOGGER.warn("Toutoshi source item is not an OshiItem: {}", item);
+      Hasugoods.LOGGER.warn("Toutoshi source item is not a CharaItem: {}", item);
       toutoshiSourceItem = null;
     }
   }

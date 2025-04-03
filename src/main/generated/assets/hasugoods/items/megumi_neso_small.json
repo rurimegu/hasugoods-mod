@@ -7,7 +7,7 @@
           "type": "minecraft:condition",
           "on_false": {
             "type": "minecraft:model",
-            "model": "hasugoods:item/megumi_badge"
+            "model": "hasugoods:item/megumi_neso_small_gui"
           },
           "on_true": {
             "type": "minecraft:model",

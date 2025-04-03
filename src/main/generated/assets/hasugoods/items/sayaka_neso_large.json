@@ -7,7 +7,7 @@
           "type": "minecraft:condition",
           "on_false": {
             "type": "minecraft:model",
-            "model": "hasugoods:item/sayaka_badge"
+            "model": "hasugoods:item/sayaka_neso_large_gui"
           },
           "on_true": {
             "type": "minecraft:model",
