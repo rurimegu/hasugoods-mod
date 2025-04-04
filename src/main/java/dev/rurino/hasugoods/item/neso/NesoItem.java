@@ -35,9 +35,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
-import team.reborn.energy.api.base.SimpleEnergyItem;
 
-public class NesoItem extends CharaItem implements SimpleEnergyItem {
+public class NesoItem extends CharaItem implements INesoItem {
   // #region Static fields
 
   protected static record NesoItemEntry(RegistryKey<Item> key, NesoItem item) {
@@ -123,15 +122,6 @@ public class NesoItem extends CharaItem implements SimpleEnergyItem {
 
   public NesoSize getNesoSize() {
     return nesoSize;
-  }
-
-  public EntityType<NesoEntity> getEntityType() {
-    String charaKey = getCharaKey();
-    Optional<EntityType<NesoEntity>> type = NesoEntity.getNesoEntityType(charaKey, nesoSize);
-    if (type.isEmpty()) {
-      Hasugoods.LOGGER.error("Neso entity type not found: {} {}", charaKey, nesoSize);
-    }
-    return type.get();
   }
 
   public NesoConfig.Base getConfig() {
@@ -239,38 +229,6 @@ public class NesoItem extends CharaItem implements SimpleEnergyItem {
   @Override
   public long getEnergyMaxOutput(ItemStack stack) {
     return 0;
-  }
-
-  public long chargeEnergy(ItemStack stack, long amount) {
-    if (amount > 0) {
-      long stored = getStoredEnergy(stack);
-      long capacity = getEnergyCapacity(stack);
-      amount = Math.min(amount, capacity - stored);
-      if (amount > 0) {
-        setStoredEnergy(stack, stored + amount);
-        return amount;
-      }
-    }
-    return 0;
-  }
-
-  public long extractEnergy(ItemStack stack, long amount) {
-    if (amount > 0) {
-      long stored = getStoredEnergy(stack);
-      amount = Math.min(amount, stored);
-      if (amount > 0) {
-        setStoredEnergy(stack, stored - amount);
-        return amount;
-      }
-    }
-    return 0;
-  }
-
-  public void setFullEnergy(ItemStack stack) {
-    long capacity = getEnergyCapacity(stack);
-    if (capacity > 0) {
-      setStoredEnergy(stack, capacity);
-    }
   }
 
   // #endregion Energy
