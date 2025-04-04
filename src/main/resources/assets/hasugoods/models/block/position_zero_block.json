@@ -3,6 +3,6 @@
   "textures": {
     "top": "hasugoods:block/position_zero_block_top",
     "side": "minecraft:block/white_concrete",
-    "front": "minecraft:block/white_concrete"
+    "front": "hasugoods:block/neso_base_block_front"
   }
 }
