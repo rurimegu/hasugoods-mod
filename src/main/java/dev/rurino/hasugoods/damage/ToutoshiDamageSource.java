@@ -1,6 +1,6 @@
 package dev.rurino.hasugoods.damage;
 
-import dev.rurino.hasugoods.item.CharaItem;
+import dev.rurino.hasugoods.util.CharaUtils.IWithChara;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageType;
@@ -28,7 +28,7 @@ public class ToutoshiDamageSource extends DamageSource {
     String string = "death.attack." + this.getType().msgId();
     LivingEntity livingEntity2 = killed.getPrimeAdversary();
     String string2 = string + ".player";
-    Text toutoshiSource = item instanceof CharaItem ? ((CharaItem) item).getCharaDisplayName() : item.getName();
+    Text toutoshiSource = item instanceof IWithChara withChara ? withChara.getCharaDisplayName() : item.getName();
     return livingEntity2 != null
         ? Text.translatable(string2, killed.getDisplayName(), toutoshiSource,
             livingEntity2.getDisplayName())

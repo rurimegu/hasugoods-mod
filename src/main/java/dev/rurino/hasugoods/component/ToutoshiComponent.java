@@ -3,7 +3,7 @@ package dev.rurino.hasugoods.component;
 import org.apache.commons.lang3.StringUtils;
 
 import dev.rurino.hasugoods.Hasugoods;
-import dev.rurino.hasugoods.item.CharaItem;
+import dev.rurino.hasugoods.util.CharaUtils.IWithChara;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NbtCompound;
@@ -43,10 +43,10 @@ public class ToutoshiComponent implements IToutoshiComponent {
     }
     RegistryKey<Item> key = RegistryKey.of(RegistryKeys.ITEM, Identifier.of(tag.getString(TOUTOSHI_SOURCE_ITEM)));
     Item item = registryLookup.getOrThrow(RegistryKeys.ITEM).getOrThrow(key).value();
-    if (item instanceof CharaItem) {
-      toutoshiSourceItem = (CharaItem) item;
+    if (item instanceof IWithChara) {
+      toutoshiSourceItem = item;
     } else {
-      Hasugoods.LOGGER.warn("Toutoshi source item is not a CharaItem: {}", item);
+      Hasugoods.LOGGER.warn("Toutoshi source item is not IWithChara: {}", item);
       toutoshiSourceItem = null;
     }
   }

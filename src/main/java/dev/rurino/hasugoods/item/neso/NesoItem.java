@@ -10,7 +10,6 @@ import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.config.NesoConfig;
 import dev.rurino.hasugoods.entity.NesoEntity;
 import dev.rurino.hasugoods.item.ModItems;
-import dev.rurino.hasugoods.item.CharaItem;
 import dev.rurino.hasugoods.util.CharaUtils.NesoSize;
 import dev.rurino.hasugoods.util.CharaUtils;
 import dev.rurino.hasugoods.util.ItemStackUtils;
@@ -36,7 +35,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 
-public class NesoItem extends CharaItem implements INesoItem {
+public class NesoItem extends Item implements INesoItem {
   // #region Static fields
 
   protected static record NesoItemEntry(RegistryKey<Item> key, NesoItem item) {
@@ -111,19 +110,28 @@ public class NesoItem extends CharaItem implements INesoItem {
       ComponentType.<KahoNesoComponent>builder().codec(KahoNesoComponent.CODEC).build());
 
   // #endregion Data component
+  private final String charaKey;
   private final NesoSize nesoSize;
   protected final NesoConfig.Base config;
 
   public NesoItem(Settings settings, String charaKey, NesoSize size) {
-    super(settings, charaKey);
+    super(settings);
+    this.charaKey = charaKey;
     this.nesoSize = size;
     this.config = NesoConfig.getConfig(charaKey, size);
   }
 
+  @Override
+  public String getCharaKey() {
+    return charaKey;
+  }
+
+  @Override
   public NesoSize getNesoSize() {
     return nesoSize;
   }
 
+  @Override
   public NesoConfig.Base getConfig() {
     return config;
   }

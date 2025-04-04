@@ -13,8 +13,8 @@ import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.config.ModConfig;
 import dev.rurino.hasugoods.effect.ToutoshiEffectsConsumeEffect;
 import dev.rurino.hasugoods.item.ModItems;
-import dev.rurino.hasugoods.item.CharaItem;
 import dev.rurino.hasugoods.util.CharaUtils;
+import dev.rurino.hasugoods.util.CharaUtils.IWithChara;
 import dev.rurino.hasugoods.util.config.HcVal;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
@@ -34,7 +34,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Rarity;
 import net.minecraft.village.VillagerProfession;
 
-public class BadgeItem extends CharaItem {
+public class BadgeItem extends Item implements IWithChara {
   // #region Static fields
   public static final DeathProtectionComponent HASU_BADGE_DEATH_PROTECTION = new DeathProtectionComponent(
       List.<ConsumeEffect>of(new ClearAllEffectsConsumeEffect(), new ToutoshiEffectsConsumeEffect()));
@@ -187,15 +187,22 @@ public class BadgeItem extends CharaItem {
   }
   // #endregion Static fields
 
+  private final String charaKey;
   private final boolean isSecret;
 
   public BadgeItem(Settings settings, String charaKey, boolean isSecret) {
-    super(settings, charaKey);
+    super(settings);
+    this.charaKey = charaKey;
     this.isSecret = isSecret;
   }
 
   public boolean isSecret() {
     return isSecret;
+  }
+
+  @Override
+  public String getCharaKey() {
+    return charaKey;
   }
 
   @Override

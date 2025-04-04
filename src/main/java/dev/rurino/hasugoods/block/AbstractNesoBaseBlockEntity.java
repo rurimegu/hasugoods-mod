@@ -8,10 +8,10 @@ import com.google.common.collect.ImmutableList;
 
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.entity.NesoEntity;
-import dev.rurino.hasugoods.item.CharaItem;
 import dev.rurino.hasugoods.item.neso.NesoItem;
 import dev.rurino.hasugoods.particle.HasuParticleEffect;
 import dev.rurino.hasugoods.util.Easing;
+import dev.rurino.hasugoods.util.CharaUtils.IWithChara;
 import dev.rurino.hasugoods.util.ParticleUtils.Emitter;
 import dev.rurino.hasugoods.util.CharaUtils;
 import dev.rurino.hasugoods.util.animation.Animation;
@@ -192,8 +192,8 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
       itemStack = ItemStack.EMPTY;
     }
     nesoItemStack = itemStack;
-    if (itemStack.getItem() instanceof CharaItem charaItem) {
-      noteParticleEffect = CHARA_KEY_TO_NOTE_PARTICLE_EFFECT.getOrDefault(charaItem.getCharaKey(),
+    if (itemStack.getItem() instanceof NesoItem nesoItem) {
+      noteParticleEffect = CHARA_KEY_TO_NOTE_PARTICLE_EFFECT.getOrDefault(nesoItem.getCharaKey(),
           DEFAULT_NOTE_PARTICLE_EFFECT);
     } else {
       if (!itemStack.isEmpty()) {
@@ -214,7 +214,7 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
   }
 
   public int getItemColor() {
-    if (getItemStack().isEmpty() || !(getItemStack().getItem() instanceof CharaItem charaItem))
+    if (getItemStack().isEmpty() || !(getItemStack().getItem() instanceof IWithChara charaItem))
       return CharaUtils.DEFAULT_CHARA_COLOR;
     return CharaUtils.CHARA_COLOR_MAP.get(charaItem.getCharaKey());
   }
