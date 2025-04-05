@@ -7,6 +7,7 @@ import dev.rurino.hasugoods.util.ItemStackUtils;
 import dev.rurino.hasugoods.util.CharaUtils.NesoSize;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -23,13 +24,15 @@ public class RurinoNesoItem extends NesoItem {
 
   @Override
   public long getEnergyMaxInput(ItemStack stack) {
-    return config.maxEnergy();
+    return config.energyTransferPerTick() * PlayerInventory.getHotbarSize();
   }
 
   @Override
   public long getEnergyMaxOutput(ItemStack stack) {
-    return config.maxEnergy();
+    return config.energyTransferPerTick() * PlayerInventory.getHotbarSize();
   }
+
+  private int tickCnt = 0;
 
   @Override
   public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
@@ -39,9 +42,14 @@ public class RurinoNesoItem extends NesoItem {
         || getStoredEnergy(stack) <= 0) {
       return;
     }
+    if (++tickCnt % 40 != 0) {
+      return;
+    }
     InventoryUtils.getHotbarStacks(playerEntity, true)
-        .filter(s -> s.getItem() instanceof NesoItem nesoItem && !nesoItem.getCharaKey().equals(getCharaKey()))
-        .forEach(s -> ItemStackUtils.transferEnergy(stack, s, config.energyTransferPerTick()));
+        .filter(s -> s.getItem() instanceof NesoItem nesoItem &&
+            !nesoItem.getCharaKey().equals(getCharaKey()))
+        .forEach(s -> ItemStackUtils.transferEnergy(stack, s,
+            config.energyTransferPerTick()));
   }
 
   @Override
@@ -58,13 +66,13 @@ public class RurinoNesoItem extends NesoItem {
         continue;
       success = true;
       if (s == user.getMainHandStack()) {
-        user.swingHand(Hand.MAIN_HAND);
+        user.swingHand(Hand.MAIN_HAND, true);
       } else if (s == user.getOffHandStack()) {
-        user.swingHand(Hand.OFF_HAND);
+        user.swingHand(Hand.OFF_HAND, true);
       }
     }
     if (success) {
-      user.swingHand(hand);
+      user.swingHand(hand, true);
       return ActionResult.SUCCESS;
     }
     return ActionResult.PASS;

@@ -1,12 +1,12 @@
 package dev.rurino.hasugoods.network;
 
-import java.util.List;
-
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.util.ParticleUtils.Emitter;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.Vec3d;
+
+import java.util.List;
 
 public class EmitParticlesHandler {
   private static void handleRandomUp(EmitParticlesPayload payload, ClientPlayNetworking.Context context) {
@@ -23,7 +23,7 @@ public class EmitParticlesHandler {
   public static void handle(EmitParticlesPayload payload, ClientPlayNetworking.Context context) {
     switch (payload.getType()) {
       case EmitParticlesPayload.TYPE_NONE:
-        Hasugoods.LOGGER.info("Unexpected particle type: TYPE_NONE, skipped");
+        Hasugoods.LOGGER.warn("Unexpected particle type: TYPE_NONE, skipped");
         break;
       case EmitParticlesPayload.TYPE_RANDOM_UP:
         handleRandomUp(payload, context);

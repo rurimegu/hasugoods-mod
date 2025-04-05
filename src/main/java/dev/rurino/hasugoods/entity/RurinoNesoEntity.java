@@ -1,23 +1,24 @@
 package dev.rurino.hasugoods.entity;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Queue;
-
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.component.INesoComponent;
 import dev.rurino.hasugoods.component.ModComponents;
 import dev.rurino.hasugoods.config.NesoConfig;
 import dev.rurino.hasugoods.util.CharaUtils;
+import dev.rurino.hasugoods.util.CharaUtils.NesoSize;
 import dev.rurino.hasugoods.util.MathUtils;
 import dev.rurino.hasugoods.util.Timer;
-import dev.rurino.hasugoods.util.CharaUtils.NesoSize;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
+
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class RurinoNesoEntity extends NesoEntity {
   private static final int CHECK_BOX_INTERVAL = 8;
@@ -31,6 +32,11 @@ public class RurinoNesoEntity extends NesoEntity {
     super(type, world, CharaUtils.RURINO_KEY, size);
     config = NesoConfig.getConfig(NesoConfig.Rurino.class, CharaUtils.RURINO_KEY, size);
     checkBoxTimer = Timer.loop(CHECK_BOX_INTERVAL, this::checkIfInBox);
+  }
+
+  @Override
+  public NesoConfig.Rurino getConfig() {
+    return config;
   }
 
   private void checkIfInBox() {
@@ -47,12 +53,12 @@ public class RurinoNesoEntity extends NesoEntity {
         break;
       Box box = new Box(current);
       var meguOptional = world
-          .getEntitiesByClass(NesoEntity.class, box, e -> e.getCharaKey() == CharaUtils.MEGUMI_KEY)
-          .stream().findFirst();
+          .getNonSpectatingEntities(MegumiNesoEntity.class, box)
+          .stream()
+          .max(Comparator.comparing(NesoEntity::getNesoSize));
       if (meguOptional.isPresent()) {
         var megu = meguOptional.get();
-        meguChargeBoost = Math.max(meguChargeBoost,
-            NesoConfig.getConfig(NesoConfig.Megumi.class, megu.getCharaKey(), megu.getNesoSize()).rurinoChargeBoost());
+        meguChargeBoost = Math.max(meguChargeBoost, megu.getConfig().rurinoChargeBoost());
       }
 
       for (BlockPos delta : MathUtils.NEIGHBORS) {
@@ -96,7 +102,7 @@ public class RurinoNesoEntity extends NesoEntity {
     if (isInBox) {
       amount += config.energyChargeInBoxPerTick();
     }
-    amount *= (1 + chargeBoost);
+    amount += (long) (amount * chargeBoost);
     charge(amount);
   }
 

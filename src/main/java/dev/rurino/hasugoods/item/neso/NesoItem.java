@@ -1,19 +1,13 @@
 package dev.rurino.hasugoods.item.neso;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.config.NesoConfig;
 import dev.rurino.hasugoods.entity.NesoEntity;
 import dev.rurino.hasugoods.item.ModItems;
-import dev.rurino.hasugoods.util.CharaUtils.NesoSize;
 import dev.rurino.hasugoods.util.CharaUtils;
-import dev.rurino.hasugoods.util.ItemStackUtils;
+import dev.rurino.hasugoods.util.CharaUtils.NesoSize;
 import dev.rurino.hasugoods.util.HasuString;
+import dev.rurino.hasugoods.util.ItemStackUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.component.ComponentType;
 import net.minecraft.entity.EntityType;
@@ -35,10 +29,12 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 
+import java.util.*;
+
 public class NesoItem extends Item implements INesoItem {
   // #region Static fields
 
-  protected static record NesoItemEntry(RegistryKey<Item> key, NesoItem item) {
+  protected record NesoItemEntry(RegistryKey<Item> key, NesoItem item) {
   }
 
   protected static final Map<String, NesoItemEntry> ALL_NESOS = new HashMap<>();
@@ -48,27 +44,28 @@ public class NesoItem extends Item implements INesoItem {
   }
 
   public static Optional<NesoItem> getNesoItem(String charaKey, NesoSize size) {
-    return getNesoItemEntry(charaKey, size).map(neso -> neso.item());
+    return getNesoItemEntry(charaKey, size).map(NesoItemEntry::item);
   }
 
   public static Optional<RegistryKey<Item>> getNesoItemKey(String charaKey, NesoSize size) {
-    return getNesoItemEntry(charaKey, size).map(neso -> neso.key());
+    return getNesoItemEntry(charaKey, size).map(NesoItemEntry::key);
   }
 
   public static List<NesoItem> getAllNesos(NesoSize size) {
     return ALL_NESOS.values().stream()
-        .filter(entry -> entry.item().nesoSize == size)
-        .map(entry -> entry.item()).toList();
+        .map(NesoItemEntry::item)
+        .filter(item -> item.nesoSize == size).toList();
   }
 
   public static List<NesoItem> getAllNesos() {
-    return ALL_NESOS.values().stream().map(entry -> entry.item()).toList();
+    return ALL_NESOS.values().stream().map(NesoItemEntry::item).toList();
   }
 
   private static NesoItem create(Settings setting, String charaKey, NesoSize size) {
     return switch (charaKey) {
       case CharaUtils.KAHO_KEY -> new KahoNesoItem(setting, size);
       case CharaUtils.RURINO_KEY -> new RurinoNesoItem(setting, size);
+      case CharaUtils.MEGUMI_KEY -> new MegumiNesoItem(setting, size);
       default -> new NesoItem(setting, charaKey, size);
     };
   }

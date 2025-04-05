@@ -1,12 +1,15 @@
 package dev.rurino.hasugoods.config;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.util.CharaUtils;
 import dev.rurino.hasugoods.util.CharaUtils.NesoSize;
 import dev.rurino.hasugoods.util.config.HcObj;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.random.Random;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class NesoConfig {
 
@@ -80,8 +83,6 @@ public class NesoConfig {
       return maxEnergy;
     }
 
-    public abstract long energyPerAction();
-
     public abstract float useCooldown();
   }
 
@@ -89,11 +90,6 @@ public class NesoConfig {
     public Placeholder(NesoSize size) {
       super(size);
       Hasugoods.LOGGER.warn("Config for {} not implemented, using placeholder values", nesoKey(size.name(), size));
-    }
-
-    @Override
-    public long energyPerAction() {
-      return 0;
     }
 
     @Override
@@ -142,7 +138,6 @@ public class NesoConfig {
       }
     }
 
-    @Override
     public long energyPerAction() {
       return energyPerAction;
     }
@@ -211,7 +206,6 @@ public class NesoConfig {
         default:
           throw new IllegalArgumentException("Unknown NesoSize: " + size);
       }
-      ;
     }
 
     @Override
@@ -223,7 +217,6 @@ public class NesoConfig {
       return energyTransferPerTick;
     }
 
-    @Override
     public long energyPerAction() {
       return energyPerAction;
     }
@@ -250,31 +243,54 @@ public class NesoConfig {
     private final long energyPerAction;
     private final float useCooldown;
     private final float rurinoChargeBoost;
+    private final float damageMultiplier;
+    private final long damageEnergy;
+    private final int oshiHenInterval;
+    private final long oshiHenEnergy;
+    private final float oshiHenWeight;
+    private final float oshiHenRadius;
 
     public Megumi(NesoSize size) {
       super(size);
       switch (size) {
         case SMALL:
-          energyPerAction = MEGUMI_SMALL.getLong("energyPerAction", 1000).val();
+          energyPerAction = MEGUMI_SMALL.getLong("energyPerAction", 100).val();
           useCooldown = MEGUMI_SMALL.getFloat("useCooldown", 1f).val();
-          rurinoChargeBoost = MEGUMI_SMALL.getFloat("rurinoChargeBoost", 3f).val();
+          rurinoChargeBoost = MEGUMI_SMALL.getFloat("rurinoChargeBoost", 1f).val();
+          damageMultiplier = MEGUMI_SMALL.getFloat("damageMultiplier", 0.5f).val();
+          damageEnergy = MEGUMI_SMALL.getLong("damageEnergy", 100).val();
+          oshiHenInterval = MEGUMI_SMALL.getInt("oshiHenInterval", 20).val();
+          oshiHenEnergy = MEGUMI_SMALL.getLong("oshiHenEnergy", 1000).val();
+          oshiHenWeight = MEGUMI_SMALL.getFloat("oshiHenWeight", 1f).val();
+          oshiHenRadius = MEGUMI_SMALL.getFloat("oshiHenRadius", 4).val();
           break;
         case MEDIUM:
-          energyPerAction = MEGUMI_MEDIUM.getLong("energyPerAction", 2000).val();
+          energyPerAction = MEGUMI_MEDIUM.getLong("energyPerAction", 150).val();
           useCooldown = MEGUMI_MEDIUM.getFloat("useCooldown", 1f).val();
           rurinoChargeBoost = MEGUMI_MEDIUM.getFloat("rurinoChargeBoost", 3f).val();
+          damageMultiplier = MEGUMI_MEDIUM.getFloat("damageMultiplier", 0f).val();
+          damageEnergy = MEGUMI_MEDIUM.getLong("damageEnergy", 150).val();
+          oshiHenInterval = MEGUMI_MEDIUM.getInt("oshiHenInterval", 20).val();
+          oshiHenEnergy = MEGUMI_MEDIUM.getLong("oshiHenEnergy", 2000).val();
+          oshiHenWeight = MEGUMI_MEDIUM.getFloat("oshiHenWeight", 2f).val();
+          oshiHenRadius = MEGUMI_MEDIUM.getFloat("oshiHenRadius", 8).val();
           break;
         case LARGE:
-          energyPerAction = MEGUMI_LARGE.getLong("energyPerAction", 4000).val();
+          energyPerAction = MEGUMI_LARGE.getLong("energyPerAction", 200).val();
           useCooldown = MEGUMI_LARGE.getFloat("useCooldown", 1f).val();
           rurinoChargeBoost = MEGUMI_LARGE.getFloat("rurinoChargeBoost", 7f).val();
+          damageMultiplier = MEGUMI_LARGE.getFloat("damageMultiplier", -0.5f).val();
+          damageEnergy = MEGUMI_LARGE.getLong("damageEnergy", 200).val();
+          oshiHenInterval = MEGUMI_LARGE.getInt("oshiHenInterval", 10).val();
+          oshiHenEnergy = MEGUMI_LARGE.getLong("oshiHenEnergy", 4000).val();
+          oshiHenWeight = MEGUMI_LARGE.getFloat("oshiHenWeight", 4f).val();
+          oshiHenRadius = MEGUMI_LARGE.getFloat("oshiHenRadius", 16).val();
           break;
         default:
           throw new IllegalArgumentException("Unknown NesoSize: " + size);
       }
     }
 
-    @Override
     public long energyPerAction() {
       return energyPerAction;
     }
@@ -287,10 +303,45 @@ public class NesoConfig {
     public float rurinoChargeBoost() {
       return rurinoChargeBoost;
     }
+
+    public float damageMultiplier() {
+      return damageMultiplier;
+    }
+
+    public long damageEnergy() {
+      return damageEnergy;
+    }
+
+    public int oshiHenInterval() {
+      return oshiHenInterval;
+    }
+
+    public long oshiHenEnergy() {
+      return oshiHenEnergy;
+    }
+
+    public float oshiHenWeight() {
+      return oshiHenWeight;
+    }
+
+    public boolean shouldOshiHen(float health, Random random) {
+      return random.nextFloat() * health < oshiHenWeight();
+    }
+
+    public boolean shouldOshiHen(LivingEntity entity) {
+      if (entity instanceof PlayerEntity) {
+        return false;
+      }
+      return shouldOshiHen(entity.getHealth(), entity.getRandom());
+    }
+
+    public float oshiHenRadius() {
+      return oshiHenRadius;
+    }
   }
   // #endregion Config impls
 
-  private static Map<String, Base> CONFIGS = new HashMap<>();
+  private static final Map<String, Base> CONFIGS = new HashMap<>();
 
   private static void registerConfig(String charaKey, NesoSize size, Base config) {
     String key = nesoKey(charaKey, size);

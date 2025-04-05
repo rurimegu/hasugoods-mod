@@ -1,12 +1,5 @@
 package dev.rurino.hasugoods.entity;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Consumer;
-
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.component.ModComponents;
 import dev.rurino.hasugoods.config.NesoConfig;
@@ -14,11 +7,7 @@ import dev.rurino.hasugoods.item.neso.NesoItem;
 import dev.rurino.hasugoods.util.CharaUtils;
 import dev.rurino.hasugoods.util.CharaUtils.NesoSize;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnGroup;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
@@ -34,31 +23,35 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import java.util.*;
+import java.util.function.Consumer;
+
 public class NesoEntity extends LivingEntity implements INesoEntity {
   // #region Static fields
-  protected static record NesoEntityEntry(RegistryKey<EntityType<?>> key, EntityType<NesoEntity> entity) {
+  protected record NesoEntityEntry(RegistryKey<EntityType<?>> key, EntityType<NesoEntity> entity) {
   }
 
   protected static final Map<String, NesoEntityEntry> ALL_NESOS = new HashMap<>();
 
   public static Optional<EntityType<NesoEntity>> getNesoEntityType(String charaKey, NesoSize size) {
-    return Optional.ofNullable(ALL_NESOS.get(CharaUtils.nesoKey(charaKey, size))).map(entry -> entry.entity());
+    return Optional.ofNullable(ALL_NESOS.get(CharaUtils.nesoKey(charaKey, size))).map(NesoEntityEntry::entity);
   }
 
   public static List<EntityType<NesoEntity>> getAllNesos(NesoSize size) {
     return ALL_NESOS.values().stream()
         .filter(entry -> entry.key().getValue().getPath().endsWith("_" + size.name().toLowerCase()))
-        .map(entry -> entry.entity()).toList();
+        .map(NesoEntityEntry::entity).toList();
   }
 
   public static List<EntityType<NesoEntity>> getAllNesos() {
-    return ALL_NESOS.values().stream().map(entry -> entry.entity()).toList();
+    return ALL_NESOS.values().stream().map(NesoEntityEntry::entity).toList();
   }
 
   private static NesoEntity createNesoEntity(EntityType<NesoEntity> entityType, World world,
-      String charaKey, NesoSize size) {
+                                             String charaKey, NesoSize size) {
     return switch (charaKey) {
       case CharaUtils.RURINO_KEY -> new RurinoNesoEntity(entityType, world, size);
+      case CharaUtils.MEGUMI_KEY -> new MegumiNesoEntity(entityType, world, size);
       default -> new NesoEntity(entityType, world, charaKey, size);
     };
   }
@@ -67,9 +60,9 @@ public class NesoEntity extends LivingEntity implements INesoEntity {
     String itemKey = CharaUtils.nesoKey(charaKey, size);
     RegistryKey<EntityType<?>> key = RegistryKey.of(RegistryKeys.ENTITY_TYPE, Hasugoods.id(itemKey));
     float width = switch (size) {
-      case SMALL -> 0.4f;
-      case MEDIUM -> 0.8f;
-      case LARGE -> 1.6f;
+      case SMALL -> 0.36f;
+      case MEDIUM -> 0.72f;
+      case LARGE -> 1.44f;
     };
     float height = switch (size) {
       case SMALL -> 0.24f;
@@ -77,7 +70,7 @@ public class NesoEntity extends LivingEntity implements INesoEntity {
       case LARGE -> 0.96f;
     };
     EntityType<NesoEntity> entityType = EntityType.Builder.<NesoEntity>create(
-        (type, world) -> createNesoEntity(type, world, charaKey, size), SpawnGroup.MISC).dimensions(width, height)
+            (type, world) -> createNesoEntity(type, world, charaKey, size), SpawnGroup.MISC).dimensions(width, height)
         .eyeHeight(height * 0.4f)
         .dropsNothing()
         .build(key);
@@ -98,8 +91,8 @@ public class NesoEntity extends LivingEntity implements INesoEntity {
   }
 
   public static NesoEntity spawnFromItemStack(EntityType<NesoEntity> entityType, ServerWorld world, ItemStack stack,
-      PlayerEntity player, BlockPos pos,
-      SpawnReason spawnReason, boolean alignPosition, boolean invertY, float initYaw) {
+                                              PlayerEntity player, BlockPos pos,
+                                              SpawnReason spawnReason, boolean alignPosition, boolean invertY, float initYaw) {
     Consumer<NesoEntity> consumer;
     if (stack != null) {
       consumer = EntityType.copier(world, stack, player);
@@ -140,8 +133,13 @@ public class NesoEntity extends LivingEntity implements INesoEntity {
   }
 
   @Override
+  public boolean isAttackable() {
+    return false;
+  }
+
+  @Override
   public boolean damage(ServerWorld world, DamageSource source, float amount) {
-    if (getNesoSize() == NesoSize.LARGE) {
+    if (getNesoSize() == NesoSize.LARGE || source == null) {
       return false;
     }
     if (!source.isIn(DamageTypeTags.IS_FIRE)) {
@@ -201,16 +199,5 @@ public class NesoEntity extends LivingEntity implements INesoEntity {
 
   public NesoConfig.Base getConfig() {
     return NesoConfig.getConfig(NesoConfig.Base.class, charaKey, nesoSize);
-  }
-
-  @Override
-  public long getStoredEnergy() {
-    var nesoComponentOptional = ModComponents.NESO.maybeGet(this);
-    if (nesoComponentOptional.isPresent()) {
-      return nesoComponentOptional.get().getStoredEnergy();
-    } else {
-      Hasugoods.LOGGER.warn("NesoComponent not found for NesoEntity: {}", this);
-      return 0;
-    }
   }
 }
