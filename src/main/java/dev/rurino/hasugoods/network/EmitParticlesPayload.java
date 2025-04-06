@@ -11,6 +11,7 @@ import net.minecraft.util.math.Vec3d;
 public class EmitParticlesPayload implements CustomPayload {
   public static final int TYPE_NONE = 0;
   public static final int TYPE_RANDOM_UP = 1;
+  public static final int TYPE_RURINO_CHARGE = 2;
 
   public static final CustomPayload.Id<EmitParticlesPayload> ID = new CustomPayload.Id<>(
       Hasugoods.id("emit_particles"));
@@ -23,18 +24,26 @@ public class EmitParticlesPayload implements CustomPayload {
       EmitParticlesPayload::getPos,
       PacketCodecs.INTEGER,
       EmitParticlesPayload::getCount,
+      PacketCodecs.INTEGER,
+      EmitParticlesPayload::getExtra,
       EmitParticlesPayload::new);
 
   private final int type;
   private final HasuParticleEffect effect;
   private final Vec3d pos;
   private final int count;
+  private final int extra;
 
-  public EmitParticlesPayload(int type, HasuParticleEffect effect, Vec3d pos, int count) {
+  public EmitParticlesPayload(int type, HasuParticleEffect effect, Vec3d pos, int count, int extra) {
     this.type = type;
     this.effect = effect;
     this.pos = pos;
     this.count = count;
+    this.extra = extra;
+  }
+
+  public EmitParticlesPayload(int type, HasuParticleEffect effect, Vec3d pos, int count) {
+    this(type, effect, pos, count, 0);
   }
 
   public int getType() {
@@ -51,6 +60,10 @@ public class EmitParticlesPayload implements CustomPayload {
 
   public int getCount() {
     return count;
+  }
+
+  public int getExtra() {
+    return extra;
   }
 
   @Override

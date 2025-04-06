@@ -49,12 +49,23 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
 
   protected static final Map<String, HasuParticleEffect> CHARA_KEY_TO_NOTE_PARTICLE_EFFECT = CharaUtils.CHARA_COLOR_MAP
       .entrySet().stream()
-      .collect(Collectors.toMap(Map.Entry::getKey, entry -> HasuParticleEffect.note(entry.getValue())));
-  protected static final HasuParticleEffect DEFAULT_NOTE_PARTICLE_EFFECT = HasuParticleEffect.note(
-      CharaUtils.DEFAULT_CHARA_COLOR);
+      .collect(Collectors.toMap(Map.Entry::getKey,
+          entry -> HasuParticleEffect.Builder.note()
+              .color(entry.getValue())
+              .initialScale(0.1f)
+              .finalScale(0)
+              .build()));
+  protected static final HasuParticleEffect DEFAULT_NOTE_PARTICLE_EFFECT = HasuParticleEffect.Builder.note()
+      .color(CharaUtils.DEFAULT_CHARA_COLOR)
+      .initialScale(0.1f)
+      .finalScale(0)
+      .build();
 
-  protected static final HasuParticleEffect QUESTION_MARK_PARTICLE_EFFECT = HasuParticleEffect.questionMark(
-      0xFF0000);
+  protected static final HasuParticleEffect QUESTION_MARK_PARTICLE_EFFECT = HasuParticleEffect.Builder.questionMark()
+      .color(0xFF0000)
+      .initialScale(0.1f)
+      .finalScale(0)
+      .build();
 
   protected static enum ParticleState {
     NONE,

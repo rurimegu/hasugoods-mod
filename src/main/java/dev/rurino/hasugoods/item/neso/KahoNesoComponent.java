@@ -111,7 +111,7 @@ public class KahoNesoComponent {
 
   private static void emitParticles(ServerWorld world, BlockPos pos) {
     int count = NUM_PARTICLES.val();
-    var effect = HasuParticleEffect.charaIcon(CharaUtils.KAHO_KEY);
+    var effect = HasuParticleEffect.Builder.charaIcon(CharaUtils.KAHO_KEY).initialScale(0.2f).build();
     EmitParticlesPayload payload = new EmitParticlesPayload(
         EmitParticlesPayload.TYPE_RANDOM_UP,
         effect,

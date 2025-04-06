@@ -14,13 +14,63 @@ import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.util.math.ColorHelper;
 
 public class HasuParticleEffect implements ParticleEffect {
+
+  public static class Builder {
+    private final String name;
+    private int color;
+    private float initialScale;
+    private float finalScale;
+
+    public Builder(String name) {
+      this.name = name;
+      this.color = 0xFFFFFF;
+      this.initialScale = 1.0F;
+      this.finalScale = 1.0F;
+    }
+
+    public static Builder note() {
+      return new Builder(ModParticles.NAME_NOTE_PARTICLE);
+    }
+
+    public static Builder questionMark() {
+      return new Builder(ModParticles.NAME_QUESTION_MARK_PARTICLE);
+    }
+
+    public static Builder charaIcon(String charaKey) {
+      return new Builder(ModParticles.getCharaIconName(charaKey));
+    }
+
+    public Builder color(int color) {
+      this.color = color;
+      return this;
+    }
+
+    public Builder initialScale(float initialScale) {
+      this.initialScale = initialScale;
+      return this;
+    }
+
+    public Builder finalScale(float finalScale) {
+      this.finalScale = finalScale;
+      return this;
+    }
+
+    public HasuParticleEffect build() {
+      return new HasuParticleEffect(name, color, initialScale, finalScale);
+    }
+  }
+
   public static final MapCodec<HasuParticleEffect> CODEC = RecordCodecBuilder.mapCodec((instance) -> {
     return instance
         .group(
             Codecs.NON_EMPTY_STRING.fieldOf("name")
                 .forGetter(HasuParticleEffect::getName),
             Codecs.RGB.fieldOf("color")
-                .forGetter(HasuParticleEffect::getColor))
+                .forGetter(HasuParticleEffect::getColor),
+            Codecs.NON_NEGATIVE_FLOAT.fieldOf("initialScale")
+                .forGetter(HasuParticleEffect::getInitialScale),
+            Codecs.NON_NEGATIVE_FLOAT.fieldOf("finalScale")
+                .forGetter(HasuParticleEffect::getFinalScale))
         .apply(instance, HasuParticleEffect::new);
   });
   public static final PacketCodec<RegistryByteBuf, HasuParticleEffect> PACKET_CODEC = PacketCodec.tuple(
@@ -28,29 +78,24 @@ public class HasuParticleEffect implements ParticleEffect {
       HasuParticleEffect::getName,
       PacketCodecs.INTEGER,
       HasuParticleEffect::getColor,
+      PacketCodecs.FLOAT,
+      HasuParticleEffect::getInitialScale,
+      PacketCodecs.FLOAT,
+      HasuParticleEffect::getFinalScale,
       HasuParticleEffect::new);
 
-  public static HasuParticleEffect note(int color) {
-    return new HasuParticleEffect(ModParticles.NAME_NOTE_PARTICLE, color);
-  }
-
-  public static HasuParticleEffect questionMark(int color) {
-    return new HasuParticleEffect(ModParticles.NAME_QUESTION_MARK_PARTICLE, color);
-  }
-
-  public static HasuParticleEffect charaIcon(String charaKey) {
-    return new HasuParticleEffect(
-        ModParticles.getCharaIconName(charaKey), 0xFFFFFF);
-  }
-
+  private final ParticleType<?> type;
   private final int color;
   private final String name;
-  private final ParticleType<?> type;
+  private final float initialScale;
+  private final float finalScale;
 
-  public HasuParticleEffect(String name, int color) {
+  public HasuParticleEffect(String name, int color, float initialScale, float finalScale) {
     this.name = name;
     this.color = color;
     this.type = ModParticles.get(name);
+    this.initialScale = initialScale;
+    this.finalScale = finalScale;
   }
 
   public int getColor() {
@@ -63,6 +108,14 @@ public class HasuParticleEffect implements ParticleEffect {
 
   public Vector3f getColorVec() {
     return ColorHelper.toVector(color);
+  }
+
+  public float getInitialScale() {
+    return this.initialScale;
+  }
+
+  public float getFinalScale() {
+    return this.finalScale;
   }
 
   @Override

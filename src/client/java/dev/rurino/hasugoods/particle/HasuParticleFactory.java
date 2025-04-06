@@ -15,7 +15,11 @@ public class HasuParticleFactory<T extends HasuParticleEffect> implements Partic
   @Override
   public Particle createParticle(T type, ClientWorld world, double x, double y, double z, double dx,
       double dy, double dz) {
-    return new HasuParticle(world, x, y, z, dx, dy, dz, type.getColorVec(), spriteProvider);
+    return new HasuParticle(world,
+        x, y, z,
+        dx, dy, dz,
+        type,
+        spriteProvider);
   }
 
 }

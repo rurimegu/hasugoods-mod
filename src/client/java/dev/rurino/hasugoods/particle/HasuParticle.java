@@ -10,22 +10,24 @@ import net.minecraft.util.math.MathHelper;
 
 public class HasuParticle extends SpriteBillboardParticle {
   private static final int MAX_AGE = 40;
-  private static final float SCALE = 0.1F;
 
-  protected final SpriteProvider spriteProvider;
+  private final SpriteProvider spriteProvider;
+  private final HasuParticleEffect effect;
 
   public HasuParticle(ClientWorld world,
       double x, double y, double z,
       double velocityX, double velocityY, double velocityZ,
-      Vector3f color,
+      HasuParticleEffect effect,
       SpriteProvider spriteProvider) {
     super(world, x, y, z, velocityX, velocityY, velocityZ);
     this.setVelocity(velocityX, velocityY, velocityZ);
-    this.scale = SCALE;
+    this.effect = effect;
+    Vector3f color = effect.getColorVec();
     this.maxAge = MAX_AGE;
     this.red = color.x;
     this.green = color.y;
     this.blue = color.z;
+    this.scale = effect.getInitialScale();
     this.spriteProvider = spriteProvider;
     this.setSpriteForAge(spriteProvider);
   }
@@ -39,7 +41,8 @@ public class HasuParticle extends SpriteBillboardParticle {
   public void tick() {
     this.setSpriteForAge(spriteProvider);
     if (this.isAlive()) {
-      this.scale = SCALE * MathHelper.easeInOutSine(1 - this.age / (float) this.maxAge);
+      float t = MathHelper.easeInOutSine(this.age / (float) this.maxAge);
+      this.scale = MathHelper.lerp(t, effect.getInitialScale(), effect.getFinalScale());
     }
     super.tick();
   }
