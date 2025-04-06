@@ -24,7 +24,7 @@ public class EmitParticlesHandler {
     var effect = payload.getEffect();
     ClientWorld world = context.client().world;
     Vec3d pos = payload.getPos();
-    world.addParticle(effect, pos.x, pos.y, pos.z, 0, 1, 0);
+    world.addParticle(effect, pos.x, pos.y, pos.z, 0, 0.05, 0);
   }
 
   public static void handle(EmitParticlesPayload payload, ClientPlayNetworking.Context context) {

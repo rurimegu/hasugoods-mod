@@ -32,17 +32,12 @@ public class RurinoNesoItem extends NesoItem {
     return config.energyTransferPerTick() * PlayerInventory.getHotbarSize();
   }
 
-  private int tickCnt = 0;
-
   @Override
   public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
     if (world.isClient
         || !(entity instanceof PlayerEntity playerEntity)
         || !InventoryUtils.isInHotbar(slot)
         || getStoredEnergy(stack) <= 0) {
-      return;
-    }
-    if (++tickCnt % 40 != 0) {
       return;
     }
     InventoryUtils.getHotbarStacks(playerEntity, true)

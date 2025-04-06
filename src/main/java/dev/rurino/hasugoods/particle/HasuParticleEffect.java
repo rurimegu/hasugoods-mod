@@ -1,5 +1,7 @@
 package dev.rurino.hasugoods.particle;
 
+import java.util.Optional;
+
 import org.joml.Vector3f;
 
 import com.mojang.serialization.MapCodec;
@@ -17,15 +19,13 @@ public class HasuParticleEffect implements ParticleEffect {
 
   public static class Builder {
     private final String name;
-    private int color;
-    private float initialScale;
-    private float finalScale;
+    private int color = 0xFFFFFF;
+    private float initialScale = 1.0F;
+    private Optional<Float> finalScale = Optional.empty();
+    private int maxAge = 40; // Default maxAge
 
     public Builder(String name) {
       this.name = name;
-      this.color = 0xFFFFFF;
-      this.initialScale = 1.0F;
-      this.finalScale = 1.0F;
     }
 
     public static Builder note() {
@@ -51,12 +51,18 @@ public class HasuParticleEffect implements ParticleEffect {
     }
 
     public Builder finalScale(float finalScale) {
-      this.finalScale = finalScale;
+      this.finalScale = Optional.of(finalScale);
+      return this;
+    }
+
+    public Builder maxAge(int maxAge) {
+      this.maxAge = maxAge;
       return this;
     }
 
     public HasuParticleEffect build() {
-      return new HasuParticleEffect(name, color, initialScale, finalScale);
+      float finalScale = this.finalScale.orElse(this.initialScale);
+      return new HasuParticleEffect(name, color, initialScale, finalScale, maxAge);
     }
   }
 
@@ -70,7 +76,9 @@ public class HasuParticleEffect implements ParticleEffect {
             Codecs.NON_NEGATIVE_FLOAT.fieldOf("initialScale")
                 .forGetter(HasuParticleEffect::getInitialScale),
             Codecs.NON_NEGATIVE_FLOAT.fieldOf("finalScale")
-                .forGetter(HasuParticleEffect::getFinalScale))
+                .forGetter(HasuParticleEffect::getFinalScale),
+            Codecs.NON_NEGATIVE_INT.fieldOf("maxAge")
+                .forGetter(HasuParticleEffect::getMaxAge))
         .apply(instance, HasuParticleEffect::new);
   });
   public static final PacketCodec<RegistryByteBuf, HasuParticleEffect> PACKET_CODEC = PacketCodec.tuple(
@@ -82,6 +90,8 @@ public class HasuParticleEffect implements ParticleEffect {
       HasuParticleEffect::getInitialScale,
       PacketCodecs.FLOAT,
       HasuParticleEffect::getFinalScale,
+      PacketCodecs.INTEGER,
+      HasuParticleEffect::getMaxAge,
       HasuParticleEffect::new);
 
   private final ParticleType<?> type;
@@ -89,13 +99,15 @@ public class HasuParticleEffect implements ParticleEffect {
   private final String name;
   private final float initialScale;
   private final float finalScale;
+  private final int maxAge;
 
-  public HasuParticleEffect(String name, int color, float initialScale, float finalScale) {
+  public HasuParticleEffect(String name, int color, float initialScale, float finalScale, int maxAge) {
     this.name = name;
     this.color = color;
     this.type = ModParticles.get(name);
     this.initialScale = initialScale;
     this.finalScale = finalScale;
+    this.maxAge = maxAge;
   }
 
   public int getColor() {
@@ -116,6 +128,10 @@ public class HasuParticleEffect implements ParticleEffect {
 
   public float getFinalScale() {
     return this.finalScale;
+  }
+
+  public int getMaxAge() {
+    return this.maxAge;
   }
 
   @Override

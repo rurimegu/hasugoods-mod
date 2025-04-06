@@ -10,13 +10,12 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import dev.rurino.hasugoods.config.NesoConfig;
 import dev.rurino.hasugoods.network.EmitParticlesPayload;
+import dev.rurino.hasugoods.network.ModNetwork;
 import dev.rurino.hasugoods.particle.HasuParticleEffect;
 import dev.rurino.hasugoods.util.CharaUtils;
 import dev.rurino.hasugoods.util.CollectionUtils;
 import dev.rurino.hasugoods.util.MathUtils;
 import dev.rurino.hasugoods.util.config.HcVal;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -117,8 +116,8 @@ public class KahoNesoComponent {
         effect,
         pos.toCenterPos(),
         count);
-    PlayerLookup.tracking(world, pos)
-        .forEach(player -> ServerPlayNetworking.send(player, payload));
+
+    ModNetwork.sendPacketToNearbyPlayers(world, pos, payload);
   }
 
   private static boolean validForReplace(World world, BlockState state, BlockPos pos) {

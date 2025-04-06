@@ -46,6 +46,10 @@ public class EmitParticlesPayload implements CustomPayload {
     this(type, effect, pos, count, 0);
   }
 
+  public EmitParticlesPayload(int type, HasuParticleEffect effect, Vec3d pos) {
+    this(type, effect, pos, 1);
+  }
+
   public int getType() {
     return type;
   }

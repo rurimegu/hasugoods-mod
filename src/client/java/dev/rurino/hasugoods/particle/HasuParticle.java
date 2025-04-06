@@ -9,7 +9,6 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.MathHelper;
 
 public class HasuParticle extends SpriteBillboardParticle {
-  private static final int MAX_AGE = 40;
 
   private final SpriteProvider spriteProvider;
   private final HasuParticleEffect effect;
@@ -23,7 +22,7 @@ public class HasuParticle extends SpriteBillboardParticle {
     this.setVelocity(velocityX, velocityY, velocityZ);
     this.effect = effect;
     Vector3f color = effect.getColorVec();
-    this.maxAge = MAX_AGE;
+    this.maxAge = effect.getMaxAge();
     this.red = color.x;
     this.green = color.y;
     this.blue = color.z;
