@@ -52,7 +52,7 @@ public class ModParticles {
     register(NAME_NOTE_PARTICLE, NOTE_PARTICLE_EFFECT);
     register(NAME_QUESTION_MARK_PARTICLE, QUESTION_MARK_PARTICLE_EFFECT);
     for (String charaKey : CharaUtils.ALL_CHARA_KEYS) {
-      register(charaKey + "_icon_particle", FabricParticleTypes.complex(
+      register(getCharaIconName(charaKey), FabricParticleTypes.complex(
           HasuParticleEffect.CODEC,
           HasuParticleEffect.PACKET_CODEC));
     }

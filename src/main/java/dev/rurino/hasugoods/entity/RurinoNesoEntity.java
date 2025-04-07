@@ -95,11 +95,11 @@ public class RurinoNesoEntity extends NesoEntity {
         .initialScale(scale)
         .maxAge(PARTICLE_MAX_AGE);
     EmitParticlesPayload payload = new EmitParticlesPayload(
-        EmitParticlesPayload.TYPE_RURINO_CHARGE,
+        EmitParticlesPayload.TYPE_UP,
         builder.build(),
         pos.add(posDelta));
 
-    ModNetwork.sendPacketToNearbyPlayers(world, blockPos, payload);
+    ModNetwork.sendPacketToPlayersTracking(world, blockPos, payload);
 
     if (hasMeguBoost) {
       // Megumi icon
@@ -107,10 +107,10 @@ public class RurinoNesoEntity extends NesoEntity {
           .initialScale(scale)
           .maxAge(PARTICLE_MAX_AGE);
       payload = new EmitParticlesPayload(
-          EmitParticlesPayload.TYPE_RURINO_CHARGE,
+          EmitParticlesPayload.TYPE_UP,
           builder.build(),
           pos.add(posDelta.negate()));
-      ModNetwork.sendPacketToNearbyPlayers(world, blockPos, payload);
+      ModNetwork.sendPacketToPlayersTracking(world, blockPos, payload);
     }
   }
 

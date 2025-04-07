@@ -117,7 +117,7 @@ public class KahoNesoComponent {
         pos.toCenterPos(),
         count);
 
-    ModNetwork.sendPacketToNearbyPlayers(world, pos, payload);
+    ModNetwork.sendPacketToPlayersTracking(world, pos, payload);
   }
 
   private static boolean validForReplace(World world, BlockState state, BlockPos pos) {

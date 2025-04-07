@@ -20,7 +20,7 @@ public class EmitParticlesHandler {
     }
   }
 
-  private static void handleRurino(EmitParticlesPayload payload, ClientPlayNetworking.Context context) {
+  private static void handleUp(EmitParticlesPayload payload, ClientPlayNetworking.Context context) {
     var effect = payload.getEffect();
     ClientWorld world = context.client().world;
     Vec3d pos = payload.getPos();
@@ -35,8 +35,8 @@ public class EmitParticlesHandler {
       case EmitParticlesPayload.TYPE_RANDOM_UP:
         handleRandomUp(payload, context);
         break;
-      case EmitParticlesPayload.TYPE_RURINO_CHARGE:
-        handleRurino(payload, context);
+      case EmitParticlesPayload.TYPE_UP:
+        handleUp(payload, context);
         break;
       default:
         break;

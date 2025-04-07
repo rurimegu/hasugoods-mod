@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class MegumiNesoEntity extends NesoEntity {
+
   private final NesoConfig.Megumi config;
   private final Timer oshiHenTimer;
 
@@ -42,7 +43,6 @@ public class MegumiNesoEntity extends NesoEntity {
       if (!oshiComponent.getOshiKey().equals(getCharaKey()) && useEnergy(config.oshiHenEnergy())) {
         oshiComponent.setOshiKey(getCharaKey());
         increased++;
-        // TODO: emit particle effect
       }
     }
     if (increased > 0) {
@@ -51,7 +51,8 @@ public class MegumiNesoEntity extends NesoEntity {
   }
 
   private void tickOshi(Collection<LivingEntity> entities) {
-    entities.stream().filter(e -> e instanceof MobEntity && ModComponents.OSHI.get(e).getOshiKey().equals(getCharaKey()))
+    entities.stream()
+        .filter(e -> e instanceof MobEntity && ModComponents.OSHI.get(e).getOshiKey().equals(getCharaKey()))
         .map(e -> (MobEntity) e)
         .forEach(e -> {
           var target = e.getTarget();

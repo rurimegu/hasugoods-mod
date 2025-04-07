@@ -11,7 +11,7 @@ import net.minecraft.util.math.Vec3d;
 public class EmitParticlesPayload implements CustomPayload {
   public static final int TYPE_NONE = 0;
   public static final int TYPE_RANDOM_UP = 1;
-  public static final int TYPE_RURINO_CHARGE = 2;
+  public static final int TYPE_UP = 2;
 
   public static final CustomPayload.Id<EmitParticlesPayload> ID = new CustomPayload.Id<>(
       Hasugoods.id("emit_particles"));
