@@ -184,7 +184,7 @@ public class NesoConfig {
           energyTransferPerTick = RURINO_SMALL.getLong("energyTransferPerTick", 16).val();
           energyPerAction = RURINO_SMALL.getLong("energyPerAction", 16_000).val();
           maxBoxSize = RURINO_SMALL.getInt("maxBoxSize", 3 * 3 * 3).val();
-          energyChargeInBoxPerTick = RURINO_SMALL.getLong("energyChargeInBoxPerTick", 128).val();
+          energyChargeInBoxPerTick = RURINO_SMALL.getLong("energyChargeInBoxPerTick", 32).val();
           useCooldown = RURINO_SMALL.getFloat("useCooldown", 1f).val();
           break;
         case MEDIUM:
@@ -192,7 +192,7 @@ public class NesoConfig {
           energyTransferPerTick = RURINO_MEDIUM.getLong("energyTransferPerTick", 64).val();
           energyPerAction = RURINO_MEDIUM.getLong("energyPerAction", 128_000).val();
           maxBoxSize = RURINO_MEDIUM.getInt("maxBoxSize", 4 * 4 * 4).val();
-          energyChargeInBoxPerTick = RURINO_MEDIUM.getLong("energyChargeInBoxPerTick", 512).val();
+          energyChargeInBoxPerTick = RURINO_MEDIUM.getLong("energyChargeInBoxPerTick", 128).val();
           useCooldown = RURINO_MEDIUM.getFloat("useCooldown", 1f).val();
           break;
         case LARGE:
@@ -200,7 +200,7 @@ public class NesoConfig {
           energyTransferPerTick = RURINO_LARGE.getLong("energyTransferPerTick", 512).val();
           energyPerAction = RURINO_LARGE.getLong("energyPerAction", 1_000_000).val();
           maxBoxSize = RURINO_LARGE.getInt("maxBoxSize", 5 * 5 * 5).val();
-          energyChargeInBoxPerTick = RURINO_LARGE.getLong("energyChargeInBoxPerTick", 2048).val();
+          energyChargeInBoxPerTick = RURINO_LARGE.getLong("energyChargeInBoxPerTick", 512).val();
           useCooldown = RURINO_LARGE.getFloat("useCooldown", 1f).val();
           break;
         default:
