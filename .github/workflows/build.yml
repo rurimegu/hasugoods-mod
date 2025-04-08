@@ -7,10 +7,10 @@ name: build
 on:
   push:
     branches:
-      - main
+      - 1.21.4-fabric
   pull_request:
     branches:
-      - main
+      - 1.21.4-fabric
   workflow_dispatch:
 
 jobs:
