@@ -1,18 +1,9 @@
 # Blender 3.6.1 Goo Engine MTL File: ''
 # www.blender.org
+# Blender 3.6.1 Goo Engine MTL File: 'None'
+# www.blender.org
 
-newmtl 发.001
-Ns 360.000000
-Ka 1.000000 1.000000 1.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd hasugoods:item/neso/kaho_hair
-
-newmtl 服.001
+newmtl Cloth
 Ns 360.000000
 Ka 1.000000 1.000000 1.000000
 Kd 0.800000 0.800000 0.800000
@@ -23,7 +14,7 @@ d 1.000000
 illum 2
 map_Kd hasugoods:item/neso/rurino_body
 
-newmtl 脸
+newmtl Face
 Ns 360.000000
 Ka 1.000000 1.000000 1.000000
 Kd 0.800000 0.800000 0.800000
@@ -33,3 +24,14 @@ Ni 1.000000
 d 1.000000
 illum 2
 map_Kd hasugoods:item/neso/kaho_face
+
+newmtl Hair
+Ns 360.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd hasugoods:item/neso/kaho_hair
