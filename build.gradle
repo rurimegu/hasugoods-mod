@@ -22,20 +22,25 @@ repositories {
   }
 
   maven {
-      name = "FelNull Maven"
-      url = "https://maven.felnull.dev" // for Special Model Loader
+    name = "FelNull Maven"
+    url = "https://maven.felnull.dev" // for Special Model Loader
   }
 
   maven {
-      name = "Jared"
-      url = "https://maven.blamejared.com/" // for Patchouli
+    name = "Jared"
+    url = "https://maven.blamejared.com/" // for Patchouli
   }
 
   maven {
-      url "https://www.cursemaven.com"
-      content {
-        includeGroup "curse.maven"
-      }
+    url "https://www.cursemaven.com"
+    content {
+      includeGroup "curse.maven"
+    }
+  }
+  
+  maven {
+    name = "Fuzs Mod Resources"
+    url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/" // For Forge Config API port
   }
 }
 
@@ -86,7 +91,10 @@ dependencies {
   include modApi('teamreborn:energy:4.1.0')
   
   // Jade
-  modImplementation "curse.maven:jade-324717:${jade_version}"
+  modImplementation "curse.maven:jade-324717:${project.jade_version}"
+
+  // Forge Config API Port
+  modApi "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${project.forge_config_api_version}"
 }
 
 processResources {
