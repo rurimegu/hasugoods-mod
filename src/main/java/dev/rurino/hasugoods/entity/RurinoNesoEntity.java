@@ -46,7 +46,7 @@ public class RurinoNesoEntity extends NesoEntity {
 
   public RurinoNesoEntity(EntityType<? extends LivingEntity> type, World world, NesoSize size) {
     super(type, world, CharaUtils.RURINO_KEY, size);
-    config = NesoConfig.getConfig(NesoConfig.Rurino.class, CharaUtils.RURINO_KEY, size);
+    config = Hasugoods.CONFIG.neso.getConfig(NesoConfig.Rurino.class, CharaUtils.RURINO_KEY, size);
     checkBoxTimer = Timer.loop(CHECK_BOX_INTERVAL, this::checkIfInBox);
     emitParticlesTimer = Timer.loop(EMIT_PARTICLES_INTERVAL, this::maybeEmitParticles);
   }

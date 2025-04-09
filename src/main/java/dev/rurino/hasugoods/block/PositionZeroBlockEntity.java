@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 import dev.rurino.hasugoods.Hasugoods;
-import dev.rurino.hasugoods.config.NesoConfig;
 import dev.rurino.hasugoods.item.neso.NesoItem;
 import dev.rurino.hasugoods.network.FinishNesoMergePayload;
 import dev.rurino.hasugoods.network.PlayAnimPayload;
@@ -21,7 +20,6 @@ import dev.rurino.hasugoods.util.ParticleUtils.Emitter;
 import dev.rurino.hasugoods.util.animation.Animation;
 import dev.rurino.hasugoods.util.animation.Interpolator;
 import dev.rurino.hasugoods.util.animation.KeyFrame;
-import dev.rurino.hasugoods.util.config.HcVal;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
@@ -34,13 +32,13 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.neoforged.neoforge.common.ModConfigSpec.LongValue;
 
 public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
   private static final int CHECK_STRUCTURE_INTERVAL = 8;
   private static final float LINK_PARTICLE_VELOCITY = 0.1f;
   private static final String NBT_NESOBASES = "nesobases";
-  private static final HcVal.Long CHARGE_AMOUNT_PER_TICK = NesoConfig.NESO
-      .getLong("pos0ChargeAmountPerTick", 128);
+  private static final LongValue CHARGE_AMOUNT_PER_TICK = Hasugoods.CONFIG.neso.pos0ChargeAmountPerTick;
 
   static void initialize() {
     Hasugoods.LOGGER.debug("Position zero block entity initialized");
@@ -402,7 +400,7 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
 
   @Override
   protected long chargeAmountPerTick(World world, BlockPos blockPos, BlockState blockState) {
-    return CHARGE_AMOUNT_PER_TICK.val();
+    return CHARGE_AMOUNT_PER_TICK.get();
   }
 
   @Override

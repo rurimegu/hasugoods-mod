@@ -45,7 +45,5 @@ public class Hasugoods implements ModInitializer {
     ModEffects.initialize();
     ModEntities.initialize();
     ModNetwork.initialize();
-
-    ModConfig.onInitializateComplete();
   }
 }

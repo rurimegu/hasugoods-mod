@@ -10,12 +10,10 @@ import java.util.stream.Stream;
 import com.google.common.collect.ImmutableSet;
 
 import dev.rurino.hasugoods.Hasugoods;
-import dev.rurino.hasugoods.config.ModConfig;
 import dev.rurino.hasugoods.effect.ToutoshiEffectsConsumeEffect;
 import dev.rurino.hasugoods.item.ModItems;
 import dev.rurino.hasugoods.util.CharaUtils;
 import dev.rurino.hasugoods.util.CharaUtils.IWithChara;
-import dev.rurino.hasugoods.util.config.HcVal;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.minecraft.component.DataComponentTypes;
@@ -33,21 +31,18 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Rarity;
 import net.minecraft.village.VillagerProfession;
+import net.neoforged.neoforge.common.ModConfigSpec.IntValue;
 
 public class BadgeItem extends Item implements IWithChara {
   // #region Static fields
   public static final DeathProtectionComponent HASU_BADGE_DEATH_PROTECTION = new DeathProtectionComponent(
       List.<ConsumeEffect>of(new ClearAllEffectsConsumeEffect(), new ToutoshiEffectsConsumeEffect()));
 
-  private static final HcVal.Int CHEST_BADGE_DROP_MIN_COUNT = ModConfig.LOOT.getInt("chestBadgeDropMinCount", 1)
-      .nonnegative();
-  private static final HcVal.Int CHEST_BADGE_DROP_MAX_COUNT = ModConfig.LOOT.getInt("chestBadgeDropMaxCount", 3)
-      .nonnegative();
-  private static final HcVal.Int CHEST_EMPTY_DROP_WEIGHT = ModConfig.LOOT.getInt("chestEmptyDropWeight", 20)
-      .nonnegative();
-  private static final HcVal.Int CHEST_BADGE_DROP_WEIGHT = ModConfig.LOOT.getInt("chestBadgeDropWeight", 70)
-      .nonnegative();
-  private static final HcVal.Int CHEST_BOX_DROP_WEIGHT = ModConfig.LOOT.getInt("chestBoxDropWeight", 10).nonnegative();
+  private static final IntValue CHEST_BADGE_DROP_MIN_COUNT = Hasugoods.CONFIG.loot.chestBadgeDropMinCount;
+  private static final IntValue CHEST_BADGE_DROP_MAX_COUNT = Hasugoods.CONFIG.loot.chestBadgeDropMaxCount;
+  private static final IntValue CHEST_EMPTY_DROP_WEIGHT = Hasugoods.CONFIG.loot.chestEmptyDropWeight;
+  private static final IntValue CHEST_BADGE_DROP_WEIGHT = Hasugoods.CONFIG.loot.chestBadgeDropWeight;
+  private static final IntValue CHEST_BOX_DROP_WEIGHT = Hasugoods.CONFIG.loot.chestBoxDropWeight;
 
   public static final ImmutableSet<VillagerProfession> BADGE_TRADE_VILLAGER_PROFESSIONS = ImmutableSet
       .of(VillagerProfession.ARMORER,
@@ -148,12 +143,12 @@ public class BadgeItem extends Item implements IWithChara {
       if (source.isBuiltin() && key.getValue().getPath().startsWith("chests/")) {
         // Give 0~3 badges, or 20 badges if really lucky.
         LootPool.Builder poolBuilder = LootPool.builder()
-            .with(EmptyEntry.builder().weight(CHEST_EMPTY_DROP_WEIGHT.val()))
-            .with(ItemEntry.builder(UNOPENED_BADGE).weight(CHEST_BADGE_DROP_WEIGHT.val())
+            .with(EmptyEntry.builder().weight(CHEST_EMPTY_DROP_WEIGHT.get()))
+            .with(ItemEntry.builder(UNOPENED_BADGE).weight(CHEST_BADGE_DROP_WEIGHT.get())
                 .apply(SetCountLootFunction
-                    .builder(UniformLootNumberProvider.create(CHEST_BADGE_DROP_MIN_COUNT.val(),
-                        CHEST_BADGE_DROP_MAX_COUNT.val()))))
-            .with(ItemEntry.builder(BOX_OF_BADGE).weight(CHEST_BOX_DROP_WEIGHT.val()));
+                    .builder(UniformLootNumberProvider.create(CHEST_BADGE_DROP_MIN_COUNT.get(),
+                        CHEST_BADGE_DROP_MAX_COUNT.get()))))
+            .with(ItemEntry.builder(BOX_OF_BADGE).weight(CHEST_BOX_DROP_WEIGHT.get()));
         tableBuilder.pool(poolBuilder);
       }
     });

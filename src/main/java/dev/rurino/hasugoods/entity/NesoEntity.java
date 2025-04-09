@@ -48,7 +48,7 @@ public class NesoEntity extends LivingEntity implements INesoEntity {
   }
 
   private static NesoEntity createNesoEntity(EntityType<NesoEntity> entityType, World world,
-                                             String charaKey, NesoSize size) {
+      String charaKey, NesoSize size) {
     return switch (charaKey) {
       case CharaUtils.RURINO_KEY -> new RurinoNesoEntity(entityType, world, size);
       case CharaUtils.MEGUMI_KEY -> new MegumiNesoEntity(entityType, world, size);
@@ -70,7 +70,7 @@ public class NesoEntity extends LivingEntity implements INesoEntity {
       case LARGE -> 0.96f;
     };
     EntityType<NesoEntity> entityType = EntityType.Builder.<NesoEntity>create(
-            (type, world) -> createNesoEntity(type, world, charaKey, size), SpawnGroup.MISC).dimensions(width, height)
+        (type, world) -> createNesoEntity(type, world, charaKey, size), SpawnGroup.MISC).dimensions(width, height)
         .eyeHeight(height * 0.4f)
         .dropsNothing()
         .build(key);
@@ -91,8 +91,8 @@ public class NesoEntity extends LivingEntity implements INesoEntity {
   }
 
   public static NesoEntity spawnFromItemStack(EntityType<NesoEntity> entityType, ServerWorld world, ItemStack stack,
-                                              PlayerEntity player, BlockPos pos,
-                                              SpawnReason spawnReason, boolean alignPosition, boolean invertY, float initYaw) {
+      PlayerEntity player, BlockPos pos,
+      SpawnReason spawnReason, boolean alignPosition, boolean invertY, float initYaw) {
     Consumer<NesoEntity> consumer;
     if (stack != null) {
       consumer = EntityType.copier(world, stack, player);
@@ -198,6 +198,6 @@ public class NesoEntity extends LivingEntity implements INesoEntity {
   }
 
   public NesoConfig.Base getConfig() {
-    return NesoConfig.getConfig(NesoConfig.Base.class, charaKey, nesoSize);
+    return Hasugoods.CONFIG.neso.getConfig(NesoConfig.Base.class, charaKey, nesoSize);
   }
 }

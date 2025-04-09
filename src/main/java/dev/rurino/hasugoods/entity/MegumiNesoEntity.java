@@ -24,7 +24,7 @@ public class MegumiNesoEntity extends NesoEntity {
 
   public MegumiNesoEntity(EntityType<? extends LivingEntity> type, World world, NesoSize size) {
     super(type, world, CharaUtils.MEGUMI_KEY, size);
-    config = NesoConfig.getConfig(NesoConfig.Megumi.class, CharaUtils.MEGUMI_KEY, size);
+    config = Hasugoods.CONFIG.neso.getConfig(NesoConfig.Megumi.class, CharaUtils.MEGUMI_KEY, size);
     oshiHenTimer = Timer.loop(config.oshiHenInterval(), this::slowTick);
   }
 

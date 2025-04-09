@@ -15,7 +15,6 @@ import dev.rurino.hasugoods.particle.HasuParticleEffect;
 import dev.rurino.hasugoods.util.CharaUtils;
 import dev.rurino.hasugoods.util.CollectionUtils;
 import dev.rurino.hasugoods.util.MathUtils;
-import dev.rurino.hasugoods.util.config.HcVal;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -31,14 +30,6 @@ import net.minecraft.world.World;
 
 public class KahoNesoComponent {
   // #region Static fields
-  private static final HcVal.Int MAX_SPREAD_DELTA_Y = NesoConfig.KAHO
-      .getInt("maxSpreadDeltaY", 3)
-      .nonnegative()
-      .max(128);
-  private static final HcVal.Int NUM_PARTICLES = NesoConfig.KAHO
-      .getInt("numParticles", 4)
-      .nonnegative()
-      .max(128);
 
   private static final List<Block> FLOWER_BLOCKS = List.of(
       Blocks.DANDELION,
@@ -108,8 +99,8 @@ public class KahoNesoComponent {
     }
   }
 
-  private static void emitParticles(ServerWorld world, BlockPos pos) {
-    int count = NUM_PARTICLES.val();
+  private static void emitParticles(TickContext context, BlockPos pos) {
+    int count = context.config.numParticles();
     var effect = HasuParticleEffect.Builder.charaIcon(CharaUtils.KAHO_KEY).initialScale(0.2f).build();
     EmitParticlesPayload payload = new EmitParticlesPayload(
         EmitParticlesPayload.TYPE_RANDOM_UP,
@@ -117,7 +108,7 @@ public class KahoNesoComponent {
         pos.toCenterPos(),
         count);
 
-    ModNetwork.sendPacketToPlayersTracking(world, pos, payload);
+    ModNetwork.sendPacketToPlayersTracking(context.world(), pos, payload);
   }
 
   private static boolean validForReplace(World world, BlockState state, BlockPos pos) {
@@ -165,14 +156,14 @@ public class KahoNesoComponent {
 
     allSpread.add(pos);
     lastSpread.add(pos);
-    emitParticles(context.world(), pos);
+    emitParticles(context, pos);
     return true;
   }
 
   private boolean trySpreadDown(TickContext context, BlockPos pos) {
     World world = context.world();
     BlockState state = world.getBlockState(pos);
-    int maxDy = MAX_SPREAD_DELTA_Y.val();
+    int maxDy = context.config().maxSpreadDeltaY();
     if (state.isReplaceable() || FLOWER_BLOCKS.stream().anyMatch(b -> state.isOf(b))) {
       for (int dy = -1; dy >= -maxDy; dy--) {
         BlockPos newPos = pos.add(0, dy, 0);
@@ -187,7 +178,7 @@ public class KahoNesoComponent {
 
   private boolean trySpreadUp(TickContext context, BlockPos pos) {
     World world = context.world();
-    int maxDy = MAX_SPREAD_DELTA_Y.val();
+    int maxDy = context.config().maxSpreadDeltaY();
     for (int dy = 0; dy <= maxDy; dy++) {
       BlockPos newPos = pos.add(0, dy, 0);
       if (!world.getBlockState(newPos.up()).isReplaceable())
@@ -223,7 +214,7 @@ public class KahoNesoComponent {
       // Replace dirt with grass block
       if (context.tryAction()) {
         world.setBlockState(pos, Blocks.GRASS_BLOCK.getDefaultState());
-        emitParticles(world, pos);
+        emitParticles(context, pos);
       }
       return;
     }
@@ -236,7 +227,7 @@ public class KahoNesoComponent {
         } else {
           world.setBlockState(upPos, flowerBlock.getDefaultState());
         }
-        emitParticles(world, pos);
+        emitParticles(context, pos);
       }
       return;
     }

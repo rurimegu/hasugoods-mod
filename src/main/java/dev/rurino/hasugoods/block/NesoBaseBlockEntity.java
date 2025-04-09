@@ -1,20 +1,18 @@
 package dev.rurino.hasugoods.block;
 
 import dev.rurino.hasugoods.Hasugoods;
-import dev.rurino.hasugoods.config.NesoConfig;
 import dev.rurino.hasugoods.util.Timer;
-import dev.rurino.hasugoods.util.config.HcVal;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper.WrapperLookup;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.neoforged.neoforge.common.ModConfigSpec.LongValue;
 
 public class NesoBaseBlockEntity extends AbstractNesoBaseBlockEntity {
   private static final int CHECK_POS_0_INTERVAL = 8;
   private static final String NBT_POS_0 = "pos0";
-  private static final HcVal.Long CHARGE_AMOUNT_PER_TICK = NesoConfig.NESO
-      .getLong("nesoBaseChargeAmountPerTick", 8);
+  private static final LongValue CHARGE_AMOUNT_PER_TICK = Hasugoods.CONFIG.neso.nesoBaseChargeAmountPerTick;
 
   static void initialize() {
     Hasugoods.LOGGER.debug("Neso base block entity initialized");
@@ -81,7 +79,7 @@ public class NesoBaseBlockEntity extends AbstractNesoBaseBlockEntity {
 
   @Override
   protected long chargeAmountPerTick(World world, BlockPos blockPos, BlockState blockState) {
-    return CHARGE_AMOUNT_PER_TICK.val();
+    return CHARGE_AMOUNT_PER_TICK.get();
   }
 
   @Override

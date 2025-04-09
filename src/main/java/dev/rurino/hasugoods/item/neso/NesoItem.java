@@ -79,7 +79,7 @@ public class NesoItem extends Item implements INesoItem {
       case LARGE -> Rarity.RARE;
     };
     Settings settings = new Settings().maxCount(1).rarity(rarity).registryKey(key);
-    NesoConfig.Base config = NesoConfig.getConfig(charaKey, size);
+    NesoConfig.Base config = Hasugoods.CONFIG.neso.getConfig(charaKey, size);
     if (config == null) {
       Hasugoods.LOGGER.warn("Config for {}, {} not found", charaKey, size);
     } else {
@@ -115,7 +115,7 @@ public class NesoItem extends Item implements INesoItem {
     super(settings);
     this.charaKey = charaKey;
     this.nesoSize = size;
-    this.config = NesoConfig.getConfig(charaKey, size);
+    this.config = Hasugoods.CONFIG.neso.getConfig(charaKey, size);
   }
 
   @Override
