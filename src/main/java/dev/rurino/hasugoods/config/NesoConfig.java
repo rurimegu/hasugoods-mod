@@ -22,6 +22,8 @@ public class NesoConfig {
   // #region Individual Configs
   public static abstract class Base {
     private final LongValue maxEnergy;
+    private final DoubleValue useCooldown;
+
     private final String charaKey;
     private final NesoSize size;
 
@@ -37,6 +39,10 @@ public class NesoConfig {
       long defaultMaxEnergy = getDefaultMaxEnergy(size);
       maxEnergy = builder.defineInRange("max_energy", defaultMaxEnergy, 0, Long.MAX_VALUE);
 
+      builder.comment("Use cooldown for " + charaKey + " " + sizeName + " neso");
+      float defaultUseCooldown = getDefaultUseCooldown(size);
+      useCooldown = builder.defineInRange("use_cooldown", defaultUseCooldown, 0f, Float.MAX_VALUE);
+
       // Each subclass will add its own configuration entries and call builder.pop()
     }
 
@@ -46,6 +52,10 @@ public class NesoConfig {
         case MEDIUM -> 1000 * 1000;
         case LARGE -> 16 * 1000 * 1000;
       };
+    }
+
+    protected float getDefaultUseCooldown(NesoSize size) {
+      return 0f;
     }
 
     public long maxEnergy() {
@@ -60,7 +70,9 @@ public class NesoConfig {
       return size;
     }
 
-    public abstract float useCooldown();
+    public float useCooldown() {
+      return useCooldown.get().floatValue();
+    }
   }
 
   public static class Placeholder extends Base {
@@ -69,11 +81,6 @@ public class NesoConfig {
 
       builder.pop(); // sizeName
       builder.pop(); // charaKey
-    }
-
-    @Override
-    public float useCooldown() {
-      return 0f;
     }
   }
 
@@ -160,8 +167,8 @@ public class NesoConfig {
     }
 
     @Override
-    public float useCooldown() {
-      return switch (getSize()) {
+    public float getDefaultUseCooldown(NesoSize size) {
+      return switch (size) {
         case SMALL -> 5f;
         case MEDIUM -> 5f;
         case LARGE -> 10f;
@@ -282,7 +289,7 @@ public class NesoConfig {
     }
 
     @Override
-    public float useCooldown() {
+    public float getDefaultUseCooldown(NesoSize size) {
       return 1f;
     }
 
@@ -404,7 +411,7 @@ public class NesoConfig {
     }
 
     @Override
-    public float useCooldown() {
+    public float getDefaultUseCooldown(NesoSize size) {
       return 1f;
     }
 
