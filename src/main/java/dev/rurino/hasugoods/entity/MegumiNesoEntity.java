@@ -4,9 +4,13 @@ import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.component.IOshiComponent;
 import dev.rurino.hasugoods.component.ModComponents;
 import dev.rurino.hasugoods.config.NesoConfig;
+import dev.rurino.hasugoods.network.EmitParticlesPayload;
+import dev.rurino.hasugoods.network.ModNetwork;
+import dev.rurino.hasugoods.particle.HasuParticleEffect;
 import dev.rurino.hasugoods.util.CharaUtils;
 import dev.rurino.hasugoods.util.CharaUtils.NesoSize;
 import dev.rurino.hasugoods.util.Timer;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
@@ -18,6 +22,21 @@ import java.util.Collection;
 import java.util.List;
 
 public class MegumiNesoEntity extends NesoEntity {
+
+  private static final float PARTICLE_SCALE = 0.2f;
+  private static final int PARTICLE_MAX_AGE = 40;
+
+  private static void emitOshiHenParticles(Entity entity) {
+    HasuParticleEffect.Builder builder = HasuParticleEffect.Builder.charaIcon(CharaUtils.MEGUMI_KEY)
+        .initialScale(PARTICLE_SCALE * entity.getWidth())
+        .maxAge(PARTICLE_MAX_AGE);
+    EmitParticlesPayload payload = new EmitParticlesPayload(
+        EmitParticlesPayload.TYPE_UP,
+        builder.build(),
+        entity.getEyePos());
+
+    ModNetwork.sendPacketToPlayersTracking(entity, payload);
+  }
 
   private final NesoConfig.Megumi config;
   private final Timer oshiHenTimer;
@@ -43,6 +62,7 @@ public class MegumiNesoEntity extends NesoEntity {
       if (!oshiComponent.getOshiKey().equals(getCharaKey()) && useEnergy(config.oshiHenEnergy())) {
         oshiComponent.setOshiKey(getCharaKey());
         increased++;
+        emitOshiHenParticles(entity);
       }
     }
     if (increased > 0) {
