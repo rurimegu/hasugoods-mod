@@ -36,12 +36,26 @@ jobs:
         run: chmod +x ./gradlew
       - name: build
         run: ./gradlew build
+      - name: copy artifacts to root
+        run: "find './build/libs'
+          -maxdepth 1
+          -name '*.jar'
+          ! -name '*-dev-shadow.jar'
+          ! -name '*-sources.jar'
+          -exec cp -t ./ {} +"
       - name: capture build artifacts
         if: ${{ matrix.java == '21' }} # Only upload artifacts built from latest java
         uses: actions/upload-artifact@v4
         with:
-          name: Artifacts
-          path: build/libs/
+          name: Built jars
+          path: "*.jar"
+      - name: release
+        uses: softprops/action-gh-release@v2
+        if: github.ref_type == 'tag'
+        with:
+          files: |
+            LICENSE
+            *.jar
       - name: upload build reports
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
