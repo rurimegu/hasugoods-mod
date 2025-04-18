@@ -25,8 +25,7 @@ public class HeldItemRendererMixin {
     // Ignore the energy component which changes every tick.
     if (Iterators.elementsEqual(
         from.getComponents().stream().filter(c -> c.type() != EnergyStorage.ENERGY_COMPONENT).iterator(),
-        to.getComponents().stream().filter(c -> c.type() != EnergyStorage.ENERGY_COMPONENT).iterator()
-    )) {
+        to.getComponents().stream().filter(c -> c.type() != EnergyStorage.ENERGY_COMPONENT).iterator())) {
       cir.setReturnValue(true);
     }
   }
