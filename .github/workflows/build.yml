@@ -8,6 +8,8 @@ on:
   push:
     branches:
       - 1.21.4-fabric
+    tags:
+      - v*.*.*
   pull_request:
     branches:
       - 1.21.4-fabric
