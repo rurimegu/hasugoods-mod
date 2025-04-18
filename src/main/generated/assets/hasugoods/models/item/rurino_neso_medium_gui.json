@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "hasugoods:item/rurino_badge",
+    "layer0": "hasugoods:item/neso/rurino_icon",
     "layer1": "hasugoods:item/neso/medium"
   }
 }

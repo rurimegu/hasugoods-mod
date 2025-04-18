@@ -142,28 +142,3 @@ publishing {
     // retrieving dependencies.
   }
 }
-
-sourceSets {
-  main {
-    java {
-      srcDirs += "dev/generatedJava"
-      exclude "dev/rurino/hasugoods/util/HasuConfig.java"
-    }
-  }
-}
-
-task copyProcessedAnnotations {
-  group "ide"
-
-  copy {
-    from "build/generated/sources/annotationProcessor/java/main/"
-    into "dev/generatedJava/dev/rurino/hasugoods/util"
-    include '**/*.java'
-  }
-
-  copy {
-    from "bin/generated-sources/annotations/"
-    into "dev/generatedJava/dev/rurino/hasugoods/util"
-    include '**/*.java'
-  }
-}
