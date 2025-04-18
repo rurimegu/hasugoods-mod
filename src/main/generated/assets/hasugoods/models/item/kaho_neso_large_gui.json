@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "hasugoods:item/neso/wip_icon",
+    "layer0": "hasugoods:item/neso/kaho_icon",
     "layer1": "hasugoods:item/neso/large"
   }
 }

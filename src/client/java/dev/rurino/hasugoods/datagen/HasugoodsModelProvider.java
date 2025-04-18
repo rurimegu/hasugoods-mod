@@ -1,6 +1,7 @@
 package dev.rurino.hasugoods.datagen;
 
 import java.util.Map;
+import java.util.function.Supplier;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonArray;
@@ -111,20 +112,33 @@ public class HasugoodsModelProvider extends FabricModelProvider {
     private static final Identifier PARENT = Identifier.of("minecraft", "item/generated");
 
     private final NesoItem item;
+    private int layerId;
 
     public NesoGuiModelSupplier(NesoItem item) {
       this.item = item;
     }
 
+    private void beginLayers() {
+      layerId = 0;
+    }
+
+    private String nextLayer() {
+      return "layer" + layerId++;
+    }
+
     public JsonObject getTextures() {
       JsonObject ret = new JsonObject();
       Identifier id = Hasugoods.id("item/neso/" + item.getCharaKey() + "_icon");
-      if (!HasugoodsDataGenerator.V.resourceExists(id.withPrefixedPath("textures/").withSuffixedPath(".png"))) {
+      beginLayers();
+      if (HasugoodsDataGenerator.V.resourceExists(id.withPrefixedPath("textures/").withSuffixedPath(".png"))) {
+        ret.addProperty(nextLayer(), id.toString());
+      } else {
         Hasugoods.LOGGER.warn("Neso icon not found: {}", id);
-        id = Hasugoods.id("item/neso/wip_icon");
+        id = ModelIds.getItemModelId(BadgeItem.getBadgeItem(item.getCharaKey()).get());
+        ret.addProperty(nextLayer(), id.toString());
+        ret.addProperty(nextLayer(), Hasugoods.id("item/neso/wip_icon").toString());
       }
-      ret.addProperty("layer0", id.toString());
-      ret.addProperty("layer1", switch (item.getNesoSize()) {
+      ret.addProperty(nextLayer(), switch (item.getNesoSize()) {
         case SMALL -> Hasugoods.id("item/neso/small").toString();
         case MEDIUM -> Hasugoods.id("item/neso/medium").toString();
         case LARGE -> Hasugoods.id("item/neso/large").toString();
