@@ -208,7 +208,7 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
           DEFAULT_NOTE_PARTICLE_EFFECT);
     } else {
       if (!itemStack.isEmpty()) {
-        Hasugoods.LOGGER.warn("Unexpected item stack inserted into NesoBaseBlock: {}", itemStack);
+        Hasugoods.LOGGER.error("Unexpected item stack inserted into NesoBaseBlock: {}", itemStack);
       }
       noteParticleEffect = DEFAULT_NOTE_PARTICLE_EFFECT;
     }

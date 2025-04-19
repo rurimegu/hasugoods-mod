@@ -162,7 +162,7 @@ public class NesoEntity extends LivingEntity implements INesoEntity {
   @Override
   public void equipStack(EquipmentSlot slot, ItemStack stack) {
     // Cannot equip items
-    Hasugoods.LOGGER.warn("Cannot equip items to NesoEntity: {}", stack);
+    Hasugoods.LOGGER.error("Cannot equip items to NesoEntity: {}", stack);
   }
 
   @Override

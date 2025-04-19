@@ -7,6 +7,8 @@ import dev.rurino.hasugoods.component.IToutoshiComponent;
 import dev.rurino.hasugoods.component.ModComponents;
 import dev.rurino.hasugoods.damage.ModDamageTypes;
 import dev.rurino.hasugoods.damage.ToutoshiDamageSource;
+import dev.rurino.hasugoods.util.CharaUtils;
+import dev.rurino.hasugoods.util.CharaUtils.IWithChara;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffect;
@@ -16,12 +18,15 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ServerWorld;
 import net.neoforged.neoforge.common.ModConfigSpec.DoubleValue;
 
-public class OshiProtectionEffect extends StatusEffect {
+public class OshiProtectionEffect extends StatusEffect implements IWithChara {
 
   private static final DoubleValue TOUTOSHISHI_DAMAGE = Hasugoods.CONFIG.oshiProtection.toutoshiDamage;
 
-  public OshiProtectionEffect() {
-    super(StatusEffectCategory.BENEFICIAL, 0xffd700);
+  private final String charaKey;
+
+  public OshiProtectionEffect(String charaKey) {
+    super(StatusEffectCategory.BENEFICIAL, CharaUtils.getCharaColor(charaKey));
+    this.charaKey = charaKey;
   }
 
   @Override
@@ -50,5 +55,10 @@ public class OshiProtectionEffect extends StatusEffect {
         item);
     entity.damage(world, damageSource, TOUTOSHISHI_DAMAGE.get().floatValue());
     return true;
+  }
+
+  @Override
+  public String getCharaKey() {
+    return charaKey;
   }
 }

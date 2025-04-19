@@ -70,7 +70,7 @@ public class Timer {
    */
   public Timer attachToServerTick(World world) {
     if (world.isClient) {
-      Hasugoods.LOGGER.warn("Timer cannot attach to server tick in client world, ignored.");
+      Hasugoods.LOGGER.error("Timer cannot attach to server tick in client world, ignored.");
       return this;
     }
     worldTickTimers.add(new Pair<>(world, this));

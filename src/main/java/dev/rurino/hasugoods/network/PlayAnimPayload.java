@@ -53,7 +53,7 @@ abstract class AbstractPlayAnimPayload implements CustomPayload {
 
   public void apply(World world) {
     if (!world.isClient) {
-      Hasugoods.LOGGER.warn("Should not receive PlayAnimPayload on server, skipped");
+      Hasugoods.LOGGER.error("Should not receive PlayAnimPayload on server, skipped");
       return;
     }
     for (Transit anim : anims) {

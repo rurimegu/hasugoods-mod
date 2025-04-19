@@ -57,7 +57,7 @@ public class ParticleUtils {
 
     public void emit(World world, Vec3d pos) {
       if (!world.isClient) {
-        Hasugoods.LOGGER.warn("Emitter ticked on server side, skipped");
+        Hasugoods.LOGGER.error("Emitter ticked on server side, skipped");
         return;
       }
       this.triggerCount++;

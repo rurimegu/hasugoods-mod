@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.google.common.collect.ImmutableSet;
@@ -29,14 +30,19 @@ import net.minecraft.loot.function.SetCountLootFunction;
 import net.minecraft.loot.provider.number.UniformLootNumberProvider;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.util.Pair;
 import net.minecraft.util.Rarity;
 import net.minecraft.village.VillagerProfession;
 import net.neoforged.neoforge.common.ModConfigSpec.IntValue;
 
 public class BadgeItem extends Item implements IWithChara {
   // #region Static fields
-  public static final DeathProtectionComponent HASU_BADGE_DEATH_PROTECTION = new DeathProtectionComponent(
-      List.<ConsumeEffect>of(new ClearAllEffectsConsumeEffect(), new ToutoshiEffectsConsumeEffect()));
+  private static final Map<String, DeathProtectionComponent> DEATH_PROTECTION_COMPONENTS = CharaUtils.ALL_CHARA_KEYS
+      .stream().map(key -> new Pair<>(key, new DeathProtectionComponent(
+          List.<ConsumeEffect>of(new ClearAllEffectsConsumeEffect(), new ToutoshiEffectsConsumeEffect(key)))))
+      .collect(Collectors.toMap(
+          Pair::getLeft,
+          Pair::getRight));
 
   private static final IntValue CHEST_BADGE_DROP_MIN_COUNT = Hasugoods.CONFIG.loot.chestBadgeDropMinCount;
   private static final IntValue CHEST_BADGE_DROP_MAX_COUNT = Hasugoods.CONFIG.loot.chestBadgeDropMaxCount;
@@ -115,10 +121,14 @@ public class BadgeItem extends Item implements IWithChara {
   private static Item registerBadge(String charaKey, boolean isSecret) {
     RegistryKey<Item> key = RegistryKey.of(RegistryKeys.ITEM,
         Hasugoods.id(charaKey + (isSecret ? "_secret" : "") + "_badge"));
+    DeathProtectionComponent deathProtectionComponent = DEATH_PROTECTION_COMPONENTS.get(charaKey);
+    if (deathProtectionComponent == null) {
+      Hasugoods.LOGGER.error("Cannot find death protection component for {}", charaKey);
+    }
     Item item = ModItems.register(
         key,
         new BadgeItem(new Settings().maxCount(16).rarity(isSecret ? Rarity.UNCOMMON : Rarity.COMMON)
-            .component(DataComponentTypes.DEATH_PROTECTION, HASU_BADGE_DEATH_PROTECTION)
+            .component(DataComponentTypes.DEATH_PROTECTION, deathProtectionComponent)
             .registryKey(key), charaKey, isSecret));
     if (isSecret)
       ALL_SECRET_BADGES.put(charaKey, new BadgeItemEntry(key, (BadgeItem) item));

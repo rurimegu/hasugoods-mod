@@ -85,7 +85,7 @@ public class NesoItem extends Item implements INesoItem {
     Settings settings = new Settings().maxCount(1).rarity(rarity).registryKey(key);
     NesoConfig.Base config = Hasugoods.CONFIG.neso.getConfig(charaKey, size);
     if (config == null) {
-      Hasugoods.LOGGER.warn("Config for {}, {} not found", charaKey, size);
+      Hasugoods.LOGGER.error("Config for {}, {} not found", charaKey, size);
     } else {
       settings = settings.useCooldown(config.useCooldown());
     }
@@ -142,7 +142,7 @@ public class NesoItem extends Item implements INesoItem {
   @Override
   public int getItemBarColor(ItemStack stack) {
     if (!(stack.getItem() instanceof NesoItem item)) {
-      Hasugoods.LOGGER.warn("getItemBarColor called on non-neso ItemStack {}", stack);
+      Hasugoods.LOGGER.error("getItemBarColor called on non-neso ItemStack {}", stack);
       return 0xFFFFFF;
     }
     return CharaUtils.getCharaColor(item.getCharaKey());
