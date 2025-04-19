@@ -1,5 +1,9 @@
 package dev.rurino.hasugoods.effect;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 import com.mojang.serialization.MapCodec;
 
 import dev.rurino.hasugoods.Hasugoods;
@@ -17,6 +21,19 @@ public class ModEffects {
 
   public static final RegistryEntry<StatusEffect> OSHI_PROTECTION = Registry.registerReference(
       Registries.STATUS_EFFECT, Hasugoods.id("oshi_protection"), new OshiProtectionEffect());
+
+  public static final Map<String, RegistryEntry<StatusEffect>> STATUS_EFFECTS = new HashMap<>();
+
+  public static Optional<RegistryEntry<StatusEffect>> getStatusEffect(String charaKey) {
+    return Optional.ofNullable(STATUS_EFFECTS.get(charaKey));
+  }
+
+  private static RegistryEntry<StatusEffect> register(String id, StatusEffect entry) {
+    Hasugoods.LOGGER.debug("Register StatusEffect: " + id);
+    return STATUS_EFFECTS.put(
+        id,
+        Registry.registerReference(Registries.STATUS_EFFECT, Hasugoods.id(id), entry));
+  }
 
   // #region ConsumeEffects
 

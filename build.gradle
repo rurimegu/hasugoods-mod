@@ -46,6 +46,8 @@ repositories {
 
 loom {
   splitEnvironmentSourceSets()
+  
+  log4jConfigs.from file("src/dev/resources/log4j.xml")
 
   mods {
     "hasugoods" {
