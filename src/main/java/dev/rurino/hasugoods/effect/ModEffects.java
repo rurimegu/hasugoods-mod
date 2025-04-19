@@ -22,7 +22,7 @@ public class ModEffects {
 
   private static <T extends ConsumeEffect> ConsumeEffect.Type<T> registerConsumeEffect(String id, MapCodec<T> codec,
       PacketCodec<RegistryByteBuf, T> packetCodec) {
-    Hasugoods.LOGGER.info("Register ConsumeEffect: " + id);
+    Hasugoods.LOGGER.debug("Register ConsumeEffect: " + id);
     return Registry.register(Registries.CONSUME_EFFECT_TYPE, id, new ConsumeEffect.Type<T>(codec, packetCodec));
   }
 

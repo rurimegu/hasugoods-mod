@@ -507,7 +507,7 @@ public class NesoConfig {
     if (CONFIGS.containsKey(key)) {
       Hasugoods.LOGGER.warn("Config for {} already registered, replacing", key);
     } else {
-      Hasugoods.LOGGER.info("Register config: {}", key);
+      Hasugoods.LOGGER.debug("Register config: {}", key);
     }
     CONFIGS.put(key, config);
   }

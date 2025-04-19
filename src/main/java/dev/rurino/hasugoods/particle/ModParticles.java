@@ -28,7 +28,7 @@ public class ModParticles {
 
   public static void register(String name, ParticleType<? extends ParticleEffect> particleType) {
     Identifier id = Hasugoods.id(name);
-    Hasugoods.LOGGER.info("Register particle: {}", id);
+    Hasugoods.LOGGER.debug("Register particle: {}", id);
     PARTICLES.put(name, Registry.register(Registries.PARTICLE_TYPE, id, particleType));
   }
 

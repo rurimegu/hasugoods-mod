@@ -37,7 +37,7 @@ public class ModItems {
   public static final TagKey<Item> TAG_NESOS = TagKey.of(RegistryKeys.ITEM, Hasugoods.id("nesos"));
 
   public static Item register(RegistryKey<Item> registryKey, Item item, boolean registerInGroup) {
-    Hasugoods.LOGGER.info("Register item: " + registryKey.getValue());
+    Hasugoods.LOGGER.debug("Register item: " + registryKey.getValue());
     Item registeredItem = Registry.register(Registries.ITEM, registryKey.getValue(), item);
     if (registerInGroup) {
       ALL_ITEMS_IN_GROUP.add(registeredItem);

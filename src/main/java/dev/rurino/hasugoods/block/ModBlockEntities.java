@@ -20,7 +20,7 @@ public class ModBlockEntities {
       FabricBlockEntityTypeBuilder.Factory<? extends T> entityFactory,
       Block... blocks) {
     Identifier id = Hasugoods.id(name);
-    Hasugoods.LOGGER.info("Register block entity: {}", id);
+    Hasugoods.LOGGER.debug("Register block entity: {}", id);
     return Registry.register(Registries.BLOCK_ENTITY_TYPE, id,
         FabricBlockEntityTypeBuilder.<T>create(entityFactory, blocks).build());
   }

@@ -32,13 +32,13 @@ public class ModBlocks {
 
     if (itemSettings != null) {
       RegistryKey<Item> itemKey = RegistryKey.of(RegistryKeys.ITEM, Hasugoods.id(name));
-      Hasugoods.LOGGER.info("Register block item: {}", itemKey.getValue());
+      Hasugoods.LOGGER.debug("Register block item: {}", itemKey.getValue());
 
       BlockItem blockItem = new BlockItem(block, itemSettings.registryKey(itemKey));
       ALL_BLOCKS_ITEMS.add(Registry.register(Registries.ITEM, itemKey, blockItem));
     }
 
-    Hasugoods.LOGGER.info("Register block: {}", blockKey.getValue());
+    Hasugoods.LOGGER.debug("Register block: {}", blockKey.getValue());
     return Registry.register(Registries.BLOCK, blockKey, block);
   }
 

@@ -29,7 +29,7 @@ public class ClientEntities {
           Hasugoods.LOGGER.warn("Failed to get NesoItem for {} {}", charaKey, size);
           continue;
         }
-        Hasugoods.LOGGER.info("Register entity renderer for {} {}", charaKey, size);
+        Hasugoods.LOGGER.debug("Register entity renderer for {} {}", charaKey, size);
         EntityRendererRegistry.register(entityType.get(), (context) -> {
           return new NesoEntityRenderer(context, new NesoEntityModel(item.get()));
         });

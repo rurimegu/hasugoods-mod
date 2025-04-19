@@ -10,7 +10,7 @@ import net.minecraft.registry.RegistryKey;
 public class ModEntities {
 
   public static <T extends Entity> EntityType<T> register(RegistryKey<EntityType<?>> registryKey, EntityType<T> type) {
-    Hasugoods.LOGGER.info("Register entity type: " + registryKey.getValue());
+    Hasugoods.LOGGER.debug("Register entity type: " + registryKey.getValue());
     return Registry.register(Registries.ENTITY_TYPE, registryKey.getValue(), type);
   }
 

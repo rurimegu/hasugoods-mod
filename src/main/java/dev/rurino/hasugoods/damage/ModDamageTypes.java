@@ -9,7 +9,7 @@ public class ModDamageTypes {
   public static final RegistryKey<DamageType> TOUTOSHI_DAMAGE = register("toutoshi");
 
   private static RegistryKey<DamageType> register(String id) {
-    Hasugoods.LOGGER.info("Register DamageType: " + id);
+    Hasugoods.LOGGER.debug("Register DamageType: " + id);
     return RegistryKey.of(RegistryKeys.DAMAGE_TYPE, Hasugoods.id(id));
   }
 
