@@ -56,7 +56,7 @@ jobs:
         if: github.ref_type == 'tag'
         with:
           files: |
-            LICENSE
+            *_LICENSE
             *.jar
       - name: upload build reports
         if: ${{ failure() }}
