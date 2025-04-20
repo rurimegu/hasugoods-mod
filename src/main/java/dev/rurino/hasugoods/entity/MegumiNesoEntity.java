@@ -91,7 +91,11 @@ public class MegumiNesoEntity extends NesoEntity {
   private void slowTick() {
     Box box = new Box(getBlockPos()).expand(config.oshiHenRadius());
     List<LivingEntity> entities = getWorld()
-        .getEntitiesByClass(LivingEntity.class, box, e -> ModComponents.OSHI.maybeGet(e).isPresent());
+        .getEntitiesByClass(LivingEntity.class, box, e -> {
+          if (e instanceof PlayerEntity || e instanceof INesoEntity)
+            return false;
+          return ModComponents.OSHI.maybeGet(e).isPresent();
+        });
     tickOshiHen(entities);
     tickOshi(entities);
   }
