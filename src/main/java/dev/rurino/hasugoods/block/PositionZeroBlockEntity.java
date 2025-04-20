@@ -138,14 +138,18 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
 
   public ItemStack getUpgradedNeso() {
     ItemStack stack = getItemStack();
-    if (!(stack.getItem() instanceof NesoItem nesoItem) || nesoItem.getNesoSize() != NesoSize.MEDIUM) {
-      Hasugoods.LOGGER.warn("Position zero {}: Cannot upgrade neso with invalid item {}", pos, stack);
-      return stack;
-    }
-    NesoItem upgradedNesoItem = NesoItem.getNesoItem(nesoItem.getCharaKey(), NesoSize.LARGE).get();
-    ItemStack newStack = stack.copyComponentsToNewStack(upgradedNesoItem, 1);
-    upgradedNesoItem.setFullEnergy(newStack);
-    return newStack;
+    return getNesoItem().map(
+        nesoItem -> {
+          if (nesoItem.getNesoSize() != NesoSize.MEDIUM) {
+            Hasugoods.LOGGER.warn("Position zero {}: Cannot upgrade neso with invalid item {}", pos, getItemStack());
+            return stack;
+          }
+          NesoItem upgradedNesoItem = NesoItem.getNesoItem(nesoItem.getCharaKey(), NesoSize.LARGE).get();
+          ItemStack newStack = stack.copyComponentsToNewStack(upgradedNesoItem, 1);
+          upgradedNesoItem.setFullEnergy(newStack);
+          return newStack;
+        })
+        .orElse(stack);
   }
   // #endregion Server Animation
 
@@ -269,10 +273,8 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
     int n = nesobases.length;
     NesoBaseState[] ret = new NesoBaseState[n];
     // Center item
-    ItemStack centerItemStack = getItemStack();
-    if (centerItemStack.isEmpty()
-        || !(centerItemStack.getItem() instanceof NesoItem centerNesoItem)
-        || centerNesoItem.getNesoSize() != NesoSize.MEDIUM
+    var centerNesoItemOptional = getNesoItem();
+    if (centerNesoItemOptional.isEmpty() || centerNesoItemOptional.get().getNesoSize() != NesoSize.MEDIUM
         || !isTopAir()) {
       Arrays.fill(ret, NesoBaseState.NONE);
       return ret;
@@ -282,15 +284,15 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
     // No duplicates
     Map<String, Integer> appeared = new HashMap<>();
     String[] nodes = new String[n + 1];
-    nodes[n] = centerNesoItem.getCharaKey();
+    nodes[n] = centerNesoItemOptional.get().getCharaKey();
     for (int i = 0; i < n; i++) {
       var nesobase = nesobases[i];
-      ItemStack itemStack = nesobase.getItemStack();
-      if (itemStack.isEmpty() || !(itemStack.getItem() instanceof NesoItem nesoItem) || !nesobase.isTopAir()) {
+      var nesoItemOptional = nesobase.getNesoItem();
+      if (nesoItemOptional.isEmpty() || !nesobase.isTopAir()) {
         ret[i] = NesoBaseState.NONE;
         continue;
       }
-      String charaKey = nesoItem.getCharaKey();
+      String charaKey = nesoItemOptional.get().getCharaKey();
       nodes[i] = charaKey;
       if (appeared.containsKey(charaKey)) {
         ret[i] = NesoBaseState.ERROR;
@@ -299,7 +301,7 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
         appeared.put(charaKey, i);
       }
       // Must be medium size
-      if (nesoItem.getNesoSize() != NesoSize.MEDIUM) {
+      if (nesoItemOptional.get().getNesoSize() != NesoSize.MEDIUM) {
         ret[i] = NesoBaseState.ERROR;
       }
     }

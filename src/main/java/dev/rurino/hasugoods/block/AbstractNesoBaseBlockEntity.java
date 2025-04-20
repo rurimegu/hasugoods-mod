@@ -1,6 +1,7 @@
 package dev.rurino.hasugoods.block;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -145,16 +146,16 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
     Vec3d translation = frame.translate();
     Vec3d scale = frame.scale();
     Vec3d ret = getPos().toBottomCenterPos().add(0, 1.0, 0).add(translation);
-    if (this.getItemStack().isEmpty() || !(this.getItemStack().getItem() instanceof NesoItem nesoItem))
-      return ret;
-    var entityTypeOptional = NesoEntity.getNesoEntityType(nesoItem.getCharaKey(), nesoItem.getNesoSize());
-    if (!entityTypeOptional.isPresent()) {
-      Hasugoods.LOGGER.warn("Neso entity type not found for chara key: {}, size {}", nesoItem.getCharaKey(),
-          nesoItem.getNesoSize());
-      return ret;
-    }
-    float eyeHeight = entityTypeOptional.get().getDimensions().eyeHeight();
-    return ret.add(0, scale.y * eyeHeight, 0);
+
+    return getNesoItem().map(
+        nesoItem -> NesoEntity.getNesoEntityType(nesoItem.getCharaKey(), nesoItem.getNesoSize()).map(entityType -> {
+          float eyeHeight = entityType.getDimensions().eyeHeight();
+          return ret.add(0, scale.y * eyeHeight, 0);
+        }).orElseGet(() -> {
+          Hasugoods.LOGGER.warn("Neso entity type not found for chara key: {}, size {}", nesoItem.getCharaKey(),
+              nesoItem.getNesoSize());
+          return ret;
+        })).orElse(ret);
   }
   // #endregion Animation
 
@@ -195,23 +196,32 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
     return nesoItemStack;
   }
 
+  public Optional<NesoItem> getNesoItem() {
+    if (getItemStack().isEmpty() || !(getItemStack().getItem() instanceof NesoItem nesoItem)) {
+      return Optional.empty();
+    }
+    return Optional.of(nesoItem);
+  }
+
   protected boolean setItemStackNoSync(ItemStack itemStack) {
     if (isItemStackLocked())
       return false;
     if (itemStack == null) {
       Hasugoods.LOGGER.warn("Unexpected null item stack inserted into NesoBaseBlock at {}", pos);
-      itemStack = ItemStack.EMPTY;
-    }
-    nesoItemStack = itemStack;
-    if (itemStack.getItem() instanceof NesoItem nesoItem) {
-      noteParticleEffect = CHARA_KEY_TO_NOTE_PARTICLE_EFFECT.getOrDefault(nesoItem.getCharaKey(),
-          DEFAULT_NOTE_PARTICLE_EFFECT);
+      nesoItemStack = ItemStack.EMPTY;
     } else {
-      if (!itemStack.isEmpty()) {
-        Hasugoods.LOGGER.error("Unexpected item stack inserted into NesoBaseBlock: {}", itemStack);
-      }
-      noteParticleEffect = DEFAULT_NOTE_PARTICLE_EFFECT;
+      nesoItemStack = itemStack;
     }
+
+    noteParticleEffect = getNesoItem().map(nesoItem -> {
+      return CHARA_KEY_TO_NOTE_PARTICLE_EFFECT.getOrDefault(nesoItem.getCharaKey(),
+          DEFAULT_NOTE_PARTICLE_EFFECT);
+    }).orElseGet(() -> {
+      if (!nesoItemStack.isEmpty()) {
+        Hasugoods.LOGGER.error("Unexpected item stack inserted into NesoBaseBlock: {}", nesoItemStack);
+      }
+      return DEFAULT_NOTE_PARTICLE_EFFECT;
+    });
     markDirty();
     return true;
   }
@@ -307,10 +317,10 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
             EnergyStorage.SIDED, (ServerWorld) world, pos.offset(Direction.UP));
       }
       if (isTopAir()) {
-        if (getItemStack().getItem() instanceof NesoItem item) {
+        getNesoItem().ifPresent(item -> {
           item.chargeEnergy(getItemStack(), chargeAmountPerTick(world, blockPos, blockState));
           markDirty();
-        }
+        });
       } else {
         EnergyStorage storage = energyStorageAbove.find(Direction.DOWN);
         if (storage != null && storage.supportsInsertion()) {

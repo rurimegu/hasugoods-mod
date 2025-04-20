@@ -32,6 +32,7 @@ public class RurinoNesoEntity extends NesoEntity {
   private static final int EMIT_PARTICLES_INTERVAL = 40;
   private static final int MAX_LIGHT_LEVEL = 3;
   private static final int PARTICLE_MAX_AGE = 60;
+  private static final int MAX_TOP_BOUNDARY_DIST = 3;
 
   private static boolean isBoxBoundary(World world, BlockPos pos) {
     BlockState state = world.getBlockState(pos);
@@ -56,7 +57,7 @@ public class RurinoNesoEntity extends NesoEntity {
     return config;
   }
 
-  private Optional<BlockPos> getBoundaryInDir(World world, Direction direction) {
+  private Optional<BlockPos> getBoundaryInDir(World world, Direction direction, int maxDist) {
     BlockPos pos = getBlockPos();
     for (int i = 0; i < config.maxBoxSize(); i++) {
       if (isBoxBoundary(world, pos)) {
@@ -80,12 +81,7 @@ public class RurinoNesoEntity extends NesoEntity {
       return;
     ServerWorld world = (ServerWorld) getWorld();
     boolean hasMeguBoost = chargeBoost > 0;
-    Optional<BlockPos> topBoundaryOptional = getBoundaryInDir(world, Direction.UP);
-    if (topBoundaryOptional.isEmpty()) {
-      return;
-    }
-
-    BlockPos blockPos = topBoundaryOptional.get();
+    BlockPos blockPos = getBoundaryInDir(world, Direction.UP, MAX_TOP_BOUNDARY_DIST).orElse(getBlockPos().up());
     float scale = getParticleSize();
     Vec3d pos = blockPos.toCenterPos().add(0, 0.4f, 0);
     Vec3d posDelta = hasMeguBoost ? new Vec3d(scale, 0, 0) : Vec3d.ZERO;
