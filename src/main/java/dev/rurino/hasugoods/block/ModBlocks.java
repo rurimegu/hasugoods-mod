@@ -48,7 +48,7 @@ public class ModBlocks {
           .mapColor(MapColor.WHITE)
           .instrument(NoteBlockInstrument.BASEDRUM)
           .strength(1.8F)
-          .luminance((state) -> 14),
+          .luminance((state) -> 10),
       new Item.Settings()
           .rarity(Rarity.COMMON));
   public static final Block POSITION_ZERO_BLOCK = register("position_zero_block", PositionZeroBlock::new,
@@ -57,7 +57,7 @@ public class ModBlocks {
           .mapColor(MapColor.WHITE)
           .instrument(NoteBlockInstrument.BELL)
           .strength(1.8F)
-          .luminance((state) -> 15),
+          .luminance((state) -> 14),
       new Item.Settings()
           .rarity(Rarity.RARE));
 
