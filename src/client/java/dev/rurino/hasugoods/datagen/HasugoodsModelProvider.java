@@ -1,7 +1,6 @@
 package dev.rurino.hasugoods.datagen;
 
 import java.util.Map;
-import java.util.function.Supplier;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonArray;
