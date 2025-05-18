@@ -1,8 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "hasugoods:item/hime_badge",
-    "layer1": "hasugoods:item/neso/wip_icon",
-    "layer2": "hasugoods:item/neso/medium"
+    "layer0": "hasugoods:item/neso/hime_icon",
+    "layer1": "hasugoods:item/neso/medium"
   }
 }

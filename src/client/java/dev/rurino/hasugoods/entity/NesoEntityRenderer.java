@@ -36,7 +36,7 @@ public class NesoEntityRenderer extends LivingEntityRenderer<NesoEntity, LivingE
     ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
     float g = state.baseScale;
     matrixStack.scale(g, g, g);
-    this.setupTransforms(state, matrixStack, state.bodyYaw, g);
+    this.setupTransforms(state, matrixStack, state.bodyYaw - 180, g);
 
     itemRenderer.renderItem(
         this.model.getItemStack(),
