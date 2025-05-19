@@ -1,6 +1,6 @@
 {
   "block.hasugoods.neso_base_block": "趴趴底座方块",
-  "block.hasugoods.position_zero_block": "零号位方块",
+  "block.hasugoods.position_zero_block": "〇号位方块",
   "config.jade.plugin_hasugoods.neso_base_block": "趴趴底座",
   "config.jade.plugin_hasugoods.neso_entity": "趴趴实体",
   "death.attack.toutoshi": "%1$s 被 %2$s 尊死了",

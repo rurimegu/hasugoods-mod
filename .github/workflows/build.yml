@@ -7,12 +7,12 @@ name: build
 on:
   push:
     branches:
-      - 1.21.4-fabric
+      - 1.21.1-fabric
     tags:
       - v*.*.*
   pull_request:
     branches:
-      - 1.21.4-fabric
+      - 1.21.1-fabric
   workflow_dispatch:
 
 jobs:
