@@ -1,11 +1,15 @@
 package dev.rurino.hasugoods.block;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
+
+import com.google.common.collect.ImmutableList;
 
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.item.neso.NesoItem;
@@ -39,6 +43,25 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
   private static final float LINK_PARTICLE_VELOCITY = 0.1f;
   private static final String NBT_NESOBASES = "nesobases";
   private static final LongValue CHARGE_AMOUNT_PER_TICK = Hasugoods.CONFIG.neso.pos0ChargeAmountPerTick;
+  private static final ImmutableList<BlockPos> NESO_FIELD_OFFSETS;
+  private static final int NESO_FIELD_VACANT_HEIGHT = 3;
+
+  static {
+    Hasugoods.LOGGER.debug("Position zero block entity static initializer");
+    List<BlockPos> offsets = new ArrayList<>();
+    for (int x = -3; x <= 3; x++) {
+      int rangeZ = switch (x) {
+        case -3, 3 -> 1;
+        case -2, 2 -> 2;
+        case -1, 1, 0 -> 3;
+        default -> throw new IllegalStateException("Unexpected value: " + x);
+      };
+      for (int z = -rangeZ; z <= rangeZ; z++) {
+        offsets.add(new BlockPos(x, 0, z));
+      }
+    }
+    NESO_FIELD_OFFSETS = ImmutableList.copyOf(offsets);
+  }
 
   static void initialize() {
     Hasugoods.LOGGER.debug("Position zero block entity initialized");
@@ -336,6 +359,19 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
     return ret;
   }
 
+  private boolean hasEnoughSpaceAbove() {
+    BlockPos pos = getPos();
+    for (BlockPos offset : NESO_FIELD_OFFSETS) {
+      BlockPos checkPos = pos.add(offset);
+      for (int y = 1; y <= NESO_FIELD_VACANT_HEIGHT; y++) {
+        if (!world.isAir(checkPos.up(y))) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
   private void syncStructure(ServerWorld world) {
     NesoBaseBlockEntity[] nesobases = getPossiblyLinkedNesoBases();
     if (nesobases.length != NESO_BASE_OFFSETS.size()) {
@@ -354,7 +390,8 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
       markDirty();
     }
 
-    boolean shouldMerge = Arrays.stream(checkNesoBaseState(nesobases)).allMatch(s -> s == NesoBaseState.OK);
+    boolean shouldMerge = Arrays.stream(checkNesoBaseState(nesobases)).allMatch(s -> s == NesoBaseState.OK)
+        && hasEnoughSpaceAbove();
     if (isPlayingMergeAnim()) {
       if (!shouldMerge) {
         serverStopMergeAnim(false);
