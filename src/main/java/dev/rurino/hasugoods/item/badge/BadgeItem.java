@@ -18,11 +18,8 @@ import dev.rurino.hasugoods.util.CharaUtils.IWithChara;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.DeathProtectionComponent;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.consume.ClearAllEffectsConsumeEffect;
-import net.minecraft.item.consume.ConsumeEffect;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.entry.EmptyEntry;
 import net.minecraft.loot.entry.ItemEntry;
@@ -110,13 +107,12 @@ public class BadgeItem extends Item implements IWithChara {
   public static final RegistryKey<Item> UNOPENED_BADGE_KEY = RegistryKey.of(RegistryKeys.ITEM,
       Hasugoods.id("unopened_badge"));
   public static final Item UNOPENED_BADGE = ModItems.register(UNOPENED_BADGE_KEY,
-      new UnopenedBadgeItem(new Item.Settings().maxCount(16).rarity(Rarity.COMMON).registryKey(UNOPENED_BADGE_KEY)));
+      new UnopenedBadgeItem(new Item.Settings().maxCount(16).rarity(Rarity.COMMON)));
 
   public static final RegistryKey<Item> BOX_OF_BADGE_KEY = RegistryKey.of(RegistryKeys.ITEM,
       Hasugoods.id("box_of_badge"));
   public static final Item BOX_OF_BADGE = ModItems.register(BOX_OF_BADGE_KEY,
-      new BoxOfBadgeItem(new Item.Settings().maxCount(1).rarity(Rarity.UNCOMMON)
-          .registryKey(BOX_OF_BADGE_KEY)));
+      new BoxOfBadgeItem(new Item.Settings().maxCount(1).rarity(Rarity.UNCOMMON)));
 
   private static Item registerBadge(String charaKey, boolean isSecret) {
     RegistryKey<Item> key = RegistryKey.of(RegistryKeys.ITEM,
@@ -130,10 +126,7 @@ public class BadgeItem extends Item implements IWithChara {
         new BadgeItem(new Settings().maxCount(16).rarity(isSecret ? Rarity.UNCOMMON : Rarity.COMMON)
             .component(DataComponentTypes.DEATH_PROTECTION, deathProtectionComponent)
             .registryKey(key), charaKey, isSecret));
-    if (isSecret)
-      ALL_SECRET_BADGES.put(charaKey, new BadgeItemEntry(key, (BadgeItem) item));
-    else
-      ALL_REGULAR_BADGES.put(charaKey, new BadgeItemEntry(key, (BadgeItem) item));
+    (isSecret ? ALL_SECRET_BADGES : ALL_REGULAR_BADGES).put(charaKey, new BadgeItemEntry(key, (BadgeItem) item));
     return item;
   }
 

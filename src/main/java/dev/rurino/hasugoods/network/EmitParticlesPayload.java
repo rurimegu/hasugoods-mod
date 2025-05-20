@@ -20,7 +20,7 @@ public class EmitParticlesPayload implements CustomPayload {
       EmitParticlesPayload::getType,
       HasuParticleEffect.PACKET_CODEC,
       EmitParticlesPayload::getEffect,
-      Vec3d.PACKET_CODEC,
+      ModNetwork.CODEC_VECTOR3D,
       EmitParticlesPayload::getPos,
       PacketCodecs.INTEGER,
       EmitParticlesPayload::getCount,

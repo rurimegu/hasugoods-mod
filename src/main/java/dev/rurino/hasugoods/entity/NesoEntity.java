@@ -80,8 +80,7 @@ public class NesoEntity extends LivingEntity implements INesoEntity {
     EntityType<NesoEntity> entityType = EntityType.Builder.<NesoEntity>create(
         (type, world) -> createNesoEntity(type, world, charaKey, size), SpawnGroup.MISC).dimensions(width, height)
         .eyeHeight(height * 0.4f)
-        .dropsNothing()
-        .build(key);
+        .build(key.toString());
     entityType = ModEntities.register(key, entityType);
 
     ALL_NESOS.put(itemKey, new NesoEntityEntry(key, entityType));
@@ -95,7 +94,7 @@ public class NesoEntity extends LivingEntity implements INesoEntity {
       case MEDIUM -> 20;
       case LARGE -> 40;
     };
-    return createLivingAttributes().add(EntityAttributes.MAX_HEALTH, maxHealth);
+    return createLivingAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, maxHealth);
   }
 
   public static NesoEntity spawnFromItemStack(EntityType<NesoEntity> entityType, ServerWorld world, ItemStack stack,
@@ -117,7 +116,7 @@ public class NesoEntity extends LivingEntity implements INesoEntity {
       } else {
         Hasugoods.LOGGER.warn("NesoComponent not found for NesoEntity: {}", entity);
       }
-      entity.rotate(180 + initYaw, 0);
+      entity.setRotation(180 + initYaw, 0);
       world.spawnEntityAndPassengers(entity);
     }
 
@@ -146,7 +145,7 @@ public class NesoEntity extends LivingEntity implements INesoEntity {
   }
 
   @Override
-  public boolean damage(ServerWorld world, DamageSource source, float amount) {
+  public boolean damage(DamageSource source, float amount) {
     if (getNesoSize() == NesoSize.LARGE || source == null) {
       return false;
     }
@@ -156,7 +155,7 @@ public class NesoEntity extends LivingEntity implements INesoEntity {
       }
       amount = 0;
     }
-    return super.damage(world, source, amount);
+    return super.damage(source, amount);
   }
 
   @Override
@@ -185,7 +184,7 @@ public class NesoEntity extends LivingEntity implements INesoEntity {
     if (player.getWorld().isClient)
       return ActionResult.CONSUME;
 
-    this.dropStack((ServerWorld) player.getWorld(), convertToNesoItemStack());
+    this.dropStack(convertToNesoItemStack());
     this.discard();
     return ActionResult.SUCCESS;
   }

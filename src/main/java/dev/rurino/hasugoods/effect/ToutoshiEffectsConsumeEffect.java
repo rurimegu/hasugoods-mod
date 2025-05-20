@@ -13,7 +13,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.consume.ConsumeEffect;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.util.dynamic.Codecs;
@@ -21,7 +20,7 @@ import net.minecraft.world.World;
 import net.neoforged.neoforge.common.ModConfigSpec.IntValue;
 import net.minecraft.network.RegistryByteBuf;
 
-public record ToutoshiEffectsConsumeEffect(String charaKey) implements ConsumeEffect {
+public record ToutoshiEffectsConsumeEffect(String charaKey) {
   public static final MapCodec<ToutoshiEffectsConsumeEffect> CODEC = RecordCodecBuilder.mapCodec((instance) -> {
     return instance
         .group(
@@ -37,12 +36,6 @@ public record ToutoshiEffectsConsumeEffect(String charaKey) implements ConsumeEf
   private static final IntValue OSHI_PROTECTION_DURATION = Hasugoods.CONFIG.oshiProtection.duration;
   private static final IntValue OSHI_SECRET_PROTECTION_DURATION = Hasugoods.CONFIG.oshiProtection.secretDuration;
 
-  @Override
-  public ConsumeEffect.Type<ToutoshiEffectsConsumeEffect> getType() {
-    return ModEffects.TOUTOSHI;
-  }
-
-  @Override
   public boolean onConsume(World world, ItemStack stack, LivingEntity user) {
     Optional<IToutoshiComponent> toutoshiComponent = ModComponents.TOUTOSHI.maybeGet(user);
     if (toutoshiComponent.isEmpty()) {

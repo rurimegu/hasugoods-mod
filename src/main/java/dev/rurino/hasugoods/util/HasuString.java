@@ -1,11 +1,7 @@
 package dev.rurino.hasugoods.util;
 
-import java.util.List;
-
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import snownee.jade.api.view.EnergyView;
-import snownee.jade.api.view.ViewGroup;
 
 public class HasuString {
   public static final String ENERGY_UNIT = "OP";
@@ -36,11 +32,5 @@ public class HasuString {
         .append(HasuString.formatEnergy(amount))
         .append(Text.literal("/").formatted(Formatting.AQUA))
         .append(HasuString.formatEnergy(capacity));
-  }
-
-  public static ViewGroup<EnergyView.Data> createEnergyView(long amount, long capacity) {
-    var group = new ViewGroup<>(List.of(new EnergyView.Data(amount, capacity)));
-    group.getExtraData().putString("Unit", ENERGY_UNIT);
-    return group;
   }
 }

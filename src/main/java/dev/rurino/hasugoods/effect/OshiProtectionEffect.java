@@ -15,12 +15,11 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.server.world.ServerWorld;
 import net.neoforged.neoforge.common.ModConfigSpec.DoubleValue;
 
 public class OshiProtectionEffect extends StatusEffect implements IWithChara {
 
-  private static final DoubleValue TOUTOSHISHI_DAMAGE = Hasugoods.CONFIG.oshiProtection.toutoshiDamage;
+  private static final DoubleValue TOUTOSHI_DAMAGE = Hasugoods.CONFIG.oshiProtection.toutoshiDamage;
 
   private final String charaKey;
 
@@ -35,7 +34,7 @@ public class OshiProtectionEffect extends StatusEffect implements IWithChara {
   }
 
   @Override
-  public boolean applyUpdateEffect(ServerWorld world, LivingEntity entity, int amplifier) {
+  public boolean applyUpdateEffect(LivingEntity entity, int amplifier) {
     Optional<IToutoshiComponent> toutoshiComponentOptional = ModComponents.TOUTOSHI.maybeGet(entity);
     if (toutoshiComponentOptional.isEmpty()) {
       Hasugoods.LOGGER.warn("Cannot find ToutoshiComponent for {} when removing oshi protection", entity);
@@ -49,11 +48,11 @@ public class OshiProtectionEffect extends StatusEffect implements IWithChara {
     }
     toutoshiComponent.setToutoshiSourceItem(null);
     DamageSource damageSource = new ToutoshiDamageSource(
-        world.getRegistryManager()
-            .getOrThrow(RegistryKeys.DAMAGE_TYPE)
-            .getEntry(ModDamageTypes.TOUTOSHI_DAMAGE.getValue()).get(),
+        entity.getWorld().getRegistryManager()
+            .getWrapperOrThrow(RegistryKeys.DAMAGE_TYPE)
+            .getOptional(ModDamageTypes.TOUTOSHI_DAMAGE).get(),
         item);
-    entity.damage(world, damageSource, TOUTOSHISHI_DAMAGE.get().floatValue());
+    entity.damage(damageSource, TOUTOSHI_DAMAGE.get().floatValue());
     return true;
   }
 

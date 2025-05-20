@@ -17,7 +17,7 @@ public class FinishNesoMergePayload extends AbstractPlayAnimPayload {
   public static final PacketCodec<RegistryByteBuf, FinishNesoMergePayload> CODEC = PacketCodec.tuple(
       PacketCodecs.collection(ArrayList::new, Transit.CODEC),
       FinishNesoMergePayload::anims,
-      PacketCodecs.BOOLEAN,
+      PacketCodecs.BOOL,
       FinishNesoMergePayload::isSuccess,
       FinishNesoMergePayload::new);
 

@@ -1,5 +1,7 @@
 package dev.rurino.hasugoods.util;
 
+import org.joml.Vector3f;
+
 import com.google.common.collect.ImmutableList;
 
 import net.minecraft.util.math.BlockPos;
@@ -39,5 +41,12 @@ public class MathUtils {
 
   public static Vec3d lerp(double progress, Vec3d a, Vec3d b) {
     return a.add(b.subtract(a).multiply(progress));
+  }
+
+  public static Vector3f colorToVec(int color) {
+    return new Vector3f(
+        ((color >> 16) & 0xFF) / 255.0F,
+        ((color >> 8) & 0xFF) / 255.0F,
+        (color & 0xFF) / 255.0F);
   }
 }

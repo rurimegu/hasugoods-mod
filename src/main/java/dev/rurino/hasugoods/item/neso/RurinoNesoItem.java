@@ -9,8 +9,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
 public class RurinoNesoItem extends NesoItem {
@@ -48,10 +48,10 @@ public class RurinoNesoItem extends NesoItem {
   }
 
   @Override
-  public ActionResult use(World world, PlayerEntity user, Hand hand) {
-    if (world.isClient || hand != Hand.MAIN_HAND)
-      return ActionResult.PASS;
+  public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
     ItemStack stack = user.getStackInHand(hand);
+    if (world.isClient || hand != Hand.MAIN_HAND)
+      return TypedActionResult.pass(stack);
     boolean success = false;
     for (ItemStack s : user.getHandItems()) {
       if (s == stack || !(s.getItem() instanceof NesoItem))
@@ -68,9 +68,9 @@ public class RurinoNesoItem extends NesoItem {
     }
     if (success) {
       user.swingHand(hand, true);
-      return ActionResult.SUCCESS;
+      return TypedActionResult.success(stack);
     }
-    return ActionResult.PASS;
+    return TypedActionResult.pass(stack);
   }
 
   @Override

@@ -2,6 +2,7 @@ package dev.rurino.hasugoods.particle;
 
 import org.joml.Vector3f;
 
+import dev.rurino.hasugoods.util.Easing;
 import net.minecraft.client.particle.ParticleTextureSheet;
 import net.minecraft.client.particle.SpriteBillboardParticle;
 import net.minecraft.client.particle.SpriteProvider;
@@ -40,7 +41,7 @@ public class HasuParticle extends SpriteBillboardParticle {
   public void tick() {
     this.setSpriteForAge(spriteProvider);
     if (this.isAlive()) {
-      float t = MathHelper.easeInOutSine(this.age / (float) this.maxAge);
+      float t = (float) Easing.easeInOutSine(this.age / (float) this.maxAge);
       this.scale = MathHelper.lerp(t, effect.getInitialScale(), effect.getFinalScale());
     }
     super.tick();

@@ -42,7 +42,7 @@ public class ToutoshiComponent implements IToutoshiComponent {
       return;
     }
     RegistryKey<Item> key = RegistryKey.of(RegistryKeys.ITEM, Identifier.of(tag.getString(TOUTOSHI_SOURCE_ITEM)));
-    Item item = registryLookup.getOrThrow(RegistryKeys.ITEM).getOrThrow(key).value();
+    Item item = registryLookup.getWrapperOrThrow(RegistryKeys.ITEM).getOrThrow(key).value();
     if (item instanceof IWithChara) {
       toutoshiSourceItem = item;
     } else {

@@ -9,10 +9,10 @@ import dev.rurino.hasugoods.util.CharaUtils.NesoSize;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.consume.UseAction;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.UseAction;
 import net.minecraft.world.World;
 
 public class KahoNesoItem extends NesoItem {
@@ -25,23 +25,23 @@ public class KahoNesoItem extends NesoItem {
   }
 
   @Override
-  public ActionResult use(World world, PlayerEntity user, Hand hand) {
+  public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+    ItemStack stack = user.getStackInHand(hand);
     if (world.isClient) {
-      return ActionResult.PASS;
+      return TypedActionResult.pass(stack);
     }
     if (!user.getActiveItem().isEmpty() || hand != Hand.MAIN_HAND) {
-      return ActionResult.PASS;
+      return TypedActionResult.pass(stack);
     }
-    ItemStack stack = user.getStackInHand(hand);
     // Get the block under the player
     TickContext context = new TickContext(this, config, stack, (ServerWorld) world, 0, user.getRandom());
     var component = KahoNesoComponent.fromPlayerPos(context, user.getBlockPos());
     if (component.isEmpty()) {
-      return ActionResult.FAIL;
+      return TypedActionResult.fail(stack);
     }
     stack.set(NesoItem.KAHO_NESO_COMPONENT, component);
     user.setCurrentHand(hand);
-    return ActionResult.SUCCESS;
+    return TypedActionResult.success(stack);
   }
 
   @Override
@@ -78,12 +78,11 @@ public class KahoNesoItem extends NesoItem {
   }
 
   @Override
-  public boolean onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
+  public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
     if (world.isClient) {
-      return true;
+      return;
     }
     stack.set(NesoItem.KAHO_NESO_COMPONENT, KahoNesoComponent.EMPTY);
-    return true;
   }
 
   @Override

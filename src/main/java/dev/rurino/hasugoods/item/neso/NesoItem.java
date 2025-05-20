@@ -82,12 +82,12 @@ public class NesoItem extends Item implements INesoItem {
       case MEDIUM -> Rarity.UNCOMMON;
       case LARGE -> Rarity.RARE;
     };
-    Settings settings = new Settings().maxCount(1).rarity(rarity).registryKey(key);
+    Settings settings = new Settings().maxCount(1).rarity(rarity);
     NesoConfig.Base config = Hasugoods.CONFIG.neso.getConfig(charaKey, size);
     if (config == null) {
       Hasugoods.LOGGER.error("Config for {}, {} not found", charaKey, size);
     } else {
-      settings = settings.useCooldown(config.useCooldown());
+      // TODO: add item cooldown
     }
     NesoItem item = (NesoItem) ModItems.register(key, create(settings, charaKey, size));
     ALL_NESOS.put(itemKey, new NesoItemEntry(key, item));
@@ -209,7 +209,7 @@ public class NesoItem extends Item implements INesoItem {
         (ServerWorld) world,
         itemStack, context.getPlayer(),
         blockPos2,
-        SpawnReason.SPAWN_ITEM_USE,
+        SpawnReason.MOB_SUMMONED,
         true,
         !Objects.equals(blockPos, blockPos2) && direction == Direction.UP,
         context.getPlayer().getYaw());

@@ -1,6 +1,7 @@
 package dev.rurino.hasugoods.datagen;
 
 import java.util.Map;
+import java.util.function.Supplier;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonArray;
@@ -12,20 +13,17 @@ import dev.rurino.hasugoods.HasugoodsDataGenerator;
 import dev.rurino.hasugoods.item.badge.BadgeItem;
 import dev.rurino.hasugoods.item.neso.NesoItem;
 import dev.rurino.hasugoods.util.CharaUtils.NesoSize;
-import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.minecraft.client.data.BlockStateModelGenerator;
-import net.minecraft.client.data.ItemModelGenerator;
-import net.minecraft.client.data.ItemModels;
-import net.minecraft.client.data.ModelIds;
-import net.minecraft.client.data.ModelSupplier;
-import net.minecraft.client.data.Models;
-import net.minecraft.client.render.item.model.ItemModel;
-import net.minecraft.client.render.item.property.bool.CustomModelDataFlagProperty;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
+import net.minecraft.client.render.model.UnbakedModel;
+import net.minecraft.data.client.BlockStateModelGenerator;
+import net.minecraft.data.client.ItemModelGenerator;
+import net.minecraft.data.client.ModelIds;
+import net.minecraft.data.client.Models;
 import net.minecraft.util.Identifier;
 
 public class HasugoodsModelProvider extends FabricModelProvider {
-  private static class NesoModelSupplier implements ModelSupplier {
+  private static class NesoModelSupplier implements Supplier<JsonElement> {
     private static final Identifier PARENT = Identifier.of("special-model-loader", "builtin/obj");
 
     private static double getMultiplier(NesoSize size) {
@@ -107,7 +105,7 @@ public class HasugoodsModelProvider extends FabricModelProvider {
     }
   }
 
-  private static class NesoGuiModelSupplier implements ModelSupplier {
+  private static class NesoGuiModelSupplier implements Supplier<JsonElement> {
     private static final Identifier PARENT = Identifier.of("minecraft", "item/generated");
 
     private final NesoItem item;
@@ -155,7 +153,7 @@ public class HasugoodsModelProvider extends FabricModelProvider {
 
   }
 
-  private static class ParticleModelSupplier implements ModelSupplier {
+  private static class ParticleModelSupplier implements Supplier<JsonElement> {
     private final String charaKey;
 
     public ParticleModelSupplier(String charaKey) {
@@ -188,13 +186,13 @@ public class HasugoodsModelProvider extends FabricModelProvider {
     for (var neso : NesoItem.getAllNesos()) {
       Identifier inhandModelId = ModelIds.getItemSubModelId(neso, "_in_hand");
       Identifier guiModelId = ModelIds.getItemSubModelId(neso, "_gui");
-      itemModelGenerator.modelCollector.accept(inhandModelId, new NesoModelSupplier(neso));
-      itemModelGenerator.modelCollector.accept(guiModelId, new NesoGuiModelSupplier(neso));
+      itemModelGenerator.writer.accept(inhandModelId, new NesoModelSupplier(neso));
+      itemModelGenerator.writer.accept(guiModelId, new NesoGuiModelSupplier(neso));
       // Register hand model
-      ItemModel.Unbaked guiModel = ItemModels.basic(guiModelId);
-      ItemModel.Unbaked handModel = ItemModels.basic(inhandModelId);
-      ItemModel.Unbaked model = ItemModels.condition(new CustomModelDataFlagProperty(0), handModel, guiModel);
-      itemModelGenerator.output.accept(neso, ItemModelGenerator.createModelWithInHandVariant(model, handModel));
+      UnbakedModel guiModel = ItemModels.basic(guiModelId);
+      UnbakedModel handModel = ItemModels.basic(inhandModelId);
+      UnbakedModel model = ItemModels.condition(new CustomModelDataFlagProperty(0), handModel, guiModel);
+      itemModelGenerator.writer.accept(neso, ItemModelGenerator.createModelWithInHandVariant(model, handModel));
     }
   }
 

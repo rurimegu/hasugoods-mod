@@ -4,16 +4,17 @@ import java.util.Optional;
 
 import org.joml.Vector3f;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
+import dev.rurino.hasugoods.util.MathUtils;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleType;
 import net.minecraft.util.dynamic.Codecs;
-import net.minecraft.util.math.ColorHelper;
 
 public class HasuParticleEffect implements ParticleEffect {
 
@@ -71,13 +72,13 @@ public class HasuParticleEffect implements ParticleEffect {
         .group(
             Codecs.NON_EMPTY_STRING.fieldOf("name")
                 .forGetter(HasuParticleEffect::getName),
-            Codecs.RGB.fieldOf("color")
+            Codecs.ARGB.fieldOf("color")
                 .forGetter(HasuParticleEffect::getColor),
-            Codecs.NON_NEGATIVE_FLOAT.fieldOf("initialScale")
+            Codec.FLOAT.fieldOf("initialScale")
                 .forGetter(HasuParticleEffect::getInitialScale),
-            Codecs.NON_NEGATIVE_FLOAT.fieldOf("finalScale")
+            Codec.FLOAT.fieldOf("finalScale")
                 .forGetter(HasuParticleEffect::getFinalScale),
-            Codecs.NON_NEGATIVE_INT.fieldOf("maxAge")
+            Codec.INT.fieldOf("maxAge")
                 .forGetter(HasuParticleEffect::getMaxAge))
         .apply(instance, HasuParticleEffect::new);
   });
@@ -119,7 +120,7 @@ public class HasuParticleEffect implements ParticleEffect {
   }
 
   public Vector3f getColorVec() {
-    return ColorHelper.toVector(color);
+    return MathUtils.colorToVec(color);
   }
 
   public float getInitialScale() {

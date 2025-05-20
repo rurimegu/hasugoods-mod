@@ -10,7 +10,6 @@ import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.util.CharaUtils;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.item.consume.ConsumeEffect;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.registry.Registries;

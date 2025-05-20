@@ -5,7 +5,7 @@ import dev.rurino.hasugoods.item.neso.NesoItem;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
+import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.MathHelper;
 
 public class ItemStackUtils {
@@ -21,7 +21,7 @@ public class ItemStackUtils {
     }
   }
 
-  public static ActionResult replaceItemsToPlayerOrDrop(PlayerEntity player, Item item, int count) {
+  public static TypedActionResult<ItemStack> replaceItemsToPlayerOrDrop(PlayerEntity player, Item item, int count) {
     int remainingCount = count;
     while (remainingCount > item.getMaxCount()) {
       int giveCount = Math.min(remainingCount, item.getMaxCount());
@@ -29,7 +29,7 @@ public class ItemStackUtils {
       giveItemsToPlayerOrDrop(player, stack);
       remainingCount -= giveCount;
     }
-    return ActionResult.SUCCESS.withNewHandStack(new ItemStack(item, remainingCount));
+    return TypedActionResult.success(new ItemStack(item, remainingCount));
   }
 
   public static void giveItemsToPlayerOrDrop(PlayerEntity player, Item item) {

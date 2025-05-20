@@ -7,20 +7,20 @@ import org.jetbrains.annotations.Nullable;
 import dev.rurino.hasugoods.block.AbstractNesoBaseBlockEntity;
 import dev.rurino.hasugoods.util.HasuString;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import snownee.jade.api.Accessor;
 import snownee.jade.api.ui.MessageType;
 import snownee.jade.api.view.ClientViewGroup;
 import snownee.jade.api.view.EnergyView;
-import snownee.jade.api.view.EnergyView.Data;
 import snownee.jade.api.view.IClientExtensionProvider;
 import snownee.jade.api.view.IServerExtensionProvider;
 import snownee.jade.api.view.ViewGroup;
 import team.reborn.energy.api.base.SimpleEnergyItem;
 
 public class AbstractNesoBaseBlockEnergyProvider
-    implements IServerExtensionProvider<EnergyView.Data>, IClientExtensionProvider<EnergyView.Data, EnergyView> {
+    implements IServerExtensionProvider<NbtCompound>, IClientExtensionProvider<NbtCompound, EnergyView> {
   public static final AbstractNesoBaseBlockEnergyProvider INSTANCE = new AbstractNesoBaseBlockEnergyProvider();
 
   private AbstractNesoBaseBlockEnergyProvider() {
@@ -32,7 +32,7 @@ public class AbstractNesoBaseBlockEnergyProvider
   }
 
   @Override
-  public @Nullable List<ViewGroup<EnergyView.Data>> getGroups(Accessor<?> accessor) {
+  public @Nullable List<ViewGroup<NbtCompound>> getGroups(Accessor<?> accessor) {
     if (!(accessor.getTarget() instanceof AbstractNesoBaseBlockEntity blockEntity)) {
       return null;
     }
@@ -42,12 +42,12 @@ public class AbstractNesoBaseBlockEnergyProvider
     }
     long capacity = energyItem.getEnergyCapacity(stack);
     long energy = energyItem.getStoredEnergy(stack);
-    return List.of(HasuString.createEnergyView(energy, capacity));
+    return List.of(new ViewGroup<>(List.of(EnergyView.of(energy, capacity))));
   }
 
   @Override
-  public List<ClientViewGroup<EnergyView>> getClientGroups(Accessor<?> accessor, List<ViewGroup<Data>> groups) {
-    return ClientViewGroup.map(groups, data -> EnergyView.read(data, "OP"), (group, clientGroup) -> {
+  public List<ClientViewGroup<EnergyView>> getClientGroups(Accessor<?> accessor, List<ViewGroup<NbtCompound>> groups) {
+    return ClientViewGroup.map(groups, data -> EnergyView.read(data, HasuString.ENERGY_UNIT), (group, clientGroup) -> {
       if (group.id != null) {
         clientGroup.title = Text.literal(group.id);
         clientGroup.messageType = MessageType.DANGER;

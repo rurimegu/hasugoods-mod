@@ -10,12 +10,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTable;
+import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.loot.context.LootContextTypes;
-import net.minecraft.loot.context.LootWorldContext;
 import net.minecraft.loot.entry.TagEntry;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 import net.neoforged.neoforge.common.ModConfigSpec.IntValue;
 
@@ -38,24 +38,24 @@ public class UnopenedBadgeItem extends Item {
   }
 
   @Override
-  public ActionResult use(World world, PlayerEntity user, Hand hand) {
+  public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
     if (world.isClient)
       return super.use(world, user, hand);
     ServerWorld serverWorld = (ServerWorld) world;
+    ItemStack handStack = user.getStackInHand(hand);
     List<ItemStack> stacks = createBadgeLootTable()
-        .generateLoot(new LootWorldContext.Builder(serverWorld).build(LootContextTypes.EMPTY));
+        .generateLoot(new LootContextParameterSet.Builder(serverWorld).build(LootContextTypes.EMPTY));
     if (stacks.isEmpty() || stacks.size() > 1) {
       Hasugoods.LOGGER.warn("Unopened badge loot table returned {} items, ignored", stacks.size());
-      return ActionResult.FAIL;
+      return TypedActionResult.fail(handStack);
     }
-    ItemStack handStack = user.getStackInHand(hand);
     ItemStack newStack = stacks.get(0);
     if (handStack.getCount() <= 1) {
       return ItemStackUtils.replaceItemsToPlayerOrDrop(user, newStack.getItem(), newStack.getCount());
     } else {
       ItemStackUtils.giveItemsToPlayerOrDrop(user, newStack);
       handStack.decrement(1);
-      return ActionResult.SUCCESS;
+      return TypedActionResult.success(handStack);
     }
   }
 }
