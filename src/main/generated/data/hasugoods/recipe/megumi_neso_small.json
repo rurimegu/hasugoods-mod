@@ -2,10 +2,18 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": "minecraft:light_blue_wool",
-    "O": "minecraft:brown_wool",
-    "W": "minecraft:white_wool",
-    "X": "hasugoods:megumi_badge"
+    "B": {
+      "item": "minecraft:light_blue_wool"
+    },
+    "O": {
+      "item": "minecraft:brown_wool"
+    },
+    "W": {
+      "item": "minecraft:white_wool"
+    },
+    "X": {
+      "item": "hasugoods:megumi_badge"
+    }
   },
   "pattern": [
     "OO ",

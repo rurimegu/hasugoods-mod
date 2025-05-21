@@ -28,13 +28,13 @@ public class ModBlocks {
   public static Block register(String name, Function<AbstractBlock.Settings, Block> blockFactory,
       AbstractBlock.Settings settings, Settings itemSettings) {
     RegistryKey<Block> blockKey = RegistryKey.of(RegistryKeys.BLOCK, Hasugoods.id(name));
-    Block block = blockFactory.apply(settings.registryKey(blockKey));
+    Block block = blockFactory.apply(settings);
 
     if (itemSettings != null) {
       RegistryKey<Item> itemKey = RegistryKey.of(RegistryKeys.ITEM, Hasugoods.id(name));
       Hasugoods.LOGGER.debug("Register block item: {}", itemKey.getValue());
 
-      BlockItem blockItem = new BlockItem(block, itemSettings.registryKey(itemKey));
+      BlockItem blockItem = new BlockItem(block, itemSettings);
       ALL_BLOCKS_ITEMS.add(Registry.register(Registries.ITEM, itemKey, blockItem));
     }
 

@@ -19,7 +19,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     super(entityType, world);
   }
 
-  @ModifyVariable(method = "applyDamage(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/damage/DamageSource;F)V", at = @At("HEAD"), ordinal = 0)
+  @ModifyVariable(method = "applyDamage(Lnet/minecraft/entity/damage/DamageSource;F)V", at = @At("HEAD"), ordinal = 0)
   private float modifyDamageAmount(float amount, @Local(argsOnly = true) DamageSource source) {
     for (ItemStack stack : this.getHandItems()) {
       if (stack.isEmpty() || !(stack.getItem() instanceof IModifyDamageInHand item)) {

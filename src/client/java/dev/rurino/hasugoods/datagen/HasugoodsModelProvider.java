@@ -9,13 +9,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import dev.rurino.hasugoods.Hasugoods;
+import dev.rurino.hasugoods.HasugoodsClient;
 import dev.rurino.hasugoods.HasugoodsDataGenerator;
 import dev.rurino.hasugoods.item.badge.BadgeItem;
 import dev.rurino.hasugoods.item.neso.NesoItem;
 import dev.rurino.hasugoods.util.CharaUtils.NesoSize;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
-import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ItemModelGenerator;
 import net.minecraft.data.client.ModelIds;
@@ -109,10 +109,12 @@ public class HasugoodsModelProvider extends FabricModelProvider {
     private static final Identifier PARENT = Identifier.of("minecraft", "item/generated");
 
     private final NesoItem item;
+    private final Identifier id3dModel;
     private int layerId;
 
-    public NesoGuiModelSupplier(NesoItem item) {
+    public NesoGuiModelSupplier(NesoItem item, Identifier id3dModel) {
       this.item = item;
+      this.id3dModel = id3dModel;
     }
 
     private void beginLayers() {
@@ -123,7 +125,7 @@ public class HasugoodsModelProvider extends FabricModelProvider {
       return "layer" + layerId++;
     }
 
-    public JsonObject getTextures() {
+    private JsonObject getTextures() {
       JsonObject ret = new JsonObject();
       Identifier id = Hasugoods.id("item/neso/" + item.getCharaKey() + "_icon");
       beginLayers();
@@ -143,11 +145,33 @@ public class HasugoodsModelProvider extends FabricModelProvider {
       return ret;
     }
 
+    private JsonArray getOverrides() {
+      JsonArray overrides = new JsonArray();
+      // Custom model data
+      JsonObject customModelData = new JsonObject();
+      JsonObject predicate = new JsonObject();
+      predicate.addProperty("custom_model_data", HasugoodsClient.CUSTOM_DATA_NESO_3D);
+      customModelData.add("predicate", predicate);
+      customModelData.addProperty("model", id3dModel.toString());
+      overrides.add(customModelData);
+
+      // Item predicate
+      JsonObject itemPredicate = new JsonObject();
+      predicate = new JsonObject();
+      predicate.addProperty(HasugoodsClient.PREDICATE_NESO_3D.toString(), 1);
+      itemPredicate.add("predicate", predicate);
+      itemPredicate.addProperty("model", id3dModel.toString());
+      overrides.add(itemPredicate);
+
+      return overrides;
+    }
+
     @Override
     public JsonElement get() {
       JsonObject jsonObject = new JsonObject();
       jsonObject.addProperty("parent", PARENT.toString());
       jsonObject.add("textures", getTextures());
+      jsonObject.add("overrides", getOverrides());
       return jsonObject;
     }
 
@@ -185,14 +209,9 @@ public class HasugoodsModelProvider extends FabricModelProvider {
     }
     for (var neso : NesoItem.getAllNesos()) {
       Identifier inhandModelId = ModelIds.getItemSubModelId(neso, "_in_hand");
-      Identifier guiModelId = ModelIds.getItemSubModelId(neso, "_gui");
+      Identifier guiModelId = ModelIds.getItemModelId(neso);
       itemModelGenerator.writer.accept(inhandModelId, new NesoModelSupplier(neso));
-      itemModelGenerator.writer.accept(guiModelId, new NesoGuiModelSupplier(neso));
-      // Register hand model
-      UnbakedModel guiModel = ItemModels.basic(guiModelId);
-      UnbakedModel handModel = ItemModels.basic(inhandModelId);
-      UnbakedModel model = ItemModels.condition(new CustomModelDataFlagProperty(0), handModel, guiModel);
-      itemModelGenerator.writer.accept(neso, ItemModelGenerator.createModelWithInHandVariant(model, handModel));
+      itemModelGenerator.writer.accept(guiModelId, new NesoGuiModelSupplier(neso, inhandModelId));
     }
   }
 

@@ -2,10 +2,18 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": "minecraft:light_blue_wool",
-    "O": "minecraft:blue_wool",
-    "W": "minecraft:white_wool",
-    "X": "hasugoods:sayaka_badge"
+    "B": {
+      "item": "minecraft:light_blue_wool"
+    },
+    "O": {
+      "item": "minecraft:blue_wool"
+    },
+    "W": {
+      "item": "minecraft:white_wool"
+    },
+    "X": {
+      "item": "hasugoods:sayaka_badge"
+    }
   },
   "pattern": [
     "OO ",

@@ -2,11 +2,21 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": "minecraft:light_blue_wool",
-    "O": "minecraft:black_wool",
-    "P": "minecraft:magenta_wool",
-    "W": "minecraft:white_wool",
-    "X": "hasugoods:hime_badge"
+    "B": {
+      "item": "minecraft:light_blue_wool"
+    },
+    "O": {
+      "item": "minecraft:black_wool"
+    },
+    "P": {
+      "item": "minecraft:magenta_wool"
+    },
+    "W": {
+      "item": "minecraft:white_wool"
+    },
+    "X": {
+      "item": "hasugoods:hime_badge"
+    }
   },
   "pattern": [
     "PO ",

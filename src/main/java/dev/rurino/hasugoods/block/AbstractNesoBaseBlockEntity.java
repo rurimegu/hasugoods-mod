@@ -115,7 +115,8 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
     // Build neso base animations
     KeyFrame.Translate secondT = new KeyFrame.Translate(40, new Vec3d(0, 2, 0));
     for (int i = 0; i < NESO_BASE_OFFSETS.size(); i++) {
-      Vec3d offset = new Vec3d(NESO_BASE_OFFSETS.get(i).multiply(-1));
+      BlockPos offsetPos = NESO_BASE_OFFSETS.get(i).multiply(-1);
+      Vec3d offset = new Vec3d(offsetPos.getX(), offsetPos.getY(), offsetPos.getZ());
       KeyFrame.Translate thirdT = new KeyFrame.Translate(80, secondT.value().add(offset.multiply(0.9)));
       KeyFrame.Scale secondS = new KeyFrame.Scale(60, new Vec3d(1, 1, 1));
       KeyFrame.Scale thirdS = new KeyFrame.Scale(80, Vec3d.ZERO);
@@ -342,7 +343,7 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
   @Override
   protected void writeNbt(NbtCompound nbt, WrapperLookup registries) {
     super.writeNbt(nbt, registries);
-    nbt.put(NBT_NESO_ITEM_STACK, getItemStack().toNbtAllowEmpty(registries));
+    nbt.put(NBT_NESO_ITEM_STACK, getItemStack().encodeAllowEmpty(registries));
     nbt.putBoolean(NBT_LOCK_ITEM_STACK, isItemStackLocked());
   }
 

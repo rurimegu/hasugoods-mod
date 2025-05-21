@@ -2,9 +2,15 @@
   "type": "minecraft:crafting_shapeless",
   "category": "building",
   "ingredients": [
-    "#hasugoods:regular_badges",
-    "minecraft:white_concrete",
-    "minecraft:note_block"
+    {
+      "tag": "hasugoods:regular_badges"
+    },
+    {
+      "item": "minecraft:white_concrete"
+    },
+    {
+      "item": "minecraft:note_block"
+    }
   ],
   "result": {
     "count": 1,

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "hasugoods",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "name": "Hasugoods",
   "description": "Adds Hasunosora items to Minecraft.",
   "authors": [
@@ -40,7 +40,7 @@
   ],
   "depends": {
     "fabricloader": ">=0.16.10",
-    "minecraft": "~1.21.4",
+    "minecraft": "~1.21.1",
     "java": ">=21",
     "fabric-api": "*"
   },

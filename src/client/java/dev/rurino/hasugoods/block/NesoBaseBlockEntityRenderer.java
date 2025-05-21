@@ -12,10 +12,10 @@ import net.minecraft.client.render.block.entity.BeaconBlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ModelTransformationMode;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
@@ -55,7 +55,8 @@ public class NesoBaseBlockEntityRenderer implements BlockEntityRenderer<Abstract
       case MEDIUM -> 1.7f;
       case LARGE -> 2.1f;
     };
-    Vec3d translation = new Vec3d(0, yOffset, 0).add(direction.getDoubleVector().multiply(radius / 2));
+    Vec3d translation = new Vec3d(0, yOffset, 0).add(
+        new Vec3d(direction.getUnitVector().mul(radius / 2)));
 
     matrices.push();
     matrices.translate(translation.x, translation.y, translation.z);
@@ -98,7 +99,7 @@ public class NesoBaseBlockEntityRenderer implements BlockEntityRenderer<Abstract
 
     ClientAnimation.apply(entity.getStateMachine().getFrame(tickDelta), matrices);
 
-    matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(direction.getPositiveHorizontalDegrees()));
+    matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(direction.getHorizontal()));
 
     itemRenderer.renderItem(
         stack,

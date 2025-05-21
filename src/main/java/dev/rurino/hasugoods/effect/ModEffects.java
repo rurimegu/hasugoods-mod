@@ -4,14 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import com.mojang.serialization.MapCodec;
-
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.util.CharaUtils;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -35,20 +31,6 @@ public class ModEffects {
         id,
         Registry.registerReference(Registries.STATUS_EFFECT, Hasugoods.id(id), entry));
   }
-
-  // #region ConsumeEffects
-
-  private static <T extends ConsumeEffect> ConsumeEffect.Type<T> registerConsumeEffect(String id, MapCodec<T> codec,
-      PacketCodec<RegistryByteBuf, T> packetCodec) {
-    Hasugoods.LOGGER.debug("Register ConsumeEffect: " + id);
-    return Registry.register(Registries.CONSUME_EFFECT_TYPE, id, new ConsumeEffect.Type<T>(codec, packetCodec));
-  }
-
-  public static final ConsumeEffect.Type<ToutoshiEffectsConsumeEffect> TOUTOSHI = registerConsumeEffect("toutoshi",
-      ToutoshiEffectsConsumeEffect.CODEC,
-      ToutoshiEffectsConsumeEffect.PACKET_CODEC);
-
-  // #endregion ConsumeEffects
 
   public static void initialize() {
 

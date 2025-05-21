@@ -2,9 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": "hasugoods:sayaka_badge",
-    "S": "hasugoods:sayaka_secret_badge",
-    "X": "hasugoods:sayaka_neso_small"
+    "B": {
+      "item": "hasugoods:sayaka_badge"
+    },
+    "S": {
+      "item": "hasugoods:sayaka_secret_badge"
+    },
+    "X": {
+      "item": "hasugoods:sayaka_neso_small"
+    }
   },
   "pattern": [
     "BSB",

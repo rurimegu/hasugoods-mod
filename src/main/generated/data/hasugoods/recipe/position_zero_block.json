@@ -2,10 +2,18 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "B": "minecraft:beacon",
-    "N": "hasugoods:neso_base_block",
-    "R": "minecraft:red_concrete",
-    "S": "#hasugoods:secret_badges"
+    "B": {
+      "item": "minecraft:beacon"
+    },
+    "N": {
+      "item": "hasugoods:neso_base_block"
+    },
+    "R": {
+      "item": "minecraft:red_concrete"
+    },
+    "S": {
+      "tag": "hasugoods:secret_badges"
+    }
   },
   "pattern": [
     "SNS",

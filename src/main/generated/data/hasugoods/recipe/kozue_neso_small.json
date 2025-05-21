@@ -2,11 +2,21 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": "minecraft:light_blue_wool",
-    "G": "minecraft:green_wool",
-    "P": "minecraft:purple_wool",
-    "W": "minecraft:white_wool",
-    "X": "hasugoods:kozue_badge"
+    "B": {
+      "item": "minecraft:light_blue_wool"
+    },
+    "G": {
+      "item": "minecraft:green_wool"
+    },
+    "P": {
+      "item": "minecraft:purple_wool"
+    },
+    "W": {
+      "item": "minecraft:white_wool"
+    },
+    "X": {
+      "item": "hasugoods:kozue_badge"
+    }
   },
   "pattern": [
     "PG ",

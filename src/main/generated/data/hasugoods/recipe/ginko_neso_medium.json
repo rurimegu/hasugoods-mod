@@ -2,9 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": "hasugoods:ginko_badge",
-    "S": "hasugoods:ginko_secret_badge",
-    "X": "hasugoods:ginko_neso_small"
+    "B": {
+      "item": "hasugoods:ginko_badge"
+    },
+    "S": {
+      "item": "hasugoods:ginko_secret_badge"
+    },
+    "X": {
+      "item": "hasugoods:ginko_neso_small"
+    }
   },
   "pattern": [
     "BSB",

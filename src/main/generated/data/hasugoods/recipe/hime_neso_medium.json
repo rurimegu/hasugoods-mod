@@ -2,9 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": "hasugoods:hime_badge",
-    "S": "hasugoods:hime_secret_badge",
-    "X": "hasugoods:hime_neso_small"
+    "B": {
+      "item": "hasugoods:hime_badge"
+    },
+    "S": {
+      "item": "hasugoods:hime_secret_badge"
+    },
+    "X": {
+      "item": "hasugoods:hime_neso_small"
+    }
   },
   "pattern": [
     "BSB",
