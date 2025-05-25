@@ -5,6 +5,7 @@ import com.mojang.serialization.MapCodec;
 import dev.rurino.hasugoods.Hasugoods;
 import dev.rurino.hasugoods.item.neso.NesoItem;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.HorizontalFacingBlock;
@@ -13,7 +14,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.EnumProperty;
+import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
@@ -23,11 +24,11 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 public abstract class AbstractNesoBaseBlock extends BlockWithEntity {
-  public static final EnumProperty<Direction> FACING = HorizontalFacingBlock.FACING;
+  public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
 
   public AbstractNesoBaseBlock(Settings settings) {
     super(settings);
-    this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
+    this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH));
   }
 
   @Override
@@ -43,6 +44,11 @@ public abstract class AbstractNesoBaseBlock extends BlockWithEntity {
   @Override
   protected BlockState mirror(BlockState state, BlockMirror mirror) {
     return state.rotate(mirror.getRotation(state.get(FACING)));
+  }
+
+  @Override
+  protected BlockRenderType getRenderType(BlockState state) {
+    return BlockRenderType.MODEL;
   }
 
   @Override

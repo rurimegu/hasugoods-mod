@@ -2,17 +2,19 @@ package dev.rurino.hasugoods.datagen;
 
 import java.util.concurrent.CompletableFuture;
 
+import dev.rurino.hasugoods.block.ModBlocks;
 import dev.rurino.hasugoods.item.ModItems;
 import dev.rurino.hasugoods.item.badge.BadgeItem;
 import dev.rurino.hasugoods.item.neso.NesoItem;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.registry.RegistryWrapper.WrapperLookup;
+import net.minecraft.registry.tag.BlockTags;
 
 public class HasugoodsTagProvider {
-  public static class ItemTags extends FabricTagProvider.ItemTagProvider {
+  public static class ItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
-    public ItemTags(FabricDataOutput output, CompletableFuture<WrapperLookup> registriesFuture) {
+    public ItemTagProvider(FabricDataOutput output, CompletableFuture<WrapperLookup> registriesFuture) {
       super(output, registriesFuture);
     }
 
@@ -28,6 +30,19 @@ public class HasugoodsTagProvider {
           case LARGE -> getOrCreateTagBuilder(ModItems.TAG_LARGE_NESOS).add(neso);
         }
       }
+    }
+  }
+
+  public static class BlockTagProvider extends FabricTagProvider.BlockTagProvider {
+
+    public BlockTagProvider(FabricDataOutput output, CompletableFuture<WrapperLookup> registriesFuture) {
+      super(output, registriesFuture);
+    }
+
+    @Override
+    protected void configure(WrapperLookup wrapperLookup) {
+      getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
+          .add(ModBlocks.NESO_BASE_BLOCK, ModBlocks.POSITION_ZERO_BLOCK);
     }
   }
 

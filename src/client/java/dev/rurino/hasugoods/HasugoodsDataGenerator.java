@@ -24,7 +24,8 @@ public class HasugoodsDataGenerator implements DataGeneratorEntrypoint {
     V = this;
     FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
     pack.addProvider(HasugoodsModelProvider::new);
-    pack.addProvider(HasugoodsTagProvider.ItemTags::new);
+    pack.addProvider(HasugoodsTagProvider.ItemTagProvider::new);
+    pack.addProvider(HasugoodsTagProvider.BlockTagProvider::new);
     pack.addProvider(HasugoodsRecipeProvider::new);
   }
 }
