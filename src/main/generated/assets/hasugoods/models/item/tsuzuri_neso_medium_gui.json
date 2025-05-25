@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:item/generated",
+  "gui_light": "front",
+  "textures": {
+    "layer0": "hasugoods:item/neso/tsuzuri_icon",
+    "layer1": "hasugoods:item/neso/medium"
+  }
+}

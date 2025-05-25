@@ -1,5 +1,6 @@
 package dev.rurino.hasugoods.entity;
 
+import dev.rurino.hasugoods.Hasugoods;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
@@ -21,12 +22,13 @@ public class NesoEntityRenderer extends LivingEntityRenderer<NesoEntity, NesoEnt
   @Override
   public void render(NesoEntity livingEntity, float f, float g, MatrixStack matrixStack,
       VertexConsumerProvider vertexConsumerProvider, int i) {
-    this.getModel().setVertexConsumers(vertexConsumerProvider);
+    model.setVertexConsumerProvider(vertexConsumerProvider);
     super.render(livingEntity, f, g, matrixStack, vertexConsumerProvider, i);
   }
 
   @Override
   public Identifier getTexture(NesoEntity entity) {
-    return null;
+    // Unused texture
+    return Hasugoods.id("textures/particle/note.png");
   }
 }

@@ -1,21 +1,4 @@
 {
-  "parent": "minecraft:item/generated",
-  "overrides": [
-    {
-      "model": "hasugoods:item/kozue_neso_small_in_hand",
-      "predicate": {
-        "custom_model_data": 1
-      }
-    },
-    {
-      "model": "hasugoods:item/kozue_neso_small_in_hand",
-      "predicate": {
-        "hasugoods:neso_3d": 1
-      }
-    }
-  ],
-  "textures": {
-    "layer0": "hasugoods:item/neso/kozue_icon",
-    "layer1": "hasugoods:item/neso/small"
-  }
+  "parent": "builtin/entity",
+  "gui_light": "front"
 }

@@ -117,6 +117,7 @@ public class NesoEntity extends LivingEntity implements INesoEntity {
         Hasugoods.LOGGER.warn("NesoComponent not found for NesoEntity: {}", entity);
       }
       entity.setRotation(180 + initYaw, 0);
+      entity.setHeadYaw(180 + initYaw);
       world.spawnEntityAndPassengers(entity);
     }
 

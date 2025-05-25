@@ -9,8 +9,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import dev.rurino.hasugoods.Hasugoods;
-import dev.rurino.hasugoods.HasugoodsClient;
 import dev.rurino.hasugoods.HasugoodsDataGenerator;
+import dev.rurino.hasugoods.item.NesoItemRenderer;
 import dev.rurino.hasugoods.item.badge.BadgeItem;
 import dev.rurino.hasugoods.item.neso.NesoItem;
 import dev.rurino.hasugoods.util.CharaUtils.NesoSize;
@@ -26,17 +26,21 @@ public class HasugoodsModelProvider extends FabricModelProvider {
   private static class NesoModelSupplier implements Supplier<JsonElement> {
     private static final Identifier PARENT = Identifier.of("special-model-loader", "builtin/obj");
 
-    private static double getMultiplier(NesoSize size) {
+    private static <T> T pick(NesoSize size, T small, T medium, T large) {
       return switch (size) {
-        case SMALL -> 1;
-        case MEDIUM -> 2;
-        case LARGE -> 4;
+        case SMALL -> small;
+        case MEDIUM -> medium;
+        case LARGE -> large;
       };
+    }
+
+    private static double getMultiplier(NesoSize size) {
+      return pick(size, 1, 2, 4);
     }
 
     private static ImmutableMap<String, ?> ground(NesoSize size) {
       int[] rotation = new int[] { 0, 0, 0 };
-      double[] translation = new double[] { 0, 2, -1 };
+      double[] translation = new double[] { 0, 0, -1 };
       double[] scale = new double[] { 0.24, 0.24, 0.24 };
       double multiplier = getMultiplier(size);
       for (int i = 0; i < scale.length; i++) {
@@ -49,32 +53,26 @@ public class HasugoodsModelProvider extends FabricModelProvider {
     }
 
     private static ImmutableMap<String, ?> thirdPerson(NesoSize size, boolean left) {
-      int[] rotation = new int[] { 100, size == NesoSize.LARGE ? 180 : 195, 0 };
-      double[] translation = new double[] { 0, 0, 0 };
-      double[] scale = new double[] { 0.18, 0.18, 0.18 };
       double multiplier = getMultiplier(size);
+      int[] rotation = new int[] { 100, size == NesoSize.LARGE ? 180 : 195, 0 };
+      double[] translation = new double[] {
+          8,
+          pick(size, 7.5, 8.5, 9.5),
+          pick(size, 8, 9, 10) };
+      double[] scale = new double[] { 0.18, 0.18, 0.18 };
       for (int i = 0; i < scale.length; i++) {
         scale[i] *= multiplier;
-      }
-      for (int i = 0; i < translation.length; i++) {
-        translation[i] *= multiplier;
       }
       return ImmutableMap.of("rotation", rotation, "translation", translation, "scale", scale);
     }
 
     private static ImmutableMap<String, ?> firstPerson(NesoSize size, boolean left) {
-      int[] rotation = new int[] {
-          size == NesoSize.LARGE ? 30 : 45,
-          size == NesoSize.LARGE ? 180 : 195,
-          0 };
-      double[] translation = new double[] { 1, size == NesoSize.LARGE ? -0.25 : 0, 0 };
+      int[] rotation = new int[] { 30, 180, 0 };
+      double[] translation = new double[] { left ? 0 : 16, 4, 0 };
       double[] scale = new double[] { 0.18, 0.18, 0.18 };
       double multiplier = getMultiplier(size);
       for (int i = 0; i < scale.length; i++) {
         scale[i] *= multiplier;
-      }
-      for (int i = 0; i < translation.length; i++) {
-        translation[i] *= multiplier;
       }
       return ImmutableMap.of("rotation", rotation, "translation", translation, "scale", scale);
     }
@@ -109,12 +107,10 @@ public class HasugoodsModelProvider extends FabricModelProvider {
     private static final Identifier PARENT = Identifier.of("minecraft", "item/generated");
 
     private final NesoItem item;
-    private final Identifier id3dModel;
     private int layerId;
 
     public NesoGuiModelSupplier(NesoItem item, Identifier id3dModel) {
       this.item = item;
-      this.id3dModel = id3dModel;
     }
 
     private void beginLayers() {
@@ -145,37 +141,27 @@ public class HasugoodsModelProvider extends FabricModelProvider {
       return ret;
     }
 
-    private JsonArray getOverrides() {
-      JsonArray overrides = new JsonArray();
-      // Custom model data
-      JsonObject customModelData = new JsonObject();
-      JsonObject predicate = new JsonObject();
-      predicate.addProperty("custom_model_data", HasugoodsClient.CUSTOM_DATA_NESO_3D);
-      customModelData.add("predicate", predicate);
-      customModelData.addProperty("model", id3dModel.toString());
-      overrides.add(customModelData);
-
-      // Item predicate
-      JsonObject itemPredicate = new JsonObject();
-      predicate = new JsonObject();
-      predicate.addProperty(HasugoodsClient.PREDICATE_NESO_3D.toString(), 1);
-      itemPredicate.add("predicate", predicate);
-      itemPredicate.addProperty("model", id3dModel.toString());
-      overrides.add(itemPredicate);
-
-      return overrides;
-    }
-
     @Override
     public JsonElement get() {
       JsonObject jsonObject = new JsonObject();
       jsonObject.addProperty("parent", PARENT.toString());
       jsonObject.add("textures", getTextures());
-      jsonObject.add("overrides", getOverrides());
+      jsonObject.addProperty("gui_light", "front");
       return jsonObject;
     }
 
   }
+
+  private static class BuiltinModelSupplier implements Supplier<JsonElement> {
+
+    @Override
+    public JsonElement get() {
+      JsonObject jsonObject = new JsonObject();
+      jsonObject.addProperty("parent", "builtin/entity");
+      jsonObject.addProperty("gui_light", "front");
+      return jsonObject;
+    }
+  };
 
   private static class ParticleModelSupplier implements Supplier<JsonElement> {
     private final String charaKey;
@@ -208,10 +194,12 @@ public class HasugoodsModelProvider extends FabricModelProvider {
       itemModelGenerator.register(item, Models.GENERATED);
     }
     for (var neso : NesoItem.getAllNesos()) {
-      Identifier inhandModelId = ModelIds.getItemSubModelId(neso, "_in_hand");
-      Identifier guiModelId = ModelIds.getItemModelId(neso);
+      Identifier modelId = NesoItemRenderer.builtinModelId(neso);
+      Identifier inhandModelId = NesoItemRenderer.inHandModelId(neso);
+      Identifier guiModelId = NesoItemRenderer.guiModelId(neso);
       itemModelGenerator.writer.accept(inhandModelId, new NesoModelSupplier(neso));
       itemModelGenerator.writer.accept(guiModelId, new NesoGuiModelSupplier(neso, inhandModelId));
+      itemModelGenerator.writer.accept(modelId, new BuiltinModelSupplier());
     }
   }
 

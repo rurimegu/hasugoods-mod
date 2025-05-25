@@ -1,21 +1,4 @@
 {
-  "parent": "minecraft:item/generated",
-  "overrides": [
-    {
-      "model": "hasugoods:item/sayaka_neso_medium_in_hand",
-      "predicate": {
-        "custom_model_data": 1
-      }
-    },
-    {
-      "model": "hasugoods:item/sayaka_neso_medium_in_hand",
-      "predicate": {
-        "hasugoods:neso_3d": 1
-      }
-    }
-  ],
-  "textures": {
-    "layer0": "hasugoods:item/neso/sayaka_icon",
-    "layer1": "hasugoods:item/neso/medium"
-  }
+  "parent": "builtin/entity",
+  "gui_light": "front"
 }

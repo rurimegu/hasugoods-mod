@@ -1,33 +1,32 @@
 package dev.rurino.hasugoods.entity;
 
-import dev.rurino.hasugoods.HasugoodsClient;
+import org.joml.Quaternionf;
+
+import dev.rurino.hasugoods.item.NesoItemRenderer;
 import dev.rurino.hasugoods.item.neso.NesoItem;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.CustomModelDataComponent;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Identifier;
 
 public class NesoEntityModel extends EntityModel<NesoEntity> {
 
-  public static final CustomModelDataComponent NESO_3D_CUSTOM_MODEL_DATA = new CustomModelDataComponent(
-      HasugoodsClient.CUSTOM_DATA_NESO_3D);
-
   private final NesoItem item;
   private final ItemStack stack;
-  private VertexConsumerProvider vertexConsumers;
+  private final Identifier inHandModelId;
+  private VertexConsumerProvider vertexConsumerProvider;
 
   protected NesoEntityModel(NesoItem item) {
     super();
     this.item = item;
     this.stack = new ItemStack(item);
-    this.stack.set(DataComponentTypes.CUSTOM_MODEL_DATA, NESO_3D_CUSTOM_MODEL_DATA);
+    inHandModelId = NesoItemRenderer.inHandModelId(item);
   }
 
   public NesoItem getItem() {
@@ -46,32 +45,38 @@ public class NesoEntityModel extends EntityModel<NesoEntity> {
     };
   }
 
+  private float getYTranslation() {
+    return switch (item.getNesoSize()) {
+      case SMALL -> -1.38F;
+      case MEDIUM -> -1.27F;
+      case LARGE -> -1.05F;
+    };
+  }
+
   @Override
   public void setAngles(NesoEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw,
       float headPitch) {
     // Ignore angles
   }
 
-  public void setVertexConsumers(VertexConsumerProvider vertexConsumers) {
-    this.vertexConsumers = vertexConsumers;
+  public void setVertexConsumerProvider(VertexConsumerProvider vertexConsumerProvider) {
+    this.vertexConsumerProvider = vertexConsumerProvider;
   }
 
   @Override
   public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, int color) {
-
     matrices.push();
 
-    ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
+    MinecraftClient client = MinecraftClient.getInstance();
+    ItemRenderer itemRenderer = client.getItemRenderer();
+    BakedModel model = client.getBakedModelManager().getModel(inHandModelId);
 
-    itemRenderer.renderItem(
-        this.getItemStack(),
-        ModelTransformationMode.GROUND,
-        light,
-        OverlayTexture.DEFAULT_UV,
-        matrices,
-        vertexConsumers,
-        null,
-        0);
+    matrices.scale(-1.0F, -1.0F, 1.0F);
+    matrices.translate(0F, getYTranslation(), 0F);
+    matrices.multiply(new Quaternionf().rotateY((float) Math.PI));
+
+    itemRenderer.renderItem(getItemStack(), ModelTransformationMode.GROUND, false, matrices,
+        vertexConsumerProvider, light, overlay, model);
 
     matrices.pop();
   }

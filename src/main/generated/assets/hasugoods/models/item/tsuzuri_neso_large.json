@@ -1,21 +1,4 @@
 {
-  "parent": "minecraft:item/generated",
-  "overrides": [
-    {
-      "model": "hasugoods:item/tsuzuri_neso_large_in_hand",
-      "predicate": {
-        "custom_model_data": 1
-      }
-    },
-    {
-      "model": "hasugoods:item/tsuzuri_neso_large_in_hand",
-      "predicate": {
-        "hasugoods:neso_3d": 1
-      }
-    }
-  ],
-  "textures": {
-    "layer0": "hasugoods:item/neso/tsuzuri_icon",
-    "layer1": "hasugoods:item/neso/large"
-  }
+  "parent": "builtin/entity",
+  "gui_light": "front"
 }

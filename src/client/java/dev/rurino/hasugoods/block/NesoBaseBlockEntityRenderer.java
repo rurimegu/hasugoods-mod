@@ -2,7 +2,6 @@ package dev.rurino.hasugoods.block;
 
 import java.util.Optional;
 
-import dev.rurino.hasugoods.entity.NesoEntityModel;
 import dev.rurino.hasugoods.item.neso.NesoItem;
 import dev.rurino.hasugoods.util.ClientAnimation;
 import dev.rurino.hasugoods.util.CharaUtils.NesoSize;
@@ -14,7 +13,6 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
@@ -82,12 +80,11 @@ public class NesoBaseBlockEntityRenderer implements BlockEntityRenderer<Abstract
       VertexConsumerProvider vertexConsumers,
       int light,
       int overlay) {
-    ItemStack stack = entity.getItemStack().copy();
+    ItemStack stack = entity.getItemStack();
     BlockState blockState = entity.getCachedState();
     if (stack.isEmpty() || !entity.isTopAir())
       return;
 
-    stack.set(DataComponentTypes.CUSTOM_MODEL_DATA, NesoEntityModel.NESO_3D_CUSTOM_MODEL_DATA);
     Direction direction = blockState.get(AbstractNesoBaseBlock.FACING);
 
     if (entity instanceof PositionZeroBlockEntity pos0Entity) {

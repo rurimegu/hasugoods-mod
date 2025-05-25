@@ -1,7 +1,6 @@
 package dev.rurino.hasugoods.block;
 
 import dev.rurino.hasugoods.Hasugoods;
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -17,12 +16,12 @@ public class ModBlockEntities {
 
   private static <T extends BlockEntity> BlockEntityType<T> register(
       String name,
-      FabricBlockEntityTypeBuilder.Factory<? extends T> entityFactory,
+      BlockEntityType.BlockEntityFactory<? extends T> entityFactory,
       Block... blocks) {
     Identifier id = Hasugoods.id(name);
     Hasugoods.LOGGER.debug("Register block entity: {}", id);
     return Registry.register(Registries.BLOCK_ENTITY_TYPE, id,
-        FabricBlockEntityTypeBuilder.<T>create(entityFactory, blocks).build());
+        BlockEntityType.Builder.<T>create(entityFactory, blocks).build());
   }
 
   public static void initialize() {
