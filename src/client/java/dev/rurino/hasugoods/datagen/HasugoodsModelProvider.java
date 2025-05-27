@@ -126,7 +126,7 @@ public class HasugoodsModelProvider extends FabricModelProvider {
       Identifier id = Hasugoods.id("item/neso/" + item.getCharaKey() + "_icon");
       beginLayers();
       if (HasugoodsDataGenerator.V.resourceExists(id.withPrefixedPath("textures/").withSuffixedPath(".png"))) {
-        ret.addProperty(nextLayer(), Hasugoods.idStr("item/neso/" + item.getCharaKey() + "_icon"));
+        ret.addProperty(nextLayer(), id.toString());
       } else {
         Hasugoods.LOGGER.warn("Neso icon not found: {}", id);
         id = ModelIds.getItemModelId(BadgeItem.getBadgeItem(item.getCharaKey()).get());
