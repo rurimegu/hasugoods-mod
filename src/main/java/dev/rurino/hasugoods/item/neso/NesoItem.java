@@ -17,7 +17,9 @@ import dev.rurino.hasugoods.util.ItemStackUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.component.ComponentType;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
@@ -83,12 +85,6 @@ public class NesoItem extends Item implements INesoItem {
       case LARGE -> Rarity.RARE;
     };
     Settings settings = new Settings().maxCount(1).rarity(rarity);
-    NesoConfig.Base config = Hasugoods.CONFIG.neso.getConfig(charaKey, size);
-    if (config == null) {
-      Hasugoods.LOGGER.error("Config for {}, {} not found", charaKey, size);
-    } else {
-      // TODO: add item cooldown
-    }
     NesoItem item = (NesoItem) ModItems.register(key, create(settings, charaKey, size));
     ALL_NESOS.put(itemKey, new NesoItemEntry(key, item));
     return item;
@@ -221,6 +217,23 @@ public class NesoItem extends Item implements INesoItem {
     world.emitGameEvent(context.getPlayer(), GameEvent.ENTITY_PLACE, blockPos);
 
     return ActionResult.SUCCESS;
+  }
+
+  protected void applyCooldown(LivingEntity user) {
+    if (user.getWorld().isClient) {
+      // No cooldown on client side
+      return;
+    }
+    if (config == null) {
+      Hasugoods.LOGGER.error("NesoItem {} has no config, cannot apply cooldown", this);
+      return;
+    }
+    if (config.useCooldown() > 0 && user instanceof PlayerEntity player) {
+      Hasugoods.LOGGER.debug("Applying cooldown of {} ticks to player {}", config.useCooldown(),
+          player.getName().getString());
+      int cooldownTicks = (int) (config.useCooldown() * 20);
+      player.getItemCooldownManager().set(this, cooldownTicks);
+    }
   }
 
   // #region Energy

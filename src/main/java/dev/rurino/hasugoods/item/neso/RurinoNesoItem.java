@@ -68,6 +68,7 @@ public class RurinoNesoItem extends NesoItem {
     }
     if (success) {
       user.swingHand(hand, true);
+      applyCooldown(user);
       return TypedActionResult.success(stack);
     }
     return TypedActionResult.pass(stack);

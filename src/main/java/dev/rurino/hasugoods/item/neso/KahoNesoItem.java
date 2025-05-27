@@ -79,10 +79,11 @@ public class KahoNesoItem extends NesoItem {
 
   @Override
   public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
+    super.onStoppedUsing(stack, world, user, remainingUseTicks);
     if (world.isClient) {
       return;
     }
-    stack.set(NesoItem.KAHO_NESO_COMPONENT, KahoNesoComponent.EMPTY);
+    applyCooldown(user);
   }
 
   @Override
