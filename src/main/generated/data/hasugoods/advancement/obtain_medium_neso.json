@@ -1,0 +1,36 @@
+{
+  "parent": "hasugoods:obtain_small_neso",
+  "criteria": {
+    "obtain_neso": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#hasugoods:medium_nesos"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.hasugoods.obtain_medium_neso.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "hasugoods:ginko_neso_medium"
+    },
+    "title": {
+      "translate": "advancement.hasugoods.obtain_medium_neso.title"
+    }
+  },
+  "requirements": [
+    [
+      "obtain_neso"
+    ]
+  ],
+  "rewards": {
+    "experience": 100
+  },
+  "sends_telemetry_event": true
+}

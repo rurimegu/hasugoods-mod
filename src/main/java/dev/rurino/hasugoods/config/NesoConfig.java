@@ -15,9 +15,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class NesoConfig {
-  public static String nesoKey(String charaKey, NesoSize size) {
-    return charaKey + "_neso_" + size.name().toLowerCase();
-  }
 
   // #region Individual Configs
   public static abstract class Base {
@@ -463,7 +460,7 @@ public class NesoConfig {
   public final LongValue nesoBaseChargeAmountPerTick;
 
   public Base getConfig(String charaKey, NesoSize size) {
-    String key = nesoKey(charaKey, size);
+    String key = CharaUtils.nesoKey(charaKey, size);
     if (!CONFIGS.containsKey(key)) {
       Hasugoods.LOGGER.error("Config for {} not found", key);
       return null;
@@ -503,7 +500,7 @@ public class NesoConfig {
   }
 
   private void registerConfig(Base config) {
-    String key = nesoKey(config.getCharaKey(), config.getSize());
+    String key = CharaUtils.nesoKey(config.getCharaKey(), config.getSize());
     if (CONFIGS.containsKey(key)) {
       Hasugoods.LOGGER.warn("Config for {} already registered, replacing", key);
     } else {

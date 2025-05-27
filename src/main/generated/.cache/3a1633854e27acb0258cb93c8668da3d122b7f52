@@ -1,7 +1,7 @@
-// 1.21.1	2025-05-24T23:52:28.6463191	Hasugoods/Tags for minecraft:item
-4dae5c2c14840ec3f3a8098789c0f37413756724 data\hasugoods\tags\item\large_nesos.json
-a9659cdfded7aa3571ee8ea6bf9d295d944fb61b data\hasugoods\tags\item\medium_nesos.json
-36b09a2d760975a12fa38083aa65ab33fbc2984d data\hasugoods\tags\item\secret_badges.json
-b2d4da7365fea7da5833ca59b43e7a727fd8e6da data\hasugoods\tags\item\regular_badges.json
-edfa52e12f7baa3ad773b8deb427a612395b8a5c data\hasugoods\tags\item\nesos.json
-f60944597a1cbd1dec1693b049a5ae4cbdf36d33 data\hasugoods\tags\item\small_nesos.json
+// 1.21.1	2025-05-27T23:17:23.718361067	Hasugoods/Tags for minecraft:item
+f60944597a1cbd1dec1693b049a5ae4cbdf36d33 data/hasugoods/tags/item/small_nesos.json
+36b09a2d760975a12fa38083aa65ab33fbc2984d data/hasugoods/tags/item/secret_badges.json
+a9659cdfded7aa3571ee8ea6bf9d295d944fb61b data/hasugoods/tags/item/medium_nesos.json
+4dae5c2c14840ec3f3a8098789c0f37413756724 data/hasugoods/tags/item/large_nesos.json
+edfa52e12f7baa3ad773b8deb427a612395b8a5c data/hasugoods/tags/item/nesos.json
+b2d4da7365fea7da5833ca59b43e7a727fd8e6da data/hasugoods/tags/item/regular_badges.json

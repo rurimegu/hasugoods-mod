@@ -1,0 +1,36 @@
+{
+  "parent": "hasugoods:root",
+  "criteria": {
+    "obtain_badge": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#hasugoods:regular_badges"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.hasugoods.obtain_regular_badge.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "hasugoods:kosuzu_badge"
+    },
+    "title": {
+      "translate": "advancement.hasugoods.obtain_regular_badge.title"
+    }
+  },
+  "requirements": [
+    [
+      "obtain_badge"
+    ]
+  ],
+  "rewards": {
+    "experience": 50
+  },
+  "sends_telemetry_event": true
+}

@@ -1,0 +1,36 @@
+{
+  "parent": "hasugoods:obtain_secret_badge",
+  "criteria": {
+    "obtain_neso_base": {
+      "conditions": {
+        "items": [
+          {
+            "items": "hasugoods:position_zero_block"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.hasugoods.obtain_position_zero_block.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "hasugoods:position_zero_block"
+    },
+    "title": {
+      "translate": "advancement.hasugoods.obtain_position_zero_block.title"
+    }
+  },
+  "requirements": [
+    [
+      "obtain_neso_base"
+    ]
+  ],
+  "rewards": {
+    "experience": 50
+  },
+  "sends_telemetry_event": true
+}

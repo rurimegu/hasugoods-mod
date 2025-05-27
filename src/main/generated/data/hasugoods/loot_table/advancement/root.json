@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:advancement_reward",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "patchouli:book": "hasugoods:hasunosora_handbook"
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "patchouli:guide_book"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ]
+}

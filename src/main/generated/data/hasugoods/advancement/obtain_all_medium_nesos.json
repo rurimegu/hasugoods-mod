@@ -1,0 +1,141 @@
+{
+  "parent": "hasugoods:obtain_medium_neso",
+  "criteria": {
+    "obtain_ginko_neso_medium": {
+      "conditions": {
+        "items": [
+          {
+            "items": "hasugoods:ginko_neso_medium"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "obtain_hime_neso_medium": {
+      "conditions": {
+        "items": [
+          {
+            "items": "hasugoods:hime_neso_medium"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "obtain_kaho_neso_medium": {
+      "conditions": {
+        "items": [
+          {
+            "items": "hasugoods:kaho_neso_medium"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "obtain_kosuzu_neso_medium": {
+      "conditions": {
+        "items": [
+          {
+            "items": "hasugoods:kosuzu_neso_medium"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "obtain_kozue_neso_medium": {
+      "conditions": {
+        "items": [
+          {
+            "items": "hasugoods:kozue_neso_medium"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "obtain_megumi_neso_medium": {
+      "conditions": {
+        "items": [
+          {
+            "items": "hasugoods:megumi_neso_medium"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "obtain_rurino_neso_medium": {
+      "conditions": {
+        "items": [
+          {
+            "items": "hasugoods:rurino_neso_medium"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "obtain_sayaka_neso_medium": {
+      "conditions": {
+        "items": [
+          {
+            "items": "hasugoods:sayaka_neso_medium"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "obtain_tsuzuri_neso_medium": {
+      "conditions": {
+        "items": [
+          {
+            "items": "hasugoods:tsuzuri_neso_medium"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.hasugoods.obtain_all_medium_nesos.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "hasugoods:megumi_neso_medium"
+    },
+    "title": {
+      "translate": "advancement.hasugoods.obtain_all_medium_nesos.title"
+    }
+  },
+  "requirements": [
+    [
+      "obtain_kaho_neso_medium"
+    ],
+    [
+      "obtain_sayaka_neso_medium"
+    ],
+    [
+      "obtain_tsuzuri_neso_medium"
+    ],
+    [
+      "obtain_kozue_neso_medium"
+    ],
+    [
+      "obtain_kosuzu_neso_medium"
+    ],
+    [
+      "obtain_hime_neso_medium"
+    ],
+    [
+      "obtain_ginko_neso_medium"
+    ],
+    [
+      "obtain_megumi_neso_medium"
+    ],
+    [
+      "obtain_rurino_neso_medium"
+    ]
+  ],
+  "rewards": {
+    "experience": 400
+  },
+  "sends_telemetry_event": true
+}

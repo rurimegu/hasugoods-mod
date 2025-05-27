@@ -1,5 +1,7 @@
 package dev.rurino.hasugoods;
 
+import dev.rurino.hasugoods.datagen.HasugoodsAdvancementProvider;
+import dev.rurino.hasugoods.datagen.HasugoodsAdvancementRewardProvider;
 import dev.rurino.hasugoods.datagen.HasugoodsModelProvider;
 import dev.rurino.hasugoods.datagen.HasugoodsRecipeProvider;
 import dev.rurino.hasugoods.datagen.HasugoodsTagProvider;
@@ -27,5 +29,7 @@ public class HasugoodsDataGenerator implements DataGeneratorEntrypoint {
     pack.addProvider(HasugoodsTagProvider.ItemTagProvider::new);
     pack.addProvider(HasugoodsTagProvider.BlockTagProvider::new);
     pack.addProvider(HasugoodsRecipeProvider::new);
+    pack.addProvider(HasugoodsAdvancementRewardProvider::new);
+    pack.addProvider(HasugoodsAdvancementProvider::new);
   }
 }

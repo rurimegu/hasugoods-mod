@@ -1,0 +1,43 @@
+{
+  "parent": "hasugoods:obtain_regular_badge",
+  "criteria": {
+    "toutoshi": {
+      "conditions": {
+        "damage": {
+          "type": {
+            "tags": [
+              {
+                "expected": true,
+                "id": "hasugoods:toutoshi"
+              }
+            ]
+          }
+        }
+      },
+      "trigger": "minecraft:entity_hurt_player"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.hasugoods.toutoshi.description"
+    },
+    "frame": "challenge",
+    "hidden": true,
+    "icon": {
+      "count": 1,
+      "id": "hasugoods:megumi_badge"
+    },
+    "title": {
+      "translate": "advancement.hasugoods.toutoshi.title"
+    }
+  },
+  "requirements": [
+    [
+      "toutoshi"
+    ]
+  ],
+  "rewards": {
+    "experience": 100
+  },
+  "sends_telemetry_event": true
+}

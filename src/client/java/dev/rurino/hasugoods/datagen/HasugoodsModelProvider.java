@@ -126,17 +126,17 @@ public class HasugoodsModelProvider extends FabricModelProvider {
       Identifier id = Hasugoods.id("item/neso/" + item.getCharaKey() + "_icon");
       beginLayers();
       if (HasugoodsDataGenerator.V.resourceExists(id.withPrefixedPath("textures/").withSuffixedPath(".png"))) {
-        ret.addProperty(nextLayer(), id.toString());
+        ret.addProperty(nextLayer(), Hasugoods.idStr("item/neso/" + item.getCharaKey() + "_icon"));
       } else {
         Hasugoods.LOGGER.warn("Neso icon not found: {}", id);
         id = ModelIds.getItemModelId(BadgeItem.getBadgeItem(item.getCharaKey()).get());
         ret.addProperty(nextLayer(), id.toString());
-        ret.addProperty(nextLayer(), Hasugoods.id("item/neso/wip_icon").toString());
+        ret.addProperty(nextLayer(), Hasugoods.idStr("item/neso/wip_icon"));
       }
       ret.addProperty(nextLayer(), switch (item.getNesoSize()) {
-        case SMALL -> Hasugoods.id("item/neso/small").toString();
-        case MEDIUM -> Hasugoods.id("item/neso/medium").toString();
-        case LARGE -> Hasugoods.id("item/neso/large").toString();
+        case SMALL -> Hasugoods.idStr("item/neso/small");
+        case MEDIUM -> Hasugoods.idStr("item/neso/medium");
+        case LARGE -> Hasugoods.idStr("item/neso/large");
       });
       return ret;
     }
@@ -173,7 +173,7 @@ public class HasugoodsModelProvider extends FabricModelProvider {
     public JsonElement get() {
       JsonObject jsonObject = new JsonObject();
       JsonArray textures = new JsonArray();
-      textures.add(Hasugoods.id(charaKey + "_icon").toString());
+      textures.add(Hasugoods.idStr(charaKey + "_icon"));
       jsonObject.add("textures", textures);
       return jsonObject;
     }

@@ -29,6 +29,10 @@ public class Hasugoods implements ModInitializer {
     return Identifier.of(MOD_ID, path);
   }
 
+  public static String idStr(String path) {
+    return MOD_ID + ":" + path;
+  }
+
   @Override
   public void onInitialize() {
     // This code runs as soon as Minecraft is in a mod-load-ready state.

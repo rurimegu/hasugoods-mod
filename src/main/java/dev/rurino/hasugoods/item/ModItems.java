@@ -18,10 +18,12 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 public class ModItems {
   public static final RegistryKey<ItemGroup> HASU_ITEM_GROUP_KEY = RegistryKey.of(
       Registries.ITEM_GROUP.getKey(), Hasugoods.id("item_group"));
+  public static final Identifier ID_PATCHOULI_BOOK = Hasugoods.id("hasunosora_handbook");
   public static final ItemGroup HASU_ITEM_GROUP = FabricItemGroup.builder()
       .icon(() -> new ItemStack(BadgeItem.getBadgeItem(CharaUtils.RURINO_KEY).get()))
       .displayName(Text.translatable("itemGroup.hasugoods"))

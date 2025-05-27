@@ -1,0 +1,36 @@
+{
+  "parent": "hasugoods:obtain_regular_badge",
+  "criteria": {
+    "obtain_neso_base": {
+      "conditions": {
+        "items": [
+          {
+            "items": "hasugoods:neso_base_block"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.hasugoods.obtain_neso_base.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "hasugoods:neso_base_block"
+    },
+    "title": {
+      "translate": "advancement.hasugoods.obtain_neso_base.title"
+    }
+  },
+  "requirements": [
+    [
+      "obtain_neso_base"
+    ]
+  ],
+  "rewards": {
+    "experience": 50
+  },
+  "sends_telemetry_event": true
+}

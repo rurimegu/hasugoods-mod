@@ -1,0 +1,141 @@
+{
+  "parent": "hasugoods:obtain_large_neso",
+  "criteria": {
+    "obtain_ginko_neso_large": {
+      "conditions": {
+        "items": [
+          {
+            "items": "hasugoods:ginko_neso_large"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "obtain_hime_neso_large": {
+      "conditions": {
+        "items": [
+          {
+            "items": "hasugoods:hime_neso_large"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "obtain_kaho_neso_large": {
+      "conditions": {
+        "items": [
+          {
+            "items": "hasugoods:kaho_neso_large"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "obtain_kosuzu_neso_large": {
+      "conditions": {
+        "items": [
+          {
+            "items": "hasugoods:kosuzu_neso_large"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "obtain_kozue_neso_large": {
+      "conditions": {
+        "items": [
+          {
+            "items": "hasugoods:kozue_neso_large"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "obtain_megumi_neso_large": {
+      "conditions": {
+        "items": [
+          {
+            "items": "hasugoods:megumi_neso_large"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "obtain_rurino_neso_large": {
+      "conditions": {
+        "items": [
+          {
+            "items": "hasugoods:rurino_neso_large"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "obtain_sayaka_neso_large": {
+      "conditions": {
+        "items": [
+          {
+            "items": "hasugoods:sayaka_neso_large"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "obtain_tsuzuri_neso_large": {
+      "conditions": {
+        "items": [
+          {
+            "items": "hasugoods:tsuzuri_neso_large"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.hasugoods.obtain_all_large_nesos.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "hasugoods:megumi_neso_large"
+    },
+    "title": {
+      "translate": "advancement.hasugoods.obtain_all_large_nesos.title"
+    }
+  },
+  "requirements": [
+    [
+      "obtain_megumi_neso_large"
+    ],
+    [
+      "obtain_sayaka_neso_large"
+    ],
+    [
+      "obtain_kaho_neso_large"
+    ],
+    [
+      "obtain_ginko_neso_large"
+    ],
+    [
+      "obtain_rurino_neso_large"
+    ],
+    [
+      "obtain_kozue_neso_large"
+    ],
+    [
+      "obtain_hime_neso_large"
+    ],
+    [
+      "obtain_tsuzuri_neso_large"
+    ],
+    [
+      "obtain_kosuzu_neso_large"
+    ]
+  ],
+  "rewards": {
+    "experience": 2000
+  },
+  "sends_telemetry_event": true
+}

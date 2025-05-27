@@ -1,0 +1,32 @@
+{
+  "criteria": {
+    "tick": {
+      "trigger": "minecraft:tick"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancement.hasugoods.root.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "hasugoods:kaho_badge"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancement.hasugoods.root.title"
+    }
+  },
+  "requirements": [
+    [
+      "tick"
+    ]
+  ],
+  "rewards": {
+    "loot": [
+      "hasugoods:advancement/root"
+    ]
+  },
+  "sends_telemetry_event": true
+}

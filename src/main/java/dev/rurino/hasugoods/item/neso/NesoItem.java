@@ -46,7 +46,7 @@ public class NesoItem extends Item implements INesoItem {
   protected static final Map<String, NesoItemEntry> ALL_NESOS = new HashMap<>();
 
   protected static Optional<NesoItemEntry> getNesoItemEntry(String charaKey, NesoSize size) {
-    return Optional.ofNullable(ALL_NESOS.get(NesoConfig.nesoKey(charaKey, size)));
+    return Optional.ofNullable(ALL_NESOS.get(CharaUtils.nesoKey(charaKey, size)));
   }
 
   public static Optional<NesoItem> getNesoItem(String charaKey, NesoSize size) {
@@ -77,7 +77,7 @@ public class NesoItem extends Item implements INesoItem {
   }
 
   private static NesoItem registerNeso(String charaKey, NesoSize size) {
-    String itemKey = NesoConfig.nesoKey(charaKey, size);
+    String itemKey = CharaUtils.nesoKey(charaKey, size);
     RegistryKey<Item> key = RegistryKey.of(RegistryKeys.ITEM, Hasugoods.id(itemKey));
     Rarity rarity = switch (size) {
       case SMALL -> Rarity.COMMON;
