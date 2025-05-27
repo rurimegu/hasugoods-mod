@@ -1,0 +1,13 @@
+{
+  "name": "Box of Badges",
+  "icon": "hasugoods:box_of_badge",
+  "category": "hasugoods:merch",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "hasugoods:box_of_badge",
+      "title": "Box of Badges",
+      "text": "A box of badges contain many unopened badge packets. How lucky you are to find one!$(br2)You oshi must be there, mustn't they?$(br2)$(italic)Disclaimer: This is not a promise.$()"
+    }
+  ]
+}

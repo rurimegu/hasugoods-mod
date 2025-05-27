@@ -169,12 +169,6 @@ public class NesoItem extends Item implements INesoItem {
   // #endregion GUI
 
   @Override
-  public void onCraft(ItemStack stack, World world) {
-    super.onCraft(stack, world);
-    setFullEnergy(stack);
-  }
-
-  @Override
   public ActionResult useOnBlock(ItemUsageContext context) {
     if (!context.getPlayer().isSneaking()) {
       return ActionResult.PASS;

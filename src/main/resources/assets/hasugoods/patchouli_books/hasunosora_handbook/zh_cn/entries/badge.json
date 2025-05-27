@@ -1,0 +1,18 @@
+{
+  "name": "徽章",
+  "icon": "hasugoods:sayaka_badge",
+  "category": "hasugoods:merch",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "tag:hasugoods:regular_badges,tag:hasugoods:secret_badges",
+      "title": "徽章",
+      "text": "是闪闪发光的装饰品，更是御宅族之间的货币。$(br2)可以从未开封的徽章袋中获得徽章，这些徽章袋可以通过战利品箱或村民交易获得；当然，也可以和朋友交换！"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "……魔法？",
+      "text": "在生死攸关之时紧握你推的徽章——这份强烈的爱意或许能稍稍支撑活下去的意志？"
+    }
+  ]
+}

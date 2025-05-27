@@ -1,6 +1,8 @@
 {
   "block.hasugoods.neso_base_block": "Neso Base Block",
   "block.hasugoods.position_zero_block": "Position Zero Block",
+  "book.hasugoods.landing_text": "Welcome to Hasunosora Girls' High! This handbook will help you discover the merchandise from the Hasunosora Girls' High School Idol Club.",
+  "book.hasugoods.title": "Hasunosora Handbook",
   "config.jade.plugin_hasugoods.neso_base_block": "Neso Base Block",
   "config.jade.plugin_hasugoods.neso_entity": "Neso Entity",
   "death.attack.toutoshi": "%1$s died of the preciousness of %2$s",

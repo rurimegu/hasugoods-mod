@@ -1,0 +1,17 @@
+{
+  "name": "Neso Base Block",
+  "icon": "hasugoods:neso_base_block",
+  "category": "hasugoods:merch",
+  "pages": [
+    {
+      "type": "patchouli:crafting",
+      "recipe": "hasugoods:neso_base_block",
+      "text": "It's time to put your neso on a display base! Craft the nesoberi base block using a regular badge, a note block, and white concrete."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "hasugoods:neso_base_block",
+      "text": "Right-click the base block with a nesoberi to place it on the base, or right-click the base block with an empty hand to obtain it.$(br2)When placed on a neso base block, the nesoberi will slowly get charged. It might be able to activate some special powers after charged enough!"
+    }
+  ]
+}

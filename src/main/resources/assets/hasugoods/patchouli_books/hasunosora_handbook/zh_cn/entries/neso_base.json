@@ -1,0 +1,17 @@
+{
+  "name": "趴趴底座方块",
+  "icon": "hasugoods:neso_base_block",
+  "category": "hasugoods:merch",
+  "pages": [
+    {
+      "type": "patchouli:crafting",
+      "recipe": "hasugoods:neso_base_block",
+      "text": "是时候把你的趴趴放在展示底座上了！使用普通徽章、音符方块和白色混凝土合成趴趴底座方块。"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "hasugoods:neso_base_block",
+      "text": "右键点击底座方块放置趴趴；空手右键点击底座方块取下趴趴。$(br2)放置在趴趴底座方块上的趴趴会慢慢充能。充能后可能会激活一些特殊能力！"
+    }
+  ]
+}

@@ -21,6 +21,7 @@ public class NesoEntityModel extends EntityModel<NesoEntity> {
   private final ItemStack stack;
   private final Identifier inHandModelId;
   private VertexConsumerProvider vertexConsumerProvider;
+  private boolean isFromPatchouli = false;
 
   protected NesoEntityModel(NesoItem item) {
     super();
@@ -57,6 +58,7 @@ public class NesoEntityModel extends EntityModel<NesoEntity> {
   public void setAngles(NesoEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw,
       float headPitch) {
     // Ignore angles
+    isFromPatchouli = entity.isFromPatchouli();
   }
 
   public void setVertexConsumerProvider(VertexConsumerProvider vertexConsumerProvider) {
@@ -71,7 +73,7 @@ public class NesoEntityModel extends EntityModel<NesoEntity> {
     ItemRenderer itemRenderer = client.getItemRenderer();
     BakedModel model = client.getBakedModelManager().getModel(inHandModelId);
 
-    matrices.scale(-1.0F, -1.0F, 1.0F);
+    matrices.scale(isFromPatchouli ? 1.0f : -1.0F, -1.0F, 1.0F);
     matrices.translate(0F, getYTranslation(), 0F);
     matrices.multiply(new Quaternionf().rotateY((float) Math.PI));
 

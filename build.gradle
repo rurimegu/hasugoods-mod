@@ -80,11 +80,11 @@ dependencies {
 
   // Special Model Loader
   modApi "dev.felnull:special-model-loader:${project.sml_version}"
-  //Required if you want this mod to be embedded by jar-in-jar
+  // Required if you want this mod to be embedded by jar-in-jar
   include "dev.felnull:special-model-loader:${project.sml_version}"
 
   // Patchouli
-  // modImplementation "vazkii.patchouli:Patchouli:1.21-88-FABRIC"
+  modImplementation "vazkii.patchouli:Patchouli:${project.patchouli_version}"
 
   // Energy API
   include modApi('teamreborn:energy:4.1.0')

@@ -1,0 +1,72 @@
+{
+  "name": "〇号位方块",
+  "icon": "hasugoods:position_zero_block",
+  "category": "hasugoods:merch",
+  "pages": [
+    {
+      "type": "patchouli:crafting",
+      "recipe": "hasugoods:position_zero_block",
+      "text": "$(bold)$(t:Position Zero)〇号位$()方块是趴趴底座方块更强大的版本。$(br2)放在上面的趴趴充能速度更快，并且会发出信标光束。"
+    },
+    {
+      "type": "patchouli:multiblock",
+      "name": "学园偶像舞台",
+      "multiblock": {
+        "pattern": [
+          [
+            "       ",
+            "       ",
+            "       ",
+            "       ",
+            "       ",
+            "       ",
+            "       "
+          ],
+          [
+            "       ",
+            "       ",
+            "       ",
+            "       ",
+            "       ",
+            "       ",
+            "       "
+          ],
+          [
+            "       ",
+            "       ",
+            "       ",
+            "       ",
+            "       ",
+            "       ",
+            "       "
+          ],
+          [
+            "___B___",
+            "_B___B_",
+            "_______",
+            "B__0__B",
+            "_______",
+            "_B___B_",
+            "___B___"
+          ]
+        ],
+        "mapping": {
+          "B": "hasugoods:neso_base_block",
+          "0": "hasugoods:position_zero_block"
+        },
+        "symmetrical": true
+      },
+      "text": "$(bold)注意：$()学园偶像舞台的上方至少需要留出3格的空间。"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "tag:hasugoods:large_nesos",
+      "title": "获取大趴",
+      "text": "要获得大趴，将$(bold)中趴$()放在$(#f88)〇号位方块$()上，并将其他$(bold)中趴$()放在$(#0a0)周围$()。$(br2)先看看$(#08f)相邻$()的定义：$(li)$(#f88)〇号位方块$()与$(#0a0)周围8个方块$()$(#08f)相邻$()。$(li)$(#0a0)趴趴底座方块$()与顺时针/逆时针方向的下一个$(#0a0)趴趴底座方块$()$(#08f)相邻$()。"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "将其他$(bold)中趴$()按照以下方式排列：$(li)同一$(bold)小组$()的所有趴趴必须$(#08f)相邻$()。$(li)同一$(bold)期（年级）$()的所有趴趴必须$(#08f)相邻$()。$(br2)关于小组和年级的更多信息，请参阅$(l:https://ja.wikipedia.org/wiki/%E3%83%A9%E3%83%96%E3%83%A9%E3%82%A4%E3%83%96!%E8%93%AE%E3%83%8E%E7%A9%BA%E5%A5%B3%E5%AD%A6%E9%99%A2%E3%82%B9%E3%82%AF%E3%83%BC%E3%83%AB%E3%82%A2%E3%82%A4%E3%83%89%E3%83%AB%E3%82%AF%E3%83%A9%E3%83%96)维基百科$()。$(br2)完成后，所有中趴将合为C位中趴的大趴版本——$(#f00)中趴不会返还！$()"
+    }
+  ]
+}

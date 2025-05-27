@@ -169,7 +169,6 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
           }
           NesoItem upgradedNesoItem = NesoItem.getNesoItem(nesoItem.getCharaKey(), NesoSize.LARGE).get();
           ItemStack newStack = stack.copyComponentsToNewStack(upgradedNesoItem, 1);
-          upgradedNesoItem.setFullEnergy(newStack);
           return newStack;
         })
         .orElse(stack);

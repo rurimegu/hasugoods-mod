@@ -1,0 +1,18 @@
+{
+  "name": "Badge",
+  "icon": "hasugoods:sayaka_badge",
+  "category": "hasugoods:merch",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "tag:hasugoods:regular_badges,tag:hasugoods:secret_badges",
+      "title": "Badge",
+      "text": "Not only kirakira decorations, but also the currency among otakus.$(br2)Obtain the badge from unopened badge packets that can be found in loot chests, by trading with the villagers, or - of course, by trading with your friends!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "...Magic?",
+      "text": "In a life-or-death moment, tightly holding onto your oshi's badge - perhaps this intense love can help sustain the will to survive, even if just a little?"
+    }
+  ]
+}

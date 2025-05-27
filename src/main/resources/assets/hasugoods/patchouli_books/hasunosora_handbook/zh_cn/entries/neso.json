@@ -1,0 +1,30 @@
+{
+  "name": "趴趴",
+  "icon": "hasugoods:rurino_neso_small",
+  "category": "hasugoods:merch",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "tag:hasugoods:small_nesos,tag:hasugoods:medium_nesos,tag:hasugoods:large_nesos",
+      "title": "趴趴",
+      "text": "和你推（的趴趴）打个招呼！这些棉花娃娃可以用来装饰房间。"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "hasugoods:tsuzuri_neso_small",
+      "text": "缀理小趴的合成表。每个成员的合成配方可能会有些许不同。"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "hasugoods:tsuzuri_neso_medium",
+      "text": "拥有小趴后，注入更多的爱（徽章）来合成中趴吧！$(br2)趴趴的大小显示在物品左上角。"
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "hasugoods:megumi_neso_medium{patchouli:true}",
+      "offset": -0.2,
+      "name": "趴趴实体",
+      "text": "$(bold)潜行右键$()一个方块来放置趴趴。再次右键点击以拾取。"
+    }
+  ]
+}

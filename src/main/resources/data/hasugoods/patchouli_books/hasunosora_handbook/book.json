@@ -1,0 +1,9 @@
+{
+  "name": "book.hasugoods.title",
+  "landing_text": "book.hasugoods.landing_text",
+  "version": 1,
+  "creative_tab": "hasugoods:item_group",
+  "use_resource_pack": true,
+  "pamphlet": true,
+  "index_icon": "hasugoods:kaho_badge"
+}

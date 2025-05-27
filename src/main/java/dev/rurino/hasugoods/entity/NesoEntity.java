@@ -17,6 +17,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.DamageTypeTags;
@@ -133,6 +134,7 @@ public class NesoEntity extends LivingEntity implements INesoEntity {
 
   private final String charaKey;
   private final NesoSize nesoSize;
+  private boolean isFromPatchouli = false;
 
   public NesoEntity(EntityType<? extends LivingEntity> type, World world, String charaKey, NesoSize size) {
     super(type, world);
@@ -207,5 +209,19 @@ public class NesoEntity extends LivingEntity implements INesoEntity {
 
   public NesoConfig.Base getConfig() {
     return Hasugoods.CONFIG.neso.getConfig(NesoConfig.Base.class, charaKey, nesoSize);
+  }
+
+  public boolean isFromPatchouli() {
+    return isFromPatchouli;
+  }
+
+  @Override
+  public void readNbt(NbtCompound nbt) {
+    super.readNbt(nbt);
+    // Hack for Patchouli compatibility
+    if (nbt.contains("patchouli")) {
+      Hasugoods.LOGGER.debug("NesoEntity {} is from Patchouli", this);
+      isFromPatchouli = nbt.getBoolean("patchouli");
+    }
   }
 }

@@ -1,0 +1,72 @@
+{
+  "name": "Position Zero Block",
+  "icon": "hasugoods:position_zero_block",
+  "category": "hasugoods:merch",
+  "pages": [
+    {
+      "type": "patchouli:crafting",
+      "recipe": "hasugoods:position_zero_block",
+      "text": "There's a more powerful version of the nesoberi base block called the $(bold)position zero$() block.$(br2)Your nesos charges faster while emitting a beacon light on it."
+    },
+    {
+      "type": "patchouli:multiblock",
+      "name": "School Idol Stage",
+      "multiblock": {
+        "pattern": [
+          [
+            "       ",
+            "       ",
+            "       ",
+            "       ",
+            "       ",
+            "       ",
+            "       "
+          ],
+          [
+            "       ",
+            "       ",
+            "       ",
+            "       ",
+            "       ",
+            "       ",
+            "       "
+          ],
+          [
+            "       ",
+            "       ",
+            "       ",
+            "       ",
+            "       ",
+            "       ",
+            "       "
+          ],
+          [
+            "___B___",
+            "_B___B_",
+            "_______",
+            "B__0__B",
+            "_______",
+            "_B___B_",
+            "___B___"
+          ]
+        ],
+        "mapping": {
+          "B": "hasugoods:neso_base_block",
+          "0": "hasugoods:position_zero_block"
+        },
+        "symmetrical": true
+      },
+      "text": "$(bold)Note:$() You must leave the at least 3 blocks of air above the field of school idol stage."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "tag:hasugoods:large_nesos",
+      "title": "Obtain Large Nesos",
+      "text": "To obtain a large version of your neso, put the $(bold)medium$() version of it on the $(#f88)position zero block$(), and put 8 other $(bold)medium$() nesos $(#0a0)around it$().$(br2)Let's define $(#08f)adjacency$():$(li)The $(#f88)position zero block$() is $(#08f)adjacent$() to the $(#0a0)8 blocks$() around it.$(li)A $(#0a0)neso base block$() is $(#08f)adjacent$() to the next $(#0a0)neso base block$(), clockwise or counterclockwise."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Arrange the other $(bold)medium$() nesos as follows:$(li)All nesos of the same $(bold)subunit$() must be $(#08f)adjacent$().$(li)All nesos of the same $(bold)grade (class)$() must be $(#08f)adjacent$().$(br2)Find more information about the subunits and grades from $(l:https://ja.wikipedia.org/wiki/%E3%83%A9%E3%83%96%E3%83%A9%E3%82%A4%E3%83%96!%E8%93%AE%E3%83%8E%E7%A9%BA%E5%A5%B3%E5%AD%A6%E9%99%A2%E3%82%B9%E3%82%AF%E3%83%BC%E3%83%AB%E3%82%A2%E3%82%A4%E3%83%89%E3%83%AB%E3%82%AF%E3%83%A9%E3%83%96)Wikipedia$().$(br2)After you're done, all medium nesos will merge into a large version of the centered neso - $(#f00)You won't get back the medium nesos!$()"
+    }
+  ]
+}

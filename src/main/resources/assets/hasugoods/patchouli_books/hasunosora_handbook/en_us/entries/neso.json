@@ -1,0 +1,30 @@
+{
+  "name": "Nesoberi",
+  "icon": "hasugoods:rurino_neso_small",
+  "category": "hasugoods:merch",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "tag:hasugoods:small_nesos,tag:hasugoods:medium_nesos,tag:hasugoods:large_nesos",
+      "title": "Nesoberi",
+      "text": "Meet your favorite Hasunosora school idols in nesoberi form! These plushies are perfect for cuddling and decorating your room."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "hasugoods:tsuzuri_neso_small",
+      "text": "Take the Tsuzuri nesoberi as an example. Recipes for small nesoberis might slightly differ in wool colors."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "hasugoods:tsuzuri_neso_medium",
+      "text": "Once you have the small neso, craft the medium one with more oshi love!$(br2)The size of the nesoberi is indicated on the top left corner of the item."
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "hasugoods:megumi_neso_medium{patchouli:true}",
+      "offset": -0.2,
+      "name": "Neso Entity",
+      "text": "$(bold)Stealth-right-click$() a block to place the neso on the ground. Right-click it again to pick it up."
+    }
+  ]
+}

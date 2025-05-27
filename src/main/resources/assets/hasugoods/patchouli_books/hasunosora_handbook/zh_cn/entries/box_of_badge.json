@@ -1,0 +1,13 @@
+{
+  "name": "徽章盒",
+  "icon": "hasugoods:box_of_badge",
+  "category": "hasugoods:merch",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "hasugoods:box_of_badge",
+      "title": "徽章盒",
+      "text": "一个装满未开封徽章袋的盒子。今天不会是你的幸运日吧？$(br2)你的主推肯定在里面！$(br2)$(italic)免责声明：其实没有保底。$()"
+    }
+  ]
+}

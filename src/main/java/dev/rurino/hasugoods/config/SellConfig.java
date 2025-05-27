@@ -30,28 +30,28 @@ public class SellConfig {
     secretProb = builder.defineInRange("secret_prob", 0.1, 0.0, 1.0);
 
     builder.comment("Maximum uses for selling regular badges");
-    maxUses = builder.defineInRange("max_uses", 12, 1, Integer.MAX_VALUE);
+    maxUses = builder.defineInRange("max_uses", 4, 1, Integer.MAX_VALUE);
 
     builder.comment("Maximum uses for selling secret badges");
-    secretMaxUses = builder.defineInRange("secret_max_uses", 3, 1, Integer.MAX_VALUE);
+    secretMaxUses = builder.defineInRange("secret_max_uses", 1, 1, Integer.MAX_VALUE);
 
     builder.comment("Price in emeralds for selling regular badges");
-    regularPrice = builder.defineInRange("regular_price", 4, 0, Integer.MAX_VALUE);
+    regularPrice = builder.defineInRange("regular_price", 8, 0, Integer.MAX_VALUE);
 
     builder.comment("Price in emeralds for selling secret badges");
-    secretPrice = builder.defineInRange("secret_price", 30, 0, Integer.MAX_VALUE);
+    secretPrice = builder.defineInRange("secret_price", 50, 0, Integer.MAX_VALUE);
 
     builder.comment("Price in emeralds for unopened badge packets");
-    unopenedPacketPrice = builder.defineInRange("unopened_packet_price", 3, 0, Integer.MAX_VALUE);
+    unopenedPacketPrice = builder.defineInRange("unopened_packet_price", 5, 0, Integer.MAX_VALUE);
 
     builder.comment("Maximum uses for unopened badge packet trades");
-    unopenedPacketMaxUses = builder.defineInRange("unopened_packet_max_uses", 9, 1, Integer.MAX_VALUE);
+    unopenedPacketMaxUses = builder.defineInRange("unopened_packet_max_uses", 10, 1, Integer.MAX_VALUE);
 
     builder.comment("Discount factor for unopened badge boxes");
     unopenedBoxDiscount = builder.defineInRange("unopened_box_discount", 0.1, 0.0, 1.0);
 
     builder.comment("Maximum uses for unopened badge box trades");
-    unopenedBoxMaxUses = builder.defineInRange("unopened_box_max_uses", 2, 1, Integer.MAX_VALUE);
+    unopenedBoxMaxUses = builder.defineInRange("unopened_box_max_uses", 1, 1, Integer.MAX_VALUE);
 
     builder.pop();
   }
