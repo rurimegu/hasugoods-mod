@@ -3,6 +3,7 @@ package dev.rurino.hasugoods.mixin;
 import dev.rurino.hasugoods.effect.ToutoshiEffectsConsumeEffect;
 import dev.rurino.hasugoods.item.badge.BadgeItem;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityStatuses;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -46,6 +47,7 @@ public abstract class LivingEntityMixin extends Entity {
     new ToutoshiEffectsConsumeEffect(badgeItem.getCharaKey())
         .onConsume(self.getWorld(), badgeStack, self);
     badgeStack.decrement(1);
+    this.getWorld().sendEntityStatus(this, EntityStatuses.USE_TOTEM_OF_UNDYING);
     cir.setReturnValue(true);
   }
 }
