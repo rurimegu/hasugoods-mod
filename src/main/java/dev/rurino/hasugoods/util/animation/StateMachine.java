@@ -67,6 +67,10 @@ public class StateMachine implements ICopyable<StateMachine> {
     states.put(state, animation);
   }
 
+  public int getState() {
+    return curState.state;
+  }
+
   public void transit(int state, int tick) {
     if (!states.containsKey(state)) {
       Hasugoods.LOGGER.warn("No animation found for state {}, skipped" + state);

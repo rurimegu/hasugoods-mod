@@ -99,7 +99,7 @@
     "frame": "goal",
     "icon": {
       "count": 1,
-      "id": "hasugoods:megumi_neso_small"
+      "id": "hasugoods:kozue_neso_small"
     },
     "title": {
       "translate": "advancement.hasugoods.obtain_all_small_nesos.title"
@@ -135,7 +135,7 @@
     ]
   ],
   "rewards": {
-    "experience": 200
+    "experience": 100
   },
   "sends_telemetry_event": true
 }

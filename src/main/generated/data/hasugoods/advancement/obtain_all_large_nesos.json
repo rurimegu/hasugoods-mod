@@ -99,7 +99,7 @@
     "frame": "goal",
     "icon": {
       "count": 1,
-      "id": "hasugoods:megumi_neso_large"
+      "id": "hasugoods:kozue_neso_large"
     },
     "title": {
       "translate": "advancement.hasugoods.obtain_all_large_nesos.title"
@@ -135,7 +135,7 @@
     ]
   ],
   "rewards": {
-    "experience": 2000
+    "experience": 1000
   },
   "sends_telemetry_event": true
 }

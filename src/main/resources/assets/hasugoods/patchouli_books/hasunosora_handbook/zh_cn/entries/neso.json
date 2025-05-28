@@ -21,7 +21,7 @@
     },
     {
       "type": "patchouli:entity",
-      "entity": "hasugoods:megumi_neso_medium{patchouli:true}",
+      "entity": "hasugoods:rurino_neso_medium{patchouli:true}",
       "offset": -0.2,
       "name": "趴趴实体",
       "text": "$(bold)潜行右键$()一个方块来放置趴趴。再次右键点击以拾取。"

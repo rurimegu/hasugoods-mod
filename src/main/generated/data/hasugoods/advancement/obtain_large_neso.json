@@ -1,5 +1,5 @@
 {
-  "parent": "hasugoods:obtain_medium_neso",
+  "parent": "hasugoods:obtain_all_medium_nesos",
   "criteria": {
     "obtain_neso": {
       "conditions": {
@@ -18,7 +18,7 @@
     },
     "icon": {
       "count": 1,
-      "id": "hasugoods:ginko_neso_large"
+      "id": "hasugoods:megumi_neso_large"
     },
     "title": {
       "translate": "advancement.hasugoods.obtain_large_neso.title"

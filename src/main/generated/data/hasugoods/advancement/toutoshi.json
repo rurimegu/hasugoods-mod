@@ -11,7 +11,8 @@
                 "id": "hasugoods:toutoshi"
               }
             ]
-          }
+          },
+          "blocked": false
         }
       },
       "trigger": "minecraft:entity_hurt_player"
@@ -37,7 +38,7 @@
     ]
   ],
   "rewards": {
-    "experience": 100
+    "experience": 50
   },
   "sends_telemetry_event": true
 }

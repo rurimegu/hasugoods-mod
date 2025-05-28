@@ -104,7 +104,8 @@ public class NesoBaseBlockEntityRenderer implements BlockEntityRenderer<Abstract
     BakedModel model = MinecraftClient.getInstance().getBakedModelManager().getModel(modelId);
     Direction direction = blockState.get(AbstractNesoBaseBlock.FACING);
 
-    if (entity instanceof PositionZeroBlockEntity pos0Entity) {
+    if (entity instanceof PositionZeroBlockEntity pos0Entity
+        && pos0Entity.getStateMachine().getState() == PositionZeroBlockEntity.ANIM_STATE_IDLE) {
       renderPositionZero(pos0Entity, tickDelta, matrices, vertexConsumers, light, overlay, direction);
     }
 

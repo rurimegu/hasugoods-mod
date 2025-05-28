@@ -83,9 +83,9 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
 
   // #region Server Animation
   private static final int ANIM_STATE_MERGE_0 = 201;
-  private static int ANIM_STATE_AFTER_MERGE = 147;
-  private static int MERGE_ANIM_DURATION = (int) STATE_MACHINE.getAnimation(ANIM_STATE_MERGE_0).duration() + 10;
-  private static Animation ANIM_AFTER_MERGE = new Animation()
+  private static final int ANIM_STATE_AFTER_MERGE = 147;
+  private static final int MERGE_ANIM_DURATION = (int) STATE_MACHINE.getAnimation(ANIM_STATE_MERGE_0).duration() + 10;
+  private static final Animation ANIM_AFTER_MERGE = new Animation()
       .addTranslation(new KeyFrame.Translate(0,
           STATE_MACHINE.getAnimation(ANIM_STATE_MERGE_0).getFrame(MERGE_ANIM_DURATION).translate()))
       .addTranslation(new KeyFrame.Translate(20, STATE_MACHINE.getAnimation(ANIM_STATE_IDLE).getFrame(0).translate()),
@@ -95,7 +95,7 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
   private Collection<ServerPlayerEntity> playersMergeAnim = null;
   private Timer mergeAnimTimer = null;
 
-  private boolean isPlayingMergeAnim() {
+  public boolean isPlayingMergeAnim() {
     return mergeAnimTimer != null;
   }
 

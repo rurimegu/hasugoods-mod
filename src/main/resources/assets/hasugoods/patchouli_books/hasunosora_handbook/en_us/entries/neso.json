@@ -21,7 +21,7 @@
     },
     {
       "type": "patchouli:entity",
-      "entity": "hasugoods:megumi_neso_medium{patchouli:true}",
+      "entity": "hasugoods:rurino_neso_medium{patchouli:true}",
       "offset": -0.2,
       "name": "Neso Entity",
       "text": "$(bold)Stealth-right-click$() a block to place the neso on the ground. Right-click it again to pick it up."

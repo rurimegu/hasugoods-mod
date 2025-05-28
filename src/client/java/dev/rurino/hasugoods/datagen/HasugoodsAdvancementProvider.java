@@ -52,7 +52,7 @@ public class HasugoodsAdvancementProvider extends FabricAdvancementProvider {
             BadgeItem.getBadgeItem(CharaUtils.KAHO_KEY).get(),
             titlekey("root"),
             descriptionKey("root"),
-            null,
+            Hasugoods.id("textures/gui/advancement/background.png"),
             AdvancementFrame.TASK,
             false,
             false,
@@ -88,7 +88,7 @@ public class HasugoodsAdvancementProvider extends FabricAdvancementProvider {
   private AdvancementEntry createObtainAllBadges(Consumer<AdvancementEntry> consumer, AdvancementEntry parent,
       boolean isSecret) {
     String advName = isSecret ? "obtain_all_secret_badges" : "obtain_all_regular_badges";
-    int experience = isSecret ? 500 : 200;
+    int experience = isSecret ? 200 : 100;
     var builder = Advancement.Builder.create().parent(parent)
         .display(
             BadgeItem.getBadgeItem(CharaUtils.HIME_KEY, isSecret).get(),
@@ -127,7 +127,7 @@ public class HasugoodsAdvancementProvider extends FabricAdvancementProvider {
     };
     return Advancement.Builder.create().parent(parent)
         .display(
-            NesoItem.getNesoItem(CharaUtils.GINKO_KEY, size).get(),
+            NesoItem.getNesoItem(CharaUtils.MEGUMI_KEY, size).get(),
             titlekey(advName),
             descriptionKey(advName),
             null,
@@ -146,13 +146,13 @@ public class HasugoodsAdvancementProvider extends FabricAdvancementProvider {
       NesoSize size) {
     String advName = "obtain_all_" + size.name().toLowerCase() + "_nesos";
     int experience = switch (size) {
-      case SMALL -> 200;
-      case MEDIUM -> 400;
-      case LARGE -> 2000;
+      case SMALL -> 100;
+      case MEDIUM -> 200;
+      case LARGE -> 1000;
     };
     var builder = Advancement.Builder.create().parent(parent)
         .display(
-            NesoItem.getNesoItem(CharaUtils.MEGUMI_KEY, size).get(),
+            NesoItem.getNesoItem(CharaUtils.KOZUE_KEY, size).get(),
             titlekey(advName),
             descriptionKey(advName),
             null,
@@ -187,9 +187,11 @@ public class HasugoodsAdvancementProvider extends FabricAdvancementProvider {
             true)
         .criterion("toutoshi", EntityHurtPlayerCriterion.Conditions.create(
             DamagePredicate.Builder.create()
-                .type(DamageSourcePredicate.Builder.create().tag(TagPredicate.expected(ModDamageTypes.TAG_TOUTOSHI)))))
+                .type(DamageSourcePredicate.Builder.create().tag(TagPredicate.expected(
+                    ModDamageTypes.TAG_TOUTOSHI)))
+                .blocked(false)))
         .requirements(AdvancementRequirements.anyOf(List.of("toutoshi")))
-        .rewards(AdvancementRewards.Builder.experience(100))
+        .rewards(AdvancementRewards.Builder.experience(50))
         .build(consumer, Hasugoods.idStr("toutoshi"));
   }
 
@@ -197,6 +199,7 @@ public class HasugoodsAdvancementProvider extends FabricAdvancementProvider {
       boolean pos0) {
     String advName = pos0 ? "obtain_position_zero_block" : "obtain_neso_base";
     Block block = pos0 ? ModBlocks.POSITION_ZERO_BLOCK : ModBlocks.NESO_BASE_BLOCK;
+    int experience = pos0 ? 100 : 50;
     return Advancement.Builder.create().parent(parent)
         .display(
             block,
@@ -209,7 +212,7 @@ public class HasugoodsAdvancementProvider extends FabricAdvancementProvider {
             false)
         .criterion("obtain_neso_base", InventoryChangedCriterion.Conditions.items(block))
         .requirements(AdvancementRequirements.anyOf(List.of("obtain_neso_base")))
-        .rewards(AdvancementRewards.Builder.experience(50))
+        .rewards(AdvancementRewards.Builder.experience(experience))
         .build(consumer, Hasugoods.idStr(advName));
   }
 
@@ -226,7 +229,7 @@ public class HasugoodsAdvancementProvider extends FabricAdvancementProvider {
     AdvancementEntry obtainAllSmallNesos = createObtainAllNesos(consumer, obtainSmallNeso, NesoSize.SMALL);
     AdvancementEntry obtainMediumNeso = createObtainNeso(consumer, obtainSmallNeso, NesoSize.MEDIUM);
     AdvancementEntry obtainAllMediumNesos = createObtainAllNesos(consumer, obtainMediumNeso, NesoSize.MEDIUM);
-    AdvancementEntry obtainLargeNeso = createObtainNeso(consumer, obtainMediumNeso, NesoSize.LARGE);
+    AdvancementEntry obtainLargeNeso = createObtainNeso(consumer, obtainAllMediumNesos, NesoSize.LARGE);
     AdvancementEntry obtainAllLargeNesos = createObtainAllNesos(consumer, obtainLargeNeso, NesoSize.LARGE);
     AdvancementEntry obtainNesoBase = createObtainNesoBase(consumer, obtainRegularBadge, false);
     AdvancementEntry obtainPositionZeroBlock = createObtainNesoBase(consumer, obtainSecretBadge, true);

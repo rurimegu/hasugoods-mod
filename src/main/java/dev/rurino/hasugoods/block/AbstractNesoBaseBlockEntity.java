@@ -99,7 +99,7 @@ public abstract class AbstractNesoBaseBlockEntity extends BlockEntity implements
       new BlockPos(0, 0, 3),
       new BlockPos(2, 0, 2));
 
-  protected static final int ANIM_STATE_IDLE = 217;
+  public static final int ANIM_STATE_IDLE = 217;
   protected static final int ANIM_STATE_MERGE_0 = 201;
   protected static final StateMachine STATE_MACHINE = new StateMachine(ANIM_STATE_IDLE);
 

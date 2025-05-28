@@ -6,6 +6,7 @@
   },
   "display": {
     "announce_to_chat": false,
+    "background": "hasugoods:textures/gui/advancement/background.png",
     "description": {
       "translate": "advancement.hasugoods.root.description"
     },
