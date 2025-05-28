@@ -319,6 +319,8 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
       if (appeared.containsKey(charaKey)) {
         ret[i] = NesoBaseState.ERROR;
         ret[appeared.get(charaKey)] = NesoBaseState.ERROR;
+      } else if (charaKey.equals(nodes[n])) {
+        ret[i] = NesoBaseState.ERROR;
       } else {
         appeared.put(charaKey, i);
       }
