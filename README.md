@@ -19,6 +19,6 @@ While I will try not to make breaking changes, it is possible that a future upda
 
 ## Other model loaders / Minecraft versions support?
 
-Fabric + Minecraft 1.21.4 only for now. If there's demand for neoforge or older minecraft versions, I might work on that.
+Fabric + Minecraft 1.21.1 only for now. If there's demand for neoforge or older minecraft versions, I might work on that.
 
 No plans to support forge.
