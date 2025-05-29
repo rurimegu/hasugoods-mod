@@ -61,7 +61,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
   }
 
   // Render oshi icon at the end
-  @Inject(method = "render(Lnet/minecraft/entity/LivingEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", at = @At("RETURN"), require = 0, allow = 1)
+  @Inject(method = "render(Lnet/minecraft/entity/LivingEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", at = @At("RETURN"), require = 1)
   private void renderOshiIcon(T livingEntity, float yaw, float tickDelta, MatrixStack matrixStack,
       VertexConsumerProvider vertexConsumerProvider, int light, CallbackInfo ci) {
     var oshiIconId = shouldRenderOshiIcon(livingEntity);
