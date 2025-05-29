@@ -46,8 +46,8 @@ public abstract class LivingEntityMixin extends Entity {
     self.clearStatusEffects();
     new ToutoshiEffectsConsumeEffect(badgeItem.getCharaKey())
         .onConsume(self.getWorld(), badgeStack, self);
-    badgeStack.decrement(1);
     this.getWorld().sendEntityStatus(this, EntityStatuses.USE_TOTEM_OF_UNDYING);
+    badgeStack.decrement(1);
     cir.setReturnValue(true);
   }
 }

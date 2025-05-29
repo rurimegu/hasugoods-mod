@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 
 import dev.rurino.hasugoods.Hasugoods;
@@ -233,7 +234,8 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
     return ret;
   }
 
-  private static <T> boolean[] checkIsolatedComponents(T[] groupByIdx, Predicate<T> isEmpty) {
+  @VisibleForTesting
+  protected static <T> boolean[] checkIsolatedComponents(T[] groupByIdx, Predicate<T> isEmpty) {
     int n = groupByIdx.length;
     boolean[] isolated = new boolean[n];
 
@@ -247,9 +249,11 @@ public class PositionZeroBlockEntity extends AbstractNesoBaseBlockEntity {
         componentNo[i] = componentNo[n - 1];
       } else if (componentNo[i] == 0) {
         componentNo[i] = nextComponentNo++;
-      }
-      if (i == 0 && groupByIdx[i].equals(groupByIdx[n - 2])) {
-        componentNo[n - 2] = componentNo[i];
+        if (i == 0) {
+          for (int j = n - 2; j > 0 && groupByIdx[j].equals(groupByIdx[i]); j--) {
+            componentNo[j] = componentNo[i];
+          }
+        }
       }
       if (i != n - 2 && groupByIdx[i].equals(groupByIdx[i + 1])) {
         componentNo[i + 1] = componentNo[i];
